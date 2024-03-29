@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en", xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css" rel="stylesheet" />
+        <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico}">
+        <title>IceSelection</title>
+        <!-- You can link any CSS files or include any necessary scripts here -->
+    </head>
+    <body>
+        <div class="ui secondary  menu">
+        <div class="item">
+            <img th:src="@{/image.png}">
+        </div>
+        <a class="item" href="/" th:href="@{/}" >
+            EisCafe Roma
+        </a>
+        <a class="item active" href="/iceSelection" th:href="@{/iceSelection}">
+            Ice 
+        </a>
+        <a class="item">
+            Drinks
+        </a>
+        <div class="right menu">
+            <div class="item">
+            <div class="ui icon input">
+                <input type="text" placeholder="Search...">
+                <i class="search link icon"></i>
+            </div>
+            </div>
+            <a class="ui item">
+            Services
+            </a>
+        </div>
+        </div>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.js" th:inline="javascript"></script> 
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous" th:inline="javascript"></script>
+
+        <div class="ui grid">
+            <div class="four wide column" th:each="flav: ${flavours}">
+                <div class="ui item">
+                    <div class="ui tiny image">
+                        <img th:src="@{/image.png}" class="ui tiny rounded image">
+                    </div>
+                    <div class="right content">
+                        <div class="header" th:text="${flav.description}"></div>
+                        <a th:text="${flav.name}"></a>
+                    </div>
+                </div>
+                <form th:action="@{/iceSelection/deleteFlavour/{flavid}(flavid=${flav.id})}" th:object="${flav}" method="POST">
+                    <button class="ui button" tabindex="0" type="submit">Delete</button>
+                </form>
+            </div> 
+        </div>
+
+        <form class="ui form" method="POST" th:action="@{/iceSelection/addFlavour}" th:object="${flavour}">
+            <div class="field">
+              <label>Ice Cream</label>
+              <div class="thre fields">
+                <div class="field">
+                  <input name="IceCream[Name]" placeholder="Name" type="text" th:field="*{name}">
+                </div>
+                <div class="field">
+                  <input name="IceCream[Description]" placeholder="Description" type="text" th:field="*{description}">
+                </div>
+              </div>
+            </div>
+
+            <div class="ui checkbox">
+                <input type="checkbox" checked="checked" th:field="*{isVegan}">
+                <label>Vegan</label>
+            </div>
+            <button class="ui button" tabindex="0" type="submit">Save</button>
+        </form>
+
+        <script th:inline="javascript">
+        $('ui.dropdown').dropdown();
+        </script>
+    </body>
+</html>

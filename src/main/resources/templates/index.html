@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en", xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css" rel="stylesheet" />
+        <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico}">
+        <title>EisCafe</title>
+        <!-- You can link any CSS files or include any necessary scripts here -->
+    </head>
+    <body>
+      <div class="ui secondary  menu">
+        <div class="item">
+          <img th:src="@{/image.png}">
+        </div>
+        <a class="item active" href="/" th:href="@{/}">
+          EisCafe Roma
+        </a>
+        <a class="item" href="/iceSelection" th:href="@{/iceSelection}">
+          Ice 
+        </a>
+        <a class="item">
+          Drinks
+        </a>
+        <div class="right menu">
+          <div class="item">
+            <div class="ui icon input">
+              <input type="text" placeholder="Search...">
+              <i class="search link icon"></i>
+            </div>
+          </div>
+          <a class="ui item">
+            Services
+          </a>
+        </div>
+      </div>
+
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.js" th:inline="javascript"></script> 
+      <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous" th:inline="javascript"></script>
+
+      <script th:inline="javascript">
+      $('ui.dropdown').dropdown();
+      </script>
+    </body>
+</html>
