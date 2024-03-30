@@ -3,29 +3,34 @@ package com.example.shop.model;
 import javax.annotation.processing.Generated;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "article")
 public class Article {
 
     @Id 
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private long id;
 
     @Column(name = "name")
     private String name; 
 
-    @Column(name = "brand")
-    private String brand; 
+    @Column(name = "type")
+    private String type; 
+
+    @Column(name = "price")
+    private BigDecimal price; 
 
     @Column(name = "description")
     private String description; 
 
     public Article(){}
 
-    public Article(String name, String brand, String description){
+    public Article(String name, BigDecimal price, String type, String description){
         this.name = name; 
-        this.brand = brand; 
+        this.price = price;
+        this.type = type; 
         this.description = description;
     }
 
@@ -45,13 +50,23 @@ public class Article {
         return name;
     }
 
-    public void setBrand(String brand) {
-        this.brand = brand;
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
-    public String getBrand() {
-        return brand;
+    public BigDecimal getPrice() {
+        return price;
     }
+
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getType() {
+        return type;
+    }
+
 
     public void setDescription(String description) {
         this.description = description;

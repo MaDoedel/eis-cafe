@@ -71,4 +71,11 @@ public class FlavourController {
         return "redirect:/iceSelection";
     }
 
+    @RequestMapping(value = "/iceSelection/favour/detail/{id}", method = RequestMethod.GET)
+    public String getDetail(@PathVariable("id") long id, Model model) {
+        Optional<Flavour> flavour = flavourRepository.findById(id);
+        model.addAttribute("flavour", flavour.get());
+        return "detail";
+    }
+
 }
