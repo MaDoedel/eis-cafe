@@ -37,11 +37,10 @@
 
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.js" th:inline="javascript"></script> 
-        <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous" th:inline="javascript"></script>
 
-        <div class="ui grid">
+        <div class="ui grid" id="flavorGrid">
             <div class="four wide column" th:each="flav: ${flavours}">
-                <div class="ui item">
+                <div class="ui item" id="${flavor.id}">
                     <div class="ui tiny image">
                         <img th:src="@{/image.png}" class="ui tiny rounded image">
                     </div>
@@ -50,13 +49,11 @@
                         <a th:text="${flav.name}"></a>
                     </div>
                 </div>
-                <form th:action="@{/iceSelection/deleteFlavour/{flavid}(flavid=${flav.id})}" th:object="${flav}" method="POST">
-                    <button class="ui button" tabindex="0" type="submit">Delete</button>
-                </form>
+                <button class="ui button" tabindex="0" id="deleteButton" data-flavor-id ="${flav.id}">Delete</button>
             </div> 
         </div>
 
-        <form class="ui form" method="POST" th:action="@{/iceSelection/addFlavour}" th:object="${flavour}">
+        <form class="ui form" method="POST" th:action="@{/iceSelection/addFlavour}" th:object="${flavour}" id="iceCreamForm">
             <div class="field">
               <label>Ice Cream</label>
               <div class="thre fields">
@@ -73,11 +70,51 @@
                 <input type="checkbox" checked="checked" th:field="*{isVegan}">
                 <label>Vegan</label>
             </div>
-            <button class="ui button" tabindex="0" type="submit">Save</button>
+            <button class="ui button" tabindex="0" id="saveButton" >Save</button>
         </form>
 
-        <script th:inline="javascript">
-        $('ui.dropdown').dropdown();
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+        $(document).ready(function() {
+            $('#saveButton').click(function(e) {
+                e.preventDefault(); // Prevent the default form submission
+                var formData = $('#iceCreamForm').serialize();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/iceSelection/addFlavour',
+                    data: formData,
+                    success: function(response) {
+                        // dass das funktioniert hat, is wahnsinn 
+                        var newFlavorItem = $('<div class="four wide column"><div class="ui item"><div class="ui tiny image"><img src="/image.png" class="ui tiny rounded image"></div><div class="right content"><div class="header">' + response.description + '</div><a>' + response.name + '</a></div></div><form action="/iceSelection/deleteFlavour/' + response.id + '" method="POST"><button class="ui button" tabindex="0" type="submit">Delete</button></form></div>');
+                        $('#flavorGrid').append(newFlavorItem);
+                        $('#iceCreamForm')[0].reset();
+                    },
+                    error: function(xhr, status, error) {
+                    }
+                });
+            });
+
+            $('#deleteButton').click(function(e) {
+                e.preventDefault();
+                document.write('sdfsd');
+
+                
+                var flavorId = $(this).data('data-flavor-id');
+                // fuck wieso geht das nicht
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/iceSelection/deleteFlavour/' + flavorId,
+                    success: function(response) {
+                        $('#flavorGrid').html(response);
+                    },
+                    error: function(xhr, status, error) {
+                    }
+                });
+            });
+        });
         </script>
+
     </body>
 </html>

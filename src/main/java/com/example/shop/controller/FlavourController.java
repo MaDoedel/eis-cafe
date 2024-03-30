@@ -50,25 +50,26 @@ public class FlavourController {
     }
 
     @RequestMapping(value = "/iceSelection/addFlavour", method = RequestMethod.POST)
-    public String addFlavour(@ModelAttribute("flavour") Flavour flavour, Model model) {
+    public ResponseEntity<Flavour> addFlavour(@ModelAttribute("flavour") Flavour flavour) {
+        System.out.println("something");
         for(Flavour f : flavourRepository.findAll()){
             if(f.getName().equals(flavour.getName())){
-                return "redirect:/iceSelection";
+                return ResponseEntity.badRequest().body(flavour);
             }
         }
 
         if (flavour.getDescription() == "" || flavour.getName() == "" ){
-            return "redirect:/iceSelection";
+            return ResponseEntity.badRequest().body(flavour);
         }
 
         flavourRepository.save(flavour);
-        return "redirect:/iceSelection";
+        return ResponseEntity.ok().body(flavour);
     }
 
     @RequestMapping(value = "/iceSelection/deleteFlavour/{id}", method = RequestMethod.POST)
-    public String updateArticleById(@PathVariable("id") long id){
+    public ResponseEntity<List<Flavour>> deleteFlavour(@PathVariable("id") long id){
         flavourRepository.deleteById(id);
-        return "redirect:/iceSelection";
+        return ResponseEntity.ok().body(flavourRepository.findAll());
     }
 
     @RequestMapping(value = "/iceSelection/favour/detail/{id}", method = RequestMethod.GET)
