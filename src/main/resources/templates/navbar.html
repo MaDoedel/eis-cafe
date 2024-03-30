@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en", xmlns:th="http://www.thymeleaf.org">
+    <body>
+        <div th:fragment="navbar" class="navbar" th:with="index_selected=${index_selected} ?: 0">
+            <img src="image.png" class="logo" alt="Logo">
+            <div class="left" 
+                th:each="elem, iter : ${elems_left}" 
+                th:classappend="${iter.index == index_selected} ? 'selected' : ''"
+                th:text="${elem}"></div>
+            <div class="right" 
+                th:each="elem, iter : ${elems_right}" 
+                th:classappend="${iter.index+#lists.size(elems_left) == index_selected} ? 'selected' : ''"
+                th:text="${elem}"></div>
+        </div>
+    </body>
+</html>
