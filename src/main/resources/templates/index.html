@@ -3,5 +3,13 @@
     <head th:replace="head :: head">
     <body>
         <div th:replace="navbar :: navbar(elems_left=${ {'Start', 'Eis', 'Getränke'} }, elems_right=${ {'Jobs'} }, index_selected=0)"></div>
-    </body>
+    
+        <div>
+          <div th:replace="home :: home" id="content-1"></div>
+
+          <div th:replace="ice :: ice(flavours=flavours)" id="content-2"></div>
+
+          <div th:replace="drinks :: drinks(drinks=drinks)" id="content-3"></div>
+        </div>
+      </body>
 </html>
