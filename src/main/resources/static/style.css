@@ -26,6 +26,15 @@ body {
     justify-content: space-between;
 }
 
+.content > :not(.selected){
+    display: none;
+}
+
+.content > .selected {
+    display: initial;
+}
+
+
 .navbar .logo {
     height: 100%;
 }
