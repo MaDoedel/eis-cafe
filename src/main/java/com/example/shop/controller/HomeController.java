@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -65,10 +66,11 @@ public class HomeController {
         return ResponseEntity.ok().body(null);
     }
 
-    @GetMapping(value = "/flavours")
+    @GetMapping(value = "/ice")
     public String getFlavours(Model model) {
         model.addAttribute("flavours", flavourRepository.findAll());
-        return "ice :: ice(flavours=${flavours})";
+        model.addAttribute("articles", articleRepository.findAll());
+        return "ice :: ice(flavours=${flavours}, articles=${articles})";
     }
     
     /* 
@@ -92,10 +94,14 @@ public class HomeController {
     */
 
     //Just a redirect if flavour gets delete
-    @PostMapping(value = "/ice/deleteFlavour/{id}")
-    public String deleteFlavour(@PathVariable("id") long id){
-        flavourRepository.deleteById(id);
-        return "redirect:/index";
+    @DeleteMapping(value = "/ice/deleteFlavour/{id}")
+    public ResponseEntity<String> deleteFlavour(@PathVariable("id") long id){
+        try {
+            flavourRepository.deleteById(id);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Error deleting flavour");
+        }
+        return ResponseEntity.ok().body(null);
     }
     
     /* 

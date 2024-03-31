@@ -2,16 +2,16 @@
 <html lang="en", xmlns:th="http://www.thymeleaf.org">
     <body>
         <div th:fragment="ice">
+            <h1>Eis</h1>
             <ul>
                 <li th:each="flav : ${flavours}">
                         <span th:text="${flav.name}">Name</span>
                         <span th:text="${flav.description}">Description</span>
                         <span th:text="${flav.isVegan}">isVegan</span>
+                        <button th:attr="data-id=${flav.id}" class="flavourDeleteButton">Delete</button>
                 </li>
             </ul>
 
-            <h1>Eis bhier</h1>
-            <button tabindex="0" id="saveButton" type="submit" >Save</button>
 
             <form method="POST" action="/ice/addFlavour" id="iceCreamForm">
                 <div>
@@ -23,6 +23,16 @@
                 </div>
                 <button tabindex="0" id="saveButton" type="submit" >Save</button>
             </form>
+
+            <h1>Articles</h1>
+            <ul>
+                <li th:each="art : ${articles}">
+                        <span th:text="${art.name}">Name</span>
+                        <span th:text="${art.description}">Description</span>
+                        <span th:text="${art.type}">Type</span>
+                        <span th:text="${art.price}">Price</span>
+                </li>
+            </ul>
         </div>
     </body>
         

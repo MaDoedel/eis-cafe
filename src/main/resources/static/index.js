@@ -11,6 +11,25 @@ window.onload = function() {
         });
     }
 
+    function refetchIce() {
+        $.ajax({
+            url: '/ice',
+            type: 'get',
+            success:function(new_content){
+                $("#content-1").html(new_content)
+                setAllBinds()
+            },
+            error: function(){
+                alert("Failed refetching ice")
+            }
+        });
+    }
+
+    function setAllBinds() {
+        $('#iceCreamForm').submit(onIceCreamFormSubmit);
+        $('.flavourDeleteButton').on("click", onFlavourDelete);
+    }
+
     function onIceCreamFormSubmit(e) {
         e.preventDefault();
         $.ajax({
@@ -18,17 +37,7 @@ window.onload = function() {
             type: 'post',
             data:$('#iceCreamForm').serialize(),
             success: function(){
-                $.ajax({
-                    url: '/flavours',
-                    type: 'get',
-                    success:function(new_content){
-                        $("#content-1").html(new_content)
-                        $('#iceCreamForm').submit(onIceCreamFormSubmit)
-                    },
-                    error: function(){
-                        alert("Failed refetching flavours")
-                    }
-                });
+                refetchIce()
             },
             error: function(data){
                 alert(data.responseText)
@@ -36,5 +45,19 @@ window.onload = function() {
         });
     }
 
-    $('#iceCreamForm').submit(onIceCreamFormSubmit);
+    function onFlavourDelete(e) {
+        e.preventDefault();
+        $.ajax({
+            url: '/ice/deleteFlavour/' + $(this).attr('data-id'),
+            type: 'delete',
+            success: function(){
+                refetchIce()
+            },
+            error: function(data){
+                alert(data.responseText)
+            }
+        });
+    }
+
+    setAllBinds()
 }

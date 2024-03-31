@@ -7,7 +7,7 @@
         <div class="content">
           <div th:insert="~{home :: home}" id="content-0" class="selected"></div>
 
-          <div th:insert="~{ice :: ice(flavours=${flavours})}" id="content-1"></div>
+          <div th:insert="~{ice :: ice(flavours=${flavours}, articles=${articles})}" id="content-1"></div>
 
           <div th:insert="~{drinks :: drinks(drinks=drinks)}" id="content-2"></div>
 
