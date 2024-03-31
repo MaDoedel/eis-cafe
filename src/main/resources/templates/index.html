@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en", xmlns:th="http://www.thymeleaf.org">
-    <head th:replace="head :: head">
+    <head th:replace="~{head :: head}">
     <body>
-        <div th:replace="navbar :: navbar(elems_left=${ {'Start', 'Eis', 'Getränke'} }, elems_right=${ {'Jobs'} }, index_selected=0)"></div>
+        <div th:replace="~{navbar :: navbar(elems_left=${ {'Start', 'Eis', 'Getränke'} }, elems_right=${ {'Jobs'} }, index_selected=0)}"></div>
     
         <div class="content">
-          <div th:include="home :: home" id="content-0" class="selected"></div>
+          <div th:insert="~{home :: home}" id="content-0" class="selected"></div>
 
-          <div th:include="ice :: ice(flavours=flavours)" id="content-1"></div>
+          <div th:insert="~{ice :: ice(flavours=${flavours})}" id="content-1"></div>
 
-          <div th:include="drinks :: drinks(drinks=drinks)" id="content-2"></div>
+          <div th:insert="~{drinks :: drinks(drinks=drinks)}" id="content-2"></div>
 
           <div id="content-3"><H2>Jobs hier</H2></div>
         </div>

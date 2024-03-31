@@ -17,10 +17,21 @@ window.onload = function() {
             url: '/ice/addFlavour',
             type: 'post',
             data:$('#iceCreamForm').serialize(),
-            success:function(data){
-                new_content = $($.parseHTML(data))
-                $("#content-1").html(new_content.html())
-                $('#iceCreamForm').submit(onIceCreamFormSubmit)
+            success: function(){
+                $.ajax({
+                    url: '/flavours',
+                    type: 'get',
+                    success:function(new_content){
+                        $("#content-1").html(new_content)
+                        $('#iceCreamForm').submit(onIceCreamFormSubmit)
+                    },
+                    error: function(){
+                        alert("Failed refetching flavours")
+                    }
+                });
+            },
+            error: function(data){
+                alert(data.responseText)
             }
         });
     }

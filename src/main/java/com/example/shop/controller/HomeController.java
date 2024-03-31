@@ -1,29 +1,18 @@
 package com.example.shop.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import com.example.shop.model.Article;
 import com.example.shop.model.Flavour;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.example.shop.repository.ArticleRepository;
 import com.example.shop.repository.FlavourRepository;
@@ -38,33 +27,48 @@ public class HomeController {
     @Autowired
     FlavourRepository flavourRepository; 
     
-    // Try template
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @GetMapping(value = "/")
     public String getAllLists(Model model) {
-        // Get the lists
         model.addAttribute("articles", articleRepository.findAll());
         model.addAttribute("flavours", flavourRepository.findAll());
-        model.addAttribute("flavour", new Flavour());
-
         return "index";
     }
 
     //Just a redirect if flavour gets added
-    @RequestMapping(value = "/ice/addFlavour", method = RequestMethod.POST)
-    public String addFlavour(@ModelAttribute("flavour") Flavour flavour) {
-        System.out.println("something");
-        for(Flavour f : flavourRepository.findAll()){
+    @PostMapping(value = "/ice/addFlavour", produces = "text/plain")
+    public ResponseEntity<String> addFlavour(@ModelAttribute Flavour flavour, Model model) {
+        // verify flavour is not empty
+        if (flavour.getDescription() == "" || flavour.getName() == ""){
+            return ResponseEntity.badRequest().body("Request body is empty");
+        };
+
+        // verify flavour is not already in the list
+        // note: technically multiple users could add the same flavour at the same time,
+        //       consider a lock for the database to prevent this
+        List<Flavour> flavours = flavourRepository.findAll();
+        for(Flavour f : flavours){
             if(f.getName().equals(flavour.getName())){
-                return "ice :: ice";
+                return ResponseEntity.badRequest().body("Flavour already exists");
             }
         }
 
-        if (flavour.getDescription() == "" || flavour.getName() == "" ){
-            return "ice :: ice";
+        // save in persistent storage
+        try {
+            flavour = flavourRepository.save(flavour);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error saving flavour");
         }
 
-        flavourRepository.save(flavour);
-        return "ice :: ice";
+        // pass the updated list to the view
+        flavours.add(flavour);
+        
+        return ResponseEntity.ok().body(null);
+    }
+
+    @GetMapping(value = "/flavours")
+    public String getFlavours(Model model) {
+        model.addAttribute("flavours", flavourRepository.findAll());
+        return "ice :: ice(flavours=${flavours})";
     }
     
     /* 
@@ -88,7 +92,7 @@ public class HomeController {
     */
 
     //Just a redirect if flavour gets delete
-    @RequestMapping(value = "/ice/deleteFlavour/{id}", method = RequestMethod.POST)
+    @PostMapping(value = "/ice/deleteFlavour/{id}")
     public String deleteFlavour(@PathVariable("id") long id){
         flavourRepository.deleteById(id);
         return "redirect:/index";
