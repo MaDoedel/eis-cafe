@@ -41,36 +41,17 @@ public class FlavourController {
     FlavourRepository flavourRepository; 
 
     // Try template
+
     @RequestMapping(value = "/iceSelection", method = RequestMethod.GET)
     public String getArticles(Model model) {
         model.addAttribute("articles", articleRepository.findAll());
         model.addAttribute("flavours", flavourRepository.findAll());
-        model.addAttribute("flavour", new Flavour());
+        model.addAttribute("newFlavour", new Flavour());
         return "iceSelection";
     }
 
-    @RequestMapping(value = "/iceSelection/addFlavour", method = RequestMethod.POST)
-    public ResponseEntity<Flavour> addFlavour(@ModelAttribute("flavour") Flavour flavour) {
-        System.out.println("something");
-        for(Flavour f : flavourRepository.findAll()){
-            if(f.getName().equals(flavour.getName())){
-                return ResponseEntity.badRequest().body(flavour);
-            }
-        }
 
-        if (flavour.getDescription() == "" || flavour.getName() == "" ){
-            return ResponseEntity.badRequest().body(flavour);
-        }
 
-        flavourRepository.save(flavour);
-        return ResponseEntity.ok().body(flavour);
-    }
-
-    @RequestMapping(value = "/iceSelection/deleteFlavour/{id}", method = RequestMethod.POST)
-    public ResponseEntity<List<Flavour>> deleteFlavour(@PathVariable("id") long id){
-        flavourRepository.deleteById(id);
-        return ResponseEntity.ok().body(flavourRepository.findAll());
-    }
 
     @RequestMapping(value = "/iceSelection/favour/detail/{id}", method = RequestMethod.GET)
     public String getDetail(@PathVariable("id") long id, Model model) {

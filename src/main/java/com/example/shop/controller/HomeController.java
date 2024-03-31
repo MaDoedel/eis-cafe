@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.example.shop.model.Article;
+import com.example.shop.model.Flavour;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -24,31 +26,82 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.shop.repository.ArticleRepository;
+import com.example.shop.repository.FlavourRepository;
 
 @CrossOrigin(origins = "https://localhost:8081")
 @Controller
 public class HomeController {
+
+    @Autowired
+    ArticleRepository articleRepository; 
+
+    @Autowired
+    FlavourRepository flavourRepository; 
     
     // Try template
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String getArticles(Model model) {
+    public String getAllLists(Model model) {
+        // Get the lists
+        model.addAttribute("articles", articleRepository.findAll());
+        model.addAttribute("flavours", flavourRepository.findAll());
+        model.addAttribute("flavour", new Flavour());
+
         return "index";
     }
 
-    // @RequestMapping(value = "/iceSelection", method = RequestMethod.GET)
-    // public ResponseEntity<List<Article>> getAllArticles(){
-    //     List<Article> articles = new ArrayList<>();
-    //     for (Article a : articleRepository.findAll()){
-    //         articles.add(a);
-    //     }
-        
+    //Just a redirect if flavour gets added
+    @RequestMapping(value = "/ice/addFlavour", method = RequestMethod.POST)
+    public String addFlavour(@ModelAttribute("flavour") Flavour flavour) {
+        System.out.println("something");
+        for(Flavour f : flavourRepository.findAll()){
+            if(f.getName().equals(flavour.getName())){
+                return "index";
+            }
+        }
 
-    //     if (articles.isEmpty()){
-    //         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    //     }
+        if (flavour.getDescription() == "" || flavour.getName() == "" ){
+            return "index";
+        }
 
-    //     return new ResponseEntity<>(articles, HttpStatus.OK);
-    // }
+        flavourRepository.save(flavour);
+        return "index";
+    }
+    
+    /* 
+    Returns catchable Response HTML OK addFlavour
+    @RequestMapping(value = "/ice/addFlavour", method = RequestMethod.POST)
+    public ResponseEntity<String> addFlavour(@ModelAttribute("flavour") Flavour flavour) {
+        System.out.println("something");
+        for(Flavour f : flavourRepository.findAll()){
+            if(f.getName().equals(flavour.getName())){
+                return ResponseEntity.badRequest().body("");
+            }
+        }
+
+        if (flavour.getDescription() == "" || flavour.getName() == "" ){
+            return ResponseEntity.badRequest().body("");
+        }
+
+        flavourRepository.save(flavour);
+        return ResponseEntity.ok().body("");
+    }
+    */
+
+    //Just a redirect if flavour gets delete
+    @RequestMapping(value = "/ice/deleteFlavour/{id}", method = RequestMethod.POST)
+    public String deleteFlavour(@PathVariable("id") long id){
+        flavourRepository.deleteById(id);
+        return "redirect:/index";
+    }
+    
+    /* 
+    Returns catchable Response HTML OK deleteFlavour
+    @RequestMapping(value = "/ice/deleteFlavour/{id}", method = RequestMethod.POST)
+    public ResponseEntity<String> deleteFlavour(@PathVariable("id") long id){
+        flavourRepository.deleteById(id);
+        return ResponseEntity.ok().body("");
+    }
+    */
 
     // @PostMapping("/articles")
     // public ResponseEntity<Article> getArticle(@RequestBody Article article){

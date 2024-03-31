@@ -2,7 +2,20 @@
 <html lang="en", xmlns:th="http://www.thymeleaf.org">
     <body>
         <div th:fragment="ice">
-            <h1>Eis hier</h1>
+            <h1>Eis bhier</h1>
+            <button tabindex="0" id="saveButton" type="submit" >Save</button>
+
+            <form method="POST" th:action="@{/ice/addFlavour}" th:object="${flavour}" id="iceCreamForm">
+                <div>
+                    <label>Ice Cream</label>
+                    <div>
+                      <input name="IceCream[Name]" placeholder="Name" type="text" th:field="*{name}">
+                      <input name="IceCream[Description]" placeholder="Description" type="text" th:field="*{description}">
+                    </div>
+                </div>
+                <button tabindex="0" id="saveButton" type="submit" >Save</button>
+            </form>
         </div>
     </body>
+        
 </html>
