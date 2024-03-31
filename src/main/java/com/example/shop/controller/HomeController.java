@@ -55,16 +55,16 @@ public class HomeController {
         System.out.println("something");
         for(Flavour f : flavourRepository.findAll()){
             if(f.getName().equals(flavour.getName())){
-                return "index";
+                return "ice :: ice";
             }
         }
 
         if (flavour.getDescription() == "" || flavour.getName() == "" ){
-            return "index";
+            return "ice :: ice";
         }
 
         flavourRepository.save(flavour);
-        return "index";
+        return "ice :: ice";
     }
     
     /* 

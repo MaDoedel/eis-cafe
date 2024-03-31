@@ -10,4 +10,20 @@ window.onload = function() {
             document.getElementById("content-"+ i).classList.add("selected")
         });
     }
+
+    function onIceCreamFormSubmit(e) {
+        e.preventDefault();
+        $.ajax({
+            url: '/ice/addFlavour',
+            type: 'post',
+            data:$('#iceCreamForm').serialize(),
+            success:function(data){
+                new_content = $($.parseHTML(data))
+                $("#content-1").html(new_content.html())
+                $('#iceCreamForm').submit(onIceCreamFormSubmit)
+            }
+        });
+    }
+
+    $('#iceCreamForm').submit(onIceCreamFormSubmit);
 }
