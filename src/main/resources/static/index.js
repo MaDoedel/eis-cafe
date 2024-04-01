@@ -4,7 +4,7 @@ window.onload = function() {
             url: '/ice',
             type: 'get',
             success:function(new_content){
-                $("#content-1").html(new_content)
+                $("#tab-1").html(new_content)
                 setAllBinds()
             },
             error: function(){
