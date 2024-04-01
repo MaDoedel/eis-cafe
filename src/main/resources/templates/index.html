@@ -4,14 +4,14 @@
     <body>
         <div th:replace="~{navbar :: navbar(elems_left=${ {'Start', 'Eis', 'Getränke'} }, elems_right=${ {'Jobs'} }, index_selected=0)}"></div>
     
-        <div class="content">
-          <div th:insert="~{home :: home}" id="content-0" class="selected"></div>
+        <div class="tab-content">
+          <div th:insert="~{home :: home}" id="tab-0" class="tab-pane fade show active"></div>
 
-          <div th:insert="~{ice :: ice(flavours=${flavours}, articles=${articles})}" id="content-1"></div>
+          <div th:insert="~{ice :: ice(flavours=${flavours}, articles=${articles})}" class="tab-pane fade" id="tab-1"></div>
 
-          <div th:insert="~{drinks :: drinks(drinks=drinks)}" id="content-2"></div>
+          <div th:insert="~{drinks :: drinks(drinks=drinks)}" id="tab-2" class="tab-pane fade"></div>
 
-          <div id="content-3"><H2>Jobs hier</H2></div>
+          <div id="tab-3" class="tab-pane fade"><H2>Jobs hier</H2></div>
         </div>
       </body>
 </html>

@@ -1,20 +1,30 @@
 <!DOCTYPE html>
 <html lang="en", xmlns:th="http://www.thymeleaf.org">
     <body>
-        <div th:fragment="navbar" class="navbar" id="navbar" th:with="index_selected=${index_selected} ?: 0">
-            <img src="image.png" class="logo" alt="Logo">
-            <div class="left" 
-                th:each="elem, iter : ${elems_left}" 
-                th:classappend="${iter.index == index_selected} ? 'selected' : ''"
-                th:text="${elem}"
-                th:id="'nav-'+${iter.index}"
-                ></div>
-            <div class="right" 
+        <div th:fragment="navbar" th:with="index_selected=${index_selected} ?: 0">
+            
+            <div class="nav nav-tabs">
+                <a class="nav-item nav-link" th:onclick="|event.preventDefault();$(&quot;.nav-item[href='#tab-${index_selected}']&quot;).click();|">
+                    <img src="image.png" class="logo" alt="Logo">
+                </a>
+                <a class="nav-item nav-link" 
+                    id = "home"
+                    data-toggle="tab"
+                    th:each="elem, iter : ${elems_left}" 
+                    th:classappend="${iter.index == index_selected} ? 'active' : ''"
+                    th:text="${elem}"
+                    th:href="'#tab-'+${iter.index}"
+                ></a>
+
+                <a class="nav-item nav-link"
+                    data-toggle="tab"
                 th:each="elem, iter : ${elems_right}" 
-                th:classappend="${iter.index+#lists.size(elems_left) == index_selected} ? 'selected' : ''"
+                th:classappend="${iter.index+#lists.size(elems_left) == index_selected} ? 'active' : ''"
                 th:text="${elem}"
-                th:id="'nav-'+${iter.index+#lists.size(elems_left)}"
-                ></div>
+                th:href="'#tab-'+${iter.index+#lists.size(elems_left)}"
+                ></a>
+            </div>
+            
         </div>
     </body>
 </html>
