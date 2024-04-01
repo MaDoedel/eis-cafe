@@ -3,7 +3,7 @@
     <body>
         <div th:fragment="navbar" th:with="index_selected=${index_selected} ?: 0">
             
-            <div class="nav nav-tabs">
+            <div class="nav nav-tabs d-flex flew-row">
                 <a class="nav-item nav-link" th:onclick="|event.preventDefault();$(&quot;.nav-item[href='#tab-${index_selected}']&quot;).click();|">
                     <img src="image.png" class="logo" alt="Logo">
                 </a>
@@ -15,14 +15,16 @@
                     th:text="${elem}"
                     th:href="'#tab-'+${iter.index}"
                 ></a>
+            
 
                 <a class="nav-item nav-link"
                     data-toggle="tab"
-                th:each="elem, iter : ${elems_right}" 
-                th:classappend="${iter.index+#lists.size(elems_left) == index_selected} ? 'active' : ''"
-                th:text="${elem}"
-                th:href="'#tab-'+${iter.index+#lists.size(elems_left)}"
+                    th:each="elem, iter : ${elems_right}" 
+                    th:classappend="|${iter.index+#lists.size(elems_left) == index_selected ? 'active' : ''} ${iter.index == 0 ? 'ml-auto' : ''}|"
+                    th:text="${elem}"
+                    th:href="'#tab-'+${iter.index+#lists.size(elems_left)}"
                 ></a>
+
             </div>
             
         </div>
