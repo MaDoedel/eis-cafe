@@ -2,31 +2,31 @@
 <html lang="en", xmlns:th="http://www.thymeleaf.org">
     <body>
         <div th:fragment="navbar" th:with="index_selected=${index_selected} ?: 0">
-            
-            <div class="nav nav-tabs d-flex flew-row">
-                <a class="nav-item nav-link" th:onclick="|event.preventDefault();$(&quot;.nav-item[href='#tab-${index_selected}']&quot;).click();|">
-                    <img src="image.png" class="logo" alt="Logo">
-                </a>
-                <a class="nav-item nav-link" 
+            <nav class="nav nav-pills d-flex flew-row align-items-center flex-nowrap overflow-x-visible">
+                <button class="nav-link" th:onclick="|event.preventDefault();$(&quot;.nav-link[data-bs-target='#tab-${index_selected}']&quot;).click();|">
+                    <img src="image.png" class="logo" alt="Logo" style="width: 10vh">
+                </button>
+                <button class="nav-link fs-2" 
                     id = "home"
-                    data-toggle="tab"
+                    data-bs-toggle="tab"
                     th:each="elem, iter : ${elems_left}" 
-                    th:classappend="${iter.index == index_selected} ? 'active' : ''"
+                    th:classappend="|${iter.index == index_selected ? 'active' : ''}
+                                    ${iter.index == 0 ? 'ms-3' : ''}|"
                     th:text="${elem}"
-                    th:href="'#tab-'+${iter.index}"
-                ></a>
+                    th:attr="data-bs-target='#tab-'+${iter.index}"
+                ></button>
             
-
-                <a class="nav-item nav-link"
-                    data-toggle="tab"
+                <button class="nav-link fs-2"
+                    data-bs-toggle="tab"
                     th:each="elem, iter : ${elems_right}" 
-                    th:classappend="|${iter.index+#lists.size(elems_left) == index_selected ? 'active' : ''} ${iter.index == 0 ? 'ml-auto' : ''}|"
+                    th:classappend="|${iter.index+#lists.size(elems_left) == index_selected ? 'active' : ''} 
+                                    ${iter.index == 0 ? 'ms-auto' : ''}
+                                    ${iter.index==#lists.size(elems_right)-1 ? 'me-3' : ''}
+                                    |"
                     th:text="${elem}"
-                    th:href="'#tab-'+${iter.index+#lists.size(elems_left)}"
-                ></a>
-
-            </div>
-            
+                    th:attr="data-bs-target='#tab-'+${iter.index+#lists.size(elems_left)}"
+                ></button>
+            </nav>
         </div>
     </body>
 </html>
