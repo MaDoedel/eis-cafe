@@ -1,4 +1,4 @@
-window.onload = function() {
+$(document).ready( function() {
     function refetchIce() {
         $.ajax({
             url: '/ice',
@@ -48,4 +48,4 @@ window.onload = function() {
     }
 
     setAllBinds()
-}
+})
