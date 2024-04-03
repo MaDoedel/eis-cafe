@@ -3,7 +3,7 @@
     <body>
         <div th:fragment="navbar" th:with="index_selected=${index_selected} ?: 0" class="d-flex flex-row">
             <button class="nav-link" th:onclick="|event.preventDefault();$(&quot;.nav-link[data-bs-target='#tab-${index_selected}']&quot;).click();|">
-                <img src="image.png" class="logo" alt="Logo" style="width: 10vh">
+                <img src="image.png" class="logo" alt="Logo" style="width: 30vw; max-width: 150px">
             </button>
             <nav id="navbar" class="nav nav-pills d-flex flex-row flex-fill align-items-center flex-nowrap overflow-x-visible">
                 <button class="nav-link fs-2" 

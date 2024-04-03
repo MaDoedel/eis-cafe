@@ -3,7 +3,7 @@
     <head th:replace="~{head :: head}">
     <body>
         <div th:replace="~{navbar :: navbar(elems_left=${ {'Start', 'Eis', 'Getränke'} }, elems_right=${ {'Jobs'} }, index_selected=0)}"></div>
-    
+        <hr>
         <div class="tab-content">
           <div th:insert="~{home :: home}" class="tab-pane fade show active" id="tab-0"></div>
 
