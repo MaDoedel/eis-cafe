@@ -2,32 +2,46 @@
 <html lang="en", xmlns:th="http://www.thymeleaf.org">
     <body>
         <div th:fragment="navbar" th:with="index_selected=${index_selected} ?: 0" class="d-flex flex-row">
-            <button class="nav-link" th:onclick="|event.preventDefault();$(&quot;.nav-link[data-bs-target='#tab-${index_selected}']&quot;).click();|">
-                <img src="image.png" class="logo" alt="Logo" style="width: 30vw; max-width: 150px">
-            </button>
-            <nav id="navbar" class="nav nav-pills d-flex flex-row flex-fill align-items-center flex-nowrap overflow-x-visible">
-                <button class="nav-link fs-2" 
-                    id = "home"
-                    data-bs-toggle="tab"
-                    th:each="elem, iter : ${elems_left}" 
-                    th:classappend="|${iter.index == index_selected ? 'active' : ''}
-                                    ${iter.index == 0 ? 'ms-3' : ''}|"
-                    th:text="${elem}"
-                    th:attr="data-bs-target='#tab-'+${iter.index}"
-                ></button>
-            
-                <button class="nav-link fs-2"
-                    data-bs-toggle="tab"
-                    th:each="elem, iter : ${elems_right}" 
-                    th:classappend="|${iter.index+#lists.size(elems_left) == index_selected ? 'active' : ''} 
-                                    ${iter.index == 0 ? 'ms-auto' : ''}
-                                    ${iter.index==#lists.size(elems_right)-1 ? 'me-3' : ''}
-                                    |"
-                    th:text="${elem}"
-                    th:attr="data-bs-target='#tab-'+${iter.index+#lists.size(elems_left)}"
-                ></button>
+           
+            <nav id="navbar" class="navbar navbar-expand-sm">
+                <button class="navbar-brand" th:onclick="|event.preventDefault();$(&quot;.nav-link[data-bs-target='#tab-${index_selected}']&quot;).get(0).click();|">
+                    <img src="image.png" class="logo" alt="Logo" style="width: 150px;">
+                </button>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+                    <span class="navbar-toggler-icon"></span>
+                  </button>
+
+                <div class="navbar-collapse collapse" id="collapsibleNavbar">
+                    <ul class="navbar-nav nav nav-pills">
+                        
+                        <li class="nav-item fs-2" 
+                            th:each="elem, iter : ${elems_left}" 
+                            >
+                                <a class="nav-link" 
+                                    data-bs-toggle="tab"
+                                    th:classappend="|${iter.index == index_selected ? 'active' : ''}
+                                        ${iter.index == 0 ? 'ms-3' : ''}|"
+                                    th:text="${elem}" 
+                                    th:attr="data-bs-target='#tab-'+${iter.index}"></a>
+                        </li>
+                
+                        <li class="nav-item fs-2"
+                            th:each="elem, iter : ${elems_right}"  
+                        >
+                            <a class="nav-link" 
+                                data-bs-toggle="tab"
+                                th:classappend="|${iter.index+#lists.size(elems_left) == index_selected ? 'active' : ''} 
+                                            ${iter.index == 0 ? 'ms-auto' : ''}
+                                            ${iter.index==#lists.size(elems_right)-1 ? 'me-3' : ''}
+                                            |"
+                                th:text="${elem}"
+                                th:attr="data-bs-target='#tab-'+${iter.index+#lists.size(elems_left)}"></a>
+                    
+                        </li>
+                    </ul>
+                </div>
             </nav>
-            <script type="text/javascript" src="navbar_responsive.js"></script>
         </div>
     </body>
 </html>
