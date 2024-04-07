@@ -3,15 +3,17 @@
     <body>
         <div th:fragment="ice">
             <h1>Eis</h1>
-            <ul>
-                <li th:each="flav : ${flavours}">
-                        <span th:text="${flav.name}">Name</span>
-                        <span th:text="${flav.description}">Description</span>
-                        <span th:text="${flav.isVegan}">isVegan</span>
-                        <button th:attr="data-id=${flav.id}" class="flavourDeleteButton">Delete</button>
-                </li>
-            </ul>
 
+            
+            <div class="container text-center">
+                <div class="row">
+                  <div class="col-4" th:each="flav : ${flavours}">
+                    <a th:text="${flav.name}"></a>
+                    <button th:attr="data-id=${flav.id}" class="flavourDeleteButton">Delete</button>
+                  </div>
+                </div>
+            </div>
+            
 
             <form method="POST" action="/ice/addFlavour" id="iceCreamForm">
                 <div>

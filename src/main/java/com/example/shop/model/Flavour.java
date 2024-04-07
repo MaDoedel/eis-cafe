@@ -4,6 +4,12 @@ import javax.annotation.processing.Generated;
 
 import jakarta.persistence.*;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
+
+
 @Entity
 @Table(name = "flavour")
 public class Flavour {
@@ -13,12 +19,15 @@ public class Flavour {
     private long id;
 
     @Column(name = "name")
+    @NotBlank(message = "Invalid name")
     private String name; 
 
     @Column(name = "isVegan")
+    @NotNull(message = "Invalid value")
     private boolean isVegan; 
 
     @Column(name = "description")
+    @NotBlank(message = "Invalid description")
     private String description; 
 
     public Flavour(){}

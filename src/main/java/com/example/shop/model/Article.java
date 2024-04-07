@@ -16,8 +16,9 @@ public class Article {
     @Column(name = "name")
     private String name; 
 
-    @Column(name = "type")
-    private String type; 
+    @ManyToOne
+    @JoinColumn(name = "type_id")
+    private Type type;
 
     @Column(name = "price")
     private BigDecimal price; 
@@ -27,7 +28,7 @@ public class Article {
 
     public Article(){}
 
-    public Article(String name, BigDecimal price, String type, String description){
+    public Article(String name, BigDecimal price, Type type, String description){
         this.name = name; 
         this.price = price;
         this.type = type; 
@@ -59,11 +60,11 @@ public class Article {
     }
 
 
-    public void setType(String type) {
+    public void setType(Type type) {
         this.type = type;
     }
 
-    public String getType() {
+    public Type getType() {
         return type;
     }
 

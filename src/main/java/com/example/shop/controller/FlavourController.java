@@ -1,16 +1,11 @@
 package com.example.shop.controller;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
-import com.example.shop.model.Article;
 import com.example.shop.model.Flavour;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
