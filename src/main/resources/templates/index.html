@@ -2,7 +2,7 @@
 <html lang="en", xmlns:th="http://www.thymeleaf.org">
     <head th:replace="~{head :: head}">
     <body>
-        <div th:replace="~{navbar :: navbar(elems_left=${ {'Start', 'Eis', 'Getränke'} }, elems_right=${ {'Jobs'} }, index_selected=0)}"></div>
+        <div th:replace="~{navbar :: navbar(elems_left=${ {'Start', 'Eis', 'Getränke'} }, elems_right=${ {'Jobs', 'Login'} }, index_selected=0)}"></div>
         <hr>
         <div class="tab-content">
           <div th:insert="~{home :: home}" class="tab-pane fade show active" id="tab-0"></div>
@@ -11,7 +11,10 @@
 
           <div th:insert="~{drinks :: drinks(drinks=drinks)}" class="tab-pane fade" id="tab-2"></div>
 
-          <div class="tab-pane fade" id="tab-3"><H2>Jobs hier</H2></div>
+          <div th:insert="~{jobs :: jobs}" class="tab-pane fade" id="tab-3"></div>
+
+          <div th:insert="~{login :: login}" class="tab-pane fade" id="tab-4"></div>
+
         </div>
 
       </body>

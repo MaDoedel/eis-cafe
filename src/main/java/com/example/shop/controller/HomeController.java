@@ -60,12 +60,18 @@ public class HomeController {
         return ResponseEntity.ok().body(null);
     }
 
+    @PostMapping(value = "/login", produces = "text/plain")
+    public ResponseEntity<String> login() {
+        return ResponseEntity.badRequest().body(null);
+    }
+    
     @GetMapping(value = "/ice")
     public String getFlavours(Model model) {
         model.addAttribute("flavours", flavourRepository.findAll());
         model.addAttribute("articles", articleRepository.findAll());
         return "ice :: ice(flavours=${flavours}, articles=${articles})";
     }
+    
 
     @DeleteMapping(value = "/ice/deleteFlavour/{id}")
     public ResponseEntity<String> deleteFlavour(@PathVariable("id") long id){

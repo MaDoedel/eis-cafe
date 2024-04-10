@@ -25,19 +25,18 @@
                                     th:text="${elem}" 
                                     th:attr="data-bs-target='#tab-'+${iter.index}"></a>
                         </li>
-                
-                        <li class="nav-item fs-2"
+
+                        <li class="nav-item fs-2 ms-auto"
                             th:each="elem, iter : ${elems_right}"  
-                        >
-                            <a class="nav-link" 
-                                data-bs-toggle="tab"
-                                th:classappend="|${iter.index+#lists.size(elems_left) == index_selected ? 'active' : ''} 
-                                            ${iter.index == 0 ? 'ms-auto' : ''}
-                                            ${iter.index==#lists.size(elems_right)-1 ? 'me-3' : ''}
-                                            |"
-                                th:text="${elem}"
-                                th:attr="data-bs-target='#tab-'+${iter.index+#lists.size(elems_left)}"></a>
-                    
+                            >
+                                <a class="nav-link" 
+                                    data-bs-toggle="tab"
+                                    th:classappend="|${iter.index+#lists.size(elems_left) == index_selected ? 'active' : ''} 
+                                                ${iter.index == 0 ? 'ms-auto' : ''}
+                                                ${iter.index==#lists.size(elems_right)-1 ? 'me-3' : ''}
+                                                text-end|"
+                                    th:text="${elem}"
+                                    th:attr="data-bs-target='#tab-'+${iter.index+#lists.size(elems_left)}"></a>
                         </li>
                     </ul>
                 </div>

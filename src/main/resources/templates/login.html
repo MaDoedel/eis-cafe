@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en", xmlns:th="http://www.thymeleaf.org">
+    <body>
+        <div th:fragment="login">
+            <form method="POST" th:action="@{/login}" id="userLoginForm">
+                <div class="me-3">
+                  <label for="nameInput" class="form-label">Username</label>
+                  <input type="text" class="form-control" id="username" aria-describedby="userHelp">
+                </div>
+                <div class="me-3">
+                  <label for="passwordInput" class="form-label">Password</label>
+                  <input type="password" class="form-control" id="password" aria-describedby="passwordHelp">
+                  <div id="passwordHelp" class="form-text">Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji. </div>
+                </div>
+                <button type="submit" class="btn btn-primary" id="userLogin">Sign Up</button>
+            </form>
+            <div id="liveAlertPlaceholder"></div>
+        </div>
+    </body>
+</html>

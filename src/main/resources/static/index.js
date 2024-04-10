@@ -14,8 +14,34 @@ $(document).ready( function() {
     }
 
     function setAllBinds() {
+        $('#userLoginForm').submit(onLoginSubmit);
         $('#iceCreamForm').submit(onIceCreamFormSubmit);
         $('.flavourDeleteButton').on("click", onFlavourDelete);
+    }
+
+    function onLoginSubmit(e){
+        e.preventDefault();
+        const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
+        const wrapper = document.createElement('div')
+
+        $.ajax({
+            url: '/login',
+            type: 'post',
+            success:function(){
+                alertPlaceholder.innerHTML = [
+                    `<div class="alert alert-success alert-dismissible" role="alert"> sexy </div>`
+                ].join('')
+                $('#userLoginForm').remove();
+                setAllBinds()
+            },
+            error: function(){
+                alertPlaceholder.innerHTML = [
+                    `<div class="alert alert-danger alert-dismissible" role="alert"> no no </div>`
+                ].join('')
+                $('#userLoginForm')[0].reset();
+                setAllBinds()
+            }
+        });            
     }
 
     function onIceCreamFormSubmit(e) {
