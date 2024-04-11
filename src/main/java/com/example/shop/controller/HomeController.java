@@ -1,5 +1,8 @@
 package com.example.shop.controller;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 import com.example.shop.model.Flavour;
@@ -14,9 +17,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.shop.repository.ArticleRepository;
 import com.example.shop.repository.FlavourRepository;
+
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 @CrossOrigin(origins = "https://localhost:8081")
 @Controller
@@ -36,7 +44,22 @@ public class HomeController {
     }
 
     @PostMapping(value = "/ice/addFlavour", produces = "text/plain")
-    public ResponseEntity<String> addFlavour(@ModelAttribute Flavour flavour, Model model) {
+    public ResponseEntity<String> addFlavour(@ModelAttribute Flavour flavour, @RequestParam("image") MultipartFile imageFile, Model model) throws IOException {
+        
+        // Does path exist
+        Path destinationFolder = Path.of("src", "main", "resources", "static", "images", "flavours");
+        if (!Files.exists(destinationFolder)) {
+            Files.createDirectories(destinationFolder);
+        }
+
+        // Check if there is any image
+        if (imageFile == null){
+            return ResponseEntity.badRequest().body("No image.");
+        }
+        if (!imageFile.getContentType().startsWith("image/")) {
+            return ResponseEntity.badRequest().body("Uploaded file is not an image.");
+        }
+
         // verify flavour is not already in the list
         // note: technically multiple users could add the same flavour at the same time,
         //       consider a lock for the database to prevent this
@@ -48,14 +71,20 @@ public class HomeController {
         }
 
         // save in persistent storage
+        String fileName;
         try {
             flavour = flavourRepository.save(flavour);
+            fileName = flavour.getId() + imageFile.getOriginalFilename().substring(imageFile.getOriginalFilename().lastIndexOf('.'));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error saving flavour");
         }
 
         // pass the updated list to the view
         flavours.add(flavour);
+
+        //safe image
+        Path filePath = destinationFolder.resolve(fileName);
+        Files.write(filePath, imageFile.getBytes());
         
         return ResponseEntity.ok().body(null);
     }

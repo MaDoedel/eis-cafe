@@ -1,4 +1,6 @@
 /src/main/resources/*.db
+/src/main/resources/static/images/*
+
 
 HELP.md
 .gradle

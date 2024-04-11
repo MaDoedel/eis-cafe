@@ -29,14 +29,14 @@ $(document).ready( function() {
             type: 'post',
             success:function(){
                 alertPlaceholder.innerHTML = [
-                    `<div class="alert alert-success alert-dismissible" role="alert"> sexy </div>`
+                    `<div class="alert alert-success alert-dismissible" role="alert"> You in </div>`
                 ].join('')
                 $('#userLoginForm').remove();
                 setAllBinds()
             },
             error: function(){
                 alertPlaceholder.innerHTML = [
-                    `<div class="alert alert-danger alert-dismissible" role="alert"> no no </div>`
+                    `<div class="alert alert-danger alert-dismissible" role="alert"> Naah </div>`
                 ].join('')
                 $('#userLoginForm')[0].reset();
                 setAllBinds()
@@ -46,10 +46,15 @@ $(document).ready( function() {
 
     function onIceCreamFormSubmit(e) {
         e.preventDefault();
+
+        var formData = new FormData($('#iceCreamForm')[0]);
+
         $.ajax({
             url: '/ice/addFlavour',
             type: 'post',
-            data:$('#iceCreamForm').serialize(),
+            data: formData,
+            contentType: false, // Set contentType to false, FormData will automatically set it correctly
+            processData: false, // Set processData to false to prevent jQuery from processing the data
             success: function(){
                 refetchIce()
             },

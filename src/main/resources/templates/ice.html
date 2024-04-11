@@ -12,11 +12,11 @@
                 </div>
             </div>
             
-            <form method="POST" action="/ice/addFlavour" id="iceCreamForm">
+            <form method="POST" action="/ice/addFlavour" id="iceCreamForm" enctype="multipart/form-data">
                 <div class="mb-3">
                     <input type="text" class="form-control" id="iceCreamNameInput" name="name" placeholder="Mintberry Crunch">
                     <input type="text" class="form-control" id="iceCreamDescriptionInput" name="description" placeholder="creamy">
-                    <input type="file" class="form-control" id="formFile" name="file" placeholder="/file">
+                    <input type="file" class="form-control" id="formFile" name="image" placeholder="/file">
                     <button tabindex="0" id="saveButton" type="submit" >Save</button>
                 </div>
             </form>
