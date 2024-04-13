@@ -1,5 +1,6 @@
 package com.example.shop.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,9 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.shop.repository.ArticleRepository;
 import com.example.shop.repository.FlavourRepository;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-
 @CrossOrigin(origins = "https://localhost:8081")
 @Controller
 public class HomeController {
@@ -46,7 +44,8 @@ public class HomeController {
     @PostMapping(value = "/ice/addFlavour", produces = "text/plain")
     public ResponseEntity<String> addFlavour(@ModelAttribute Flavour flavour, @RequestParam("image") MultipartFile imageFile, Model model) throws IOException {
         
-        // Does path exist
+        // Does path exist 
+        // TODO make this final
         Path destinationFolder = Path.of("src", "main", "resources", "static", "images", "flavours");
         if (!Files.exists(destinationFolder)) {
             Files.createDirectories(destinationFolder);
@@ -103,12 +102,24 @@ public class HomeController {
     
 
     @DeleteMapping(value = "/ice/deleteFlavour/{id}")
-    public ResponseEntity<String> deleteFlavour(@PathVariable("id") long id){
+    public ResponseEntity<String> deleteFlavour(@PathVariable("id") long id) throws IOException{
         try {
             flavourRepository.deleteById(id);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Error deleting flavour");
         }
+
+        Path destinationFolder = Path.of("src", "main", "resources", "static", "images", "flavours");
+        if (!Files.exists(destinationFolder)) {
+            Files.createDirectories(destinationFolder);
+        }
+
+        for (File file : destinationFolder.toFile().listFiles()){
+            if (file.getName().contains(Long.toString(id))) {
+                file.delete();
+            }
+        }
+
         return ResponseEntity.ok().body(null);
     }
 }

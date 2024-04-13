@@ -16,7 +16,7 @@ $(document).ready( function() {
     function setAllBinds() {
         $('#userLoginForm').submit(onLoginSubmit);
         $('#iceCreamForm').submit(onIceCreamFormSubmit);
-        $('.flavourDeleteButton').on("click", onFlavourDelete);
+        $('#flavourDeleteButton').on("click", onFlavourDelete);
     }
 
     function onLoginSubmit(e){
