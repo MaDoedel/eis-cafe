@@ -6,7 +6,7 @@
 
             <div class="container-fluid text-center">
                 <div class="row row-cols-4 g-2">
-                  <div class="col-sm-4" th:each="flav : ${flavours}">
+                  <div class="col-lg-4 sm-4 d-flex align-items-stretch" th:each="flav : ${flavours}">
                     <div class="card mb-3" style="max-width: 540px;">
                         <div class="row g-0">
                           <div class="col-md-4">
@@ -14,17 +14,36 @@
                           </div>
                           <div class="col-md-8">
                             <div class="card-body">
-                              <h5 class="card-title" th:text="${flav.name}"></h5>
-                              <p class="card-text" th:text="${flav.description}"></p>
-                              <button th:attr="data-id=${flav.id}" type="submit" class="btn btn-primary" id="flavourDeleteButton">Delete</button>
+                              <h5 class="card-title text-start" th:text="${flav.name}"></h5>
+                              <p class="card-text text-start" th:text="${flav.description}"></p>
+                              <button th:attr="data-id=${flav.id}" type="submit" class="btn btn-primary text-end" id="flavourDeleteButton">Delete</button>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 sm-4 d-flex align-items-stretch" >
+                    <form method="POST" action="/ice/addFlavour" id="iceCreamForm" enctype="multipart/form-data">
+                      <div class="card mb-3" style="max-width: 540px;">
+                        <div class="row g-0">
+                          <div class="col-md-4">
+                            <img th:src="@{${'/images/flavours/placeholder.png'}}" class="img-fluid rounded-start" style="object-fit: cover; height: 100%; cursor: pointer;" alt="..." id="placeholderImage" onclick="selectImage()">
+                            <input type="file" class="d-none" id="formFile" name="image" onchange="previewImage(event)">
+                          </div>
+                          <div class="col-md-8">
+                            <div class="card-body">
+                              <input type="text" class="form-control card-title text-start" id="iceCreamNameInput" name="name" placeholder="Mintberry Crunch">
+                              <input type="text" class="form-control card-text text-start" id="iceCreamDescriptionInput" name="description" placeholder="creamy">
+                              <button tabindex="0" id="saveButton" type="submit" class="btn btn-primary text-end" >Save</button>
                             </div>
                           </div>
                         </div>
                       </div>
+                    </form>
                   </div>
                 </div>
             </div>
-            
+<!--             
             <form method="POST" action="/ice/addFlavour" id="iceCreamForm" enctype="multipart/form-data">
                 <div class="mb-3">
                     <input type="text" class="form-control" id="iceCreamNameInput" name="name" placeholder="Mintberry Crunch">
@@ -32,7 +51,7 @@
                     <input type="file" class="form-control" id="formFile" name="image" placeholder="/file">
                     <button tabindex="0" id="saveButton" type="submit" >Save</button>
                 </div>
-            </form>
+            </form> -->
 
             <h1>Articles</h1>
             <ul>

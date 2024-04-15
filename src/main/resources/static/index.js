@@ -11,12 +11,17 @@ $(document).ready( function() {
                 alert("Failed refetching ice")
             }
         });
+        $('#iceCreamForm')[0].reset()
     }
 
     function setAllBinds() {
         $('#userLoginForm').submit(onLoginSubmit);
         $('#iceCreamForm').submit(onIceCreamFormSubmit);
         $('#flavourDeleteButton').on("click", onFlavourDelete);
+        $('#placeholderImage').on("click", selectImage);
+        $('#formFile').on("change", previewImage);
+
+
     }
 
     function onLoginSubmit(e){
@@ -43,6 +48,11 @@ $(document).ready( function() {
             }
         });            
     }
+
+    function selectImage() {
+        document.getElementById('formFile').click();
+        
+      }
 
     function onIceCreamFormSubmit(e) {
         e.preventDefault();
@@ -76,6 +86,18 @@ $(document).ready( function() {
                 alert(data.responseText)
             }
         });
+    }
+
+    function previewImage(event) {
+        event.preventDefault();
+        var input = event.target;
+        var reader = new FileReader();
+        reader.onload = function(){
+          var dataURL = reader.result;
+          var img = document.getElementById('placeholderImage'); 
+          img.src = dataURL;
+        };
+        reader.readAsDataURL(input.files[0]);
     }
 
     setAllBinds()
