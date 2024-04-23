@@ -17,10 +17,14 @@ $(document).ready( function() {
     function setAllBinds() {
         $('#userLoginForm').submit(onLoginSubmit);
         $('#iceCreamForm').submit(onIceCreamFormSubmit);
+        $('#jobsForm').submit(onJobsFormSubmit);
+
         $('#flavourDeleteButton').on("click", onFlavourDelete);
         $('#placeholderImage').on("click", selectImage);
         $('#formFile').on("change", previewImage);
 
+        $('#CVButton').on("click", selectCV);
+        $('#CVInput').on("change", previewCV);
 
     }
 
@@ -49,10 +53,66 @@ $(document).ready( function() {
         });            
     }
 
+
     function selectImage() {
         document.getElementById('formFile').click();
-        
-      }
+    }
+
+    function selectCV(e) {
+        e.preventDefault();
+        document.getElementById('CVInput').click();
+    }
+
+    function previewCV() {
+        var input = document.getElementById('CVInput');
+        var fileName = input.files[0].name;
+        var cvTitle = document.getElementById('cvTitle');
+        cvTitle.textContent = fileName;
+
+        if (file.type === 'application/pdf') {
+            var reader = new FileReader();
+
+            reader.onload = function(){
+                var dataURL = reader.result;
+                var img = document.getElementById('placeholderImage'); 
+                img.src = dataURL;
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function onJobsFormSubmit(e) {
+        e.preventDefault();
+
+        var formData = new FormData($('#jobsForm')[0]);
+        const alertPlaceholder = document.getElementById('jobsFormAlert')
+        const wrapper = document.createElement('div')
+
+        $.ajax({
+            url: '/jobs/apply',
+            type: 'post',
+            data: formData,
+            contentType: false,
+            processData: false, 
+            success: function(){
+                alertPlaceholder.innerHTML = [
+                    `<div class="alert alert-success" role="alert">
+                    <h4 class="alert-heading">Hervorragend!</h4>
+                    <p> Ihre Bewerbung ist hinterlegt und wir bedanken uns für Ihr Intersse!</p>
+                    <hr>
+                    <p class="mb-0">Zusätzlich zu Ihrer E-Mail Bestätigung, kontaktieren wir Sie in den nächsten Tagen per Mail.</p>
+                  </div>`
+                ].join('')
+                setAllBinds()
+            },
+            error: function(){
+                alertPlaceholder.innerHTML = [
+                    `<div class="alert alert-danger alert-dismissible" role="alert"> Naah </div>`
+                ].join('')
+                setAllBinds()
+            }
+        });
+    }
 
     function onIceCreamFormSubmit(e) {
         e.preventDefault();

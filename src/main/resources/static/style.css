@@ -18,3 +18,8 @@ body {
     flex-wrap: wrap;
     align-content: flex-start;
   }
+
+.custom-file-input {
+    visibility: hidden;
+    position: absolute;
+}

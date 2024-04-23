@@ -2,7 +2,49 @@
 <html lang="en", xmlns:th="http://www.thymeleaf.org">
     <body>
         <div th:fragment="jobs">
-            <a> jobs baby </a>
+            <div class="container-fluid">
+                <form method="POST" action="/jobs/apply" id="jobsForm" enctype="multipart/form-data">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Vorname</span>
+                        <input type="text" class="form-control" name="name" placeholder="Max" aria-label="name">
+                        <span class="input-group-text">Nachname</span>
+                        <input type="text" class="form-control" name="surname" placeholder="Mustermann" aria-label="surname">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="MailID">@</span>
+                        <input type="text" class="form-control"  name="email" placeholder="max.mustermann@example.com" aria-label="email">
+                    </div>
+                      
+                    <div class="input-group mb-3">
+                        <label class="input-group-text" for="inputGroupSelect01">Bewerbung für</label>
+                        <select class="form-select" id="inputGroupSelect01">
+                          <option selected>...</option>
+                          <option value="MiniJob">MiniJob</option>
+                          <option value="Praktikum">Praktikum</option>
+                        </select>
+                    </div>   
+
+                    <div class="container text-center">
+                        <div class="row ">
+                            <div class="col">
+                                <div class="card" style="width: 9rem;">
+                                    <img id="pdfPreviewImage" th:src="@{${'/images/flavours/placeholder.png'}}" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                      <h5 class="card-title">Lebenslauf</h5>
+                                      <p class="card-text" id="cvTitle">CV Title</p>
+                                      <button tabindex="0" id="CVButton" type="submit" class="btn btn-primary" >Change</button>
+                                      <input type="file" class="d-none"name="CV" id="CVInput" accept="application/pdf">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button tabindex="0" type="submit" class="btn btn-primary" >Anfrage senden</button>
+                </form>
+
+                <div id="jobsFormAlert"></div>
+            </div>   
         </div>
     </body>
 </html>
