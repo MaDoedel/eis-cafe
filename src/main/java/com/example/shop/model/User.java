@@ -8,8 +8,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
@@ -33,16 +35,12 @@ public class User {
     @NotBlank(message = "Invalid email")
     private String email; 
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
     private File cv;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<File> otherFiles;
-
-    // No-arg constructor (required by JPA)
     protected User() {}
 
-    // Constructor with parameters
     public User(String name, String surname, String email) {
         this.name = name;
         this.surname = surname;
@@ -55,6 +53,14 @@ public class User {
 
     public long getId() {
         return id;
+    }
+
+    public void setCV(File file) {
+        this.cv = file;
+    }
+
+    public File getCV() {
+        return cv;
     }
 
     public void setName(String name) {

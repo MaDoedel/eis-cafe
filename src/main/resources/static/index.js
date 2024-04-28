@@ -20,8 +20,11 @@ $(document).ready( function() {
         $('#jobsForm').submit(onJobsFormSubmit);
 
         $('#flavourDeleteButton').on("click", onFlavourDelete);
+        $(document).on("click",'.download-btn', onDownloadCV); // because of unique ID, should be the same for all buttons in a loop
+
         $('#placeholderImage').on("click", selectImage);
         $('#formFile').on("change", previewImage);
+        $('#floatingTextarea2').on("keyup", commentCharCounter);
 
         $('#CVButton').on("click", selectCV);
         $('#CVInput').on("change", previewCV);
@@ -148,6 +151,12 @@ $(document).ready( function() {
         });
     }
 
+    function onDownloadCV(e) {
+        e.preventDefault();
+        var userId = $(this).attr('data-id');
+        window.location.href = '/download/cv/' + userId;
+    }
+
     function previewImage(event) {
         event.preventDefault();
         var input = event.target;
@@ -159,6 +168,15 @@ $(document).ready( function() {
         };
         reader.readAsDataURL(input.files[0]);
     }
+
+    function commentCharCounter(val) {
+        var n = val.value.length;
+        if (n >= 254) {
+          val.value = val.value.substring(0, 254);
+        } else {
+          $('#TextAreaEval').text(254 - n);
+        }
+      };
 
     setAllBinds()
 })

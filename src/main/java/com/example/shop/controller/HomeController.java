@@ -1,15 +1,21 @@
 package com.example.shop.controller;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.core.io.Resource;
 import com.example.shop.model.Flavour;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.shop.repository.ArticleRepository;
 import com.example.shop.repository.FlavourRepository;
+import com.example.shop.repository.UserRepository;
 
 @CrossOrigin(origins = "https://localhost:8081")
 @Controller
@@ -33,11 +40,16 @@ public class HomeController {
 
     @Autowired
     FlavourRepository flavourRepository; 
+
+    @Autowired
+    UserRepository userRepository; 
     
     @GetMapping(value = "/")
     public String getAllLists(Model model) {
         model.addAttribute("articles", articleRepository.findAll());
         model.addAttribute("flavours", flavourRepository.findAll());
+        model.addAttribute("users", userRepository.findAll());
+
         return "index";
     }
 
@@ -121,5 +133,21 @@ public class HomeController {
         }
 
         return ResponseEntity.ok().body(null);
+    }
+
+    @GetMapping("/download/cv/{id}")
+    public ResponseEntity<Resource> downloadCV(@PathVariable("id") long id) throws IOException {
+
+        Path filePath = Paths.get(userRepository.findById(id).get().getCV().getUrl()).normalize();
+        System.out.println(filePath.toString());
+        Resource resource = new UrlResource(filePath.toUri());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + userRepository.findById(id).get().getCV().getFileName());
+        
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
     }
 }
