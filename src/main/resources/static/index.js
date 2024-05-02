@@ -1,4 +1,98 @@
+// Validation Bridge
+// left
+class AbstractFormValidator{
+    constructor(implList){
+        this.implList = implList;
+    }
+    isValid(){}
+}
+
+// Works fine for non responsive forms
+class IceForm extends AbstractFormValidator {
+    constructor(implList){
+        super(implList)
+    }
+    isValid(){
+        for (let implementation of this.implList) {
+            if (!implementation.check()){
+                return false; 
+            }
+        }
+        return true;
+    }
+}
+
+
+// Works for responsive forms
+class ListeningIceForm extends AbstractFormValidator {
+    isValid(){
+        for (let implementation of this.implList) {
+            implementation.check();
+        }
+    }
+}
+
+// right
+class AbstractCheckerImplementation{
+    constructor(name){
+        this.input = name;
+    }
+    check(){}
+}
+
+
+// decorator, is more a proxy, but... who cares 
+class CheckerDecorator extends AbstractCheckerImplementation{
+    constructor(checker){
+        super();
+        this.checker = checker;
+    }
+    check(){}
+}
+
+// InputListener
+class InputListenerDecorator extends CheckerDecorator{
+    constructor(checker, id){
+        super(checker);
+        this.id = id; 
+    }
+
+    check(){
+        const inputElement = document.getElementById(this.id);
+        var self = this;
+        inputElement.addEventListener('input', function() {
+            self.checker.input = inputElement.value;
+            if (!self.checker.check()) {
+                inputElement.classList.remove('is-valid');
+                inputElement.classList.add('is-invalid');
+            } else {
+                inputElement.classList.remove('is-invalid');
+                inputElement.classList.add('is-valid');
+            }
+        });     
+    }
+}
+
+
+
+class TextRegexChecker extends AbstractCheckerImplementation{
+    check(){
+        return /^[a-zA-Z]+$/.test(this.input);
+    }
+}
+
+class EmailRegexChecker extends AbstractCheckerImplementation{
+    check(){
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.input);
+    }
+}
+
+
+
+
 $(document).ready( function() {
+    // Validation Client-Side
+    
     function refetchIce() {
         $.ajax({
             url: '/ice',
@@ -15,12 +109,24 @@ $(document).ready( function() {
     }
 
     function setAllBinds() {
+        //var formData = new FormData($('#iceCreamForm')[0]);
+        const nameChecker = new TextRegexChecker('');
+        const descriptionChecker = new TextRegexChecker('');
+
+        // Create InputListenerDecorator instances
+        const nameInputDecorator = new InputListenerDecorator(nameChecker, 'iceCreamNameInput');
+        const descriptionInputDecorator = new InputListenerDecorator(descriptionChecker, 'iceCreamDescriptionInput');
+
+        // Create the IceForm
+        const iceForm = new ListeningIceForm([nameInputDecorator, descriptionInputDecorator]);
+        iceForm.isValid();
+
         $('#userLoginForm').submit(onLoginSubmit);
         $('#iceCreamForm').submit(onIceCreamFormSubmit);
         $('#jobsForm').submit(onJobsFormSubmit);
 
         $('#flavourDeleteButton').on("click", onFlavourDelete);
-        $(document).on("click",'.download-btn', onDownloadCV); // because of unique ID, should be the same for all buttons in a loop
+        $(document).on("click",'.cv-download-btn', onDownloadCV); // because of unique ID, should be the same for all buttons in a loop
 
         $('#placeholderImage').on("click", selectImage);
         $('#formFile').on("change", previewImage);
@@ -121,6 +227,12 @@ $(document).ready( function() {
         e.preventDefault();
 
         var formData = new FormData($('#iceCreamForm')[0]);
+        
+        // const iceForm = new IceForm([new TextRegexChecker(formData.get('name')), new TextRegexChecker(formData.get('description'))]);
+        // if(!iceForm.isValid()){
+        //     alert('nnnnnnah');
+        // }
+        
 
         $.ajax({
             url: '/ice/addFlavour',

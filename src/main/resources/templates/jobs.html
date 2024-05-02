@@ -74,7 +74,7 @@
                             <td><span th:text="${user.surname}"></span></td>
                             <td><span th:text="${user.email}"></span></td>
                             <td><span>
-                                <button th:attr="data-id=${user.id}" type="submit" class="btn btn-primary download-btn" th:text="${user.getCV().getFileName()}"></button>
+                                <button th:attr="data-id=${user.id}" type="submit" class="btn btn-primary cv-download-btn" th:text="${user.getCV().getFileName()}"></button>
                             </span></td>
                         </tr>
                     </tbody>
