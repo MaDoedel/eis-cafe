@@ -22,6 +22,8 @@ import ch.qos.logback.core.model.Model;
 @Controller
 public class JobsController {
 
+    static final Path urdir = Path.of("src", "main", "resources", "static", "user");
+
     @Autowired
     UserRepository userRepository; 
 
@@ -29,43 +31,48 @@ public class JobsController {
     FileRepository fileRepository; 
 
     @PostMapping(value = "/jobs/apply", produces = "text/plain")
-    public ResponseEntity<String> addUser(@ModelAttribute User user, @RequestParam("CV") MultipartFile pdfFile) throws IOException {
-        
-        // Does path exist 
-        // TODO make this final
-        Path destinationFolder = Path.of("src", "main", "resources", "static", "user");
-        if (!Files.exists(destinationFolder)) {
-            Files.createDirectories(destinationFolder);
+    public ResponseEntity<String> addUser(
+        @RequestParam("name") String name,
+        @RequestParam("email") String email,
+        @RequestParam("surname") String surname,
+        @RequestParam(value = "CV") MultipartFile pdfFile) throws IOException {
+            User user = new User(name, surname, email);
+
+            if (!Files.exists(urdir)) {
+                Files.createDirectories(urdir);
+            }
+
+            // Better check pdf again
+            if (pdfFile == null){
+                return ResponseEntity.badRequest().body("No CV.");
+            }
+            if (!pdfFile.getContentType().startsWith("application/pdf")) {
+                return ResponseEntity.badRequest().body("Uploaded file is not an pdf.");
+            }
+
+
+
+            // save in persistent storage
+            String fileName;
+            try {
+                System.out.println(user.getEmail());
+                user = userRepository.save(user);
+                fileName = user.getId() + pdfFile.getOriginalFilename().substring(pdfFile.getOriginalFilename().lastIndexOf('.'));
+            } catch (Exception e) {
+                e.printStackTrace();
+                return ResponseEntity.badRequest().body("Something went wrong");
+            }
+
+            //safe image
+            Path filePath = urdir.resolve(fileName);
+            Files.write(filePath, pdfFile.getBytes());
+
+            File file = new File(fileName, filePath.toString(), true);
+            file.setUser(user);
+            fileRepository.save(file);
+            
+            return ResponseEntity.ok().body(null);
         }
-
-        // Check if there is any image
-        if (pdfFile == null){
-            return ResponseEntity.badRequest().body("No CV.");
-        }
-        if (!pdfFile.getContentType().startsWith("application/pdf")) {
-            return ResponseEntity.badRequest().body("Uploaded file is not an pdf.");
-        }
-
-
-        // save in persistent storage
-        String fileName;
-        try {
-            System.out.println(user.getEmail());
-            user = userRepository.save(user);
-            fileName = user.getId() + pdfFile.getOriginalFilename().substring(pdfFile.getOriginalFilename().lastIndexOf('.'));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body("Something went wrong");
-        }
-
-        //safe image
-        Path filePath = destinationFolder.resolve(fileName);
-        Files.write(filePath, pdfFile.getBytes());
-
-        File file = new File(fileName, filePath.toString(), true);
-        file.setUser(user);
-        fileRepository.save(file);
-        
-        return ResponseEntity.ok().body(null);
-    }
+    
+    
 }

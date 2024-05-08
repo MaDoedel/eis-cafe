@@ -8,7 +8,7 @@ class AbstractFormValidator{
 }
 
 // Works fine for non responsive forms
-class IceForm extends AbstractFormValidator {
+class Form extends AbstractFormValidator {
     constructor(implList){
         super(implList)
     }
@@ -24,7 +24,7 @@ class IceForm extends AbstractFormValidator {
 
 
 // Works for responsive forms
-class ListeningIceForm extends AbstractFormValidator {
+class ListeningForm extends AbstractFormValidator {
     isValid(){
         for (let implementation of this.implList) {
             implementation.check();
@@ -34,8 +34,12 @@ class ListeningIceForm extends AbstractFormValidator {
 
 // right
 class AbstractCheckerImplementation{
-    constructor(name){
-        this.input = name;
+    constructor(id){
+        if (document.getElementById(id)) {
+            this.input = document.getElementById(id).value;
+        } else {
+            this.input = '';
+        }
     }
     check(){}
 }
@@ -73,7 +77,34 @@ class InputListenerDecorator extends CheckerDecorator{
     }
 }
 
+// TextAreaListener
+class TextAreaListenerDecorator extends CheckerDecorator{
+    constructor(checker, id){
+        super(checker);
+        this.id = id; 
+    }
 
+    check(){
+        const inputElement = document.getElementById(this.id);
+        var self = this;
+        inputElement.addEventListener('input', function() {
+            self.checker.input = inputElement.value;
+
+            if (!self.checker.check()) {
+                inputElement.value = inputElement.value.substring(0, 255);
+            }
+
+            document.getElementById('applicantCommentTextAreaCount').innerText = inputElement.value.length + '/255';
+        });     
+    }
+}
+
+
+class TextLengthChecker extends AbstractCheckerImplementation{
+    check(){
+        return this.input.length <= 255;
+    }
+}
 
 class TextRegexChecker extends AbstractCheckerImplementation{
     check(){
@@ -99,7 +130,12 @@ $(document).ready( function() {
             type: 'get',
             success:function(new_content){
                 $("#tab-1").html(new_content)
-                setAllBinds()
+                $('#iceCreamForm').submit(onIceCreamFormSubmit);
+                $('#placeholderImage').on("click", selectImage);
+                $('#formFile').on("change", previewImage);
+                ListeningIceForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'iceCreamNameInput'), new InputListenerDecorator(new TextRegexChecker(''), 'iceCreamDescriptionInput')]);
+                ListeningIceForm.isValid();
+
             },
             error: function(){
                 alert("Failed refetching ice")
@@ -110,27 +146,21 @@ $(document).ready( function() {
 
     function setAllBinds() {
         //var formData = new FormData($('#iceCreamForm')[0]);
-        const nameChecker = new TextRegexChecker('');
-        const descriptionChecker = new TextRegexChecker('');
+        const ListeningIceForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'iceCreamNameInput'), new InputListenerDecorator(new TextRegexChecker(''), 'iceCreamDescriptionInput')]);
+        const ListeningJobsForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'applicantNameInput'), new InputListenerDecorator(new TextRegexChecker(''), 'applicantSurnameInput'), new InputListenerDecorator(new EmailRegexChecker(''), 'applicantMailInput'), new TextAreaListenerDecorator(new TextLengthChecker(''), 'applicantCommentTextArea')]);
 
-        // Create InputListenerDecorator instances
-        const nameInputDecorator = new InputListenerDecorator(nameChecker, 'iceCreamNameInput');
-        const descriptionInputDecorator = new InputListenerDecorator(descriptionChecker, 'iceCreamDescriptionInput');
-
-        // Create the IceForm
-        const iceForm = new ListeningIceForm([nameInputDecorator, descriptionInputDecorator]);
-        iceForm.isValid();
+        ListeningIceForm.isValid();
+        ListeningJobsForm.isValid();
 
         $('#userLoginForm').submit(onLoginSubmit);
         $('#iceCreamForm').submit(onIceCreamFormSubmit);
         $('#jobsForm').submit(onJobsFormSubmit);
 
-        $('#flavourDeleteButton').on("click", onFlavourDelete);
+        $(document).on("click",'.flavour-delete-btn', onFlavourDelete); // because of unique ID, should be the same for all buttons in a loop
         $(document).on("click",'.cv-download-btn', onDownloadCV); // because of unique ID, should be the same for all buttons in a loop
 
         $('#placeholderImage').on("click", selectImage);
         $('#formFile').on("change", previewImage);
-        $('#floatingTextarea2').on("keyup", commentCharCounter);
 
         $('#CVButton').on("click", selectCV);
         $('#CVInput').on("change", previewCV);
@@ -150,14 +180,12 @@ $(document).ready( function() {
                     `<div class="alert alert-success alert-dismissible" role="alert"> You in </div>`
                 ].join('')
                 $('#userLoginForm').remove();
-                setAllBinds()
             },
             error: function(){
                 alertPlaceholder.innerHTML = [
                     `<div class="alert alert-danger alert-dismissible" role="alert"> Naah </div>`
                 ].join('')
                 $('#userLoginForm')[0].reset();
-                setAllBinds()
             }
         });            
     }
@@ -183,7 +211,7 @@ $(document).ready( function() {
 
             reader.onload = function(){
                 var dataURL = reader.result;
-                var img = document.getElementById('placeholderImage'); 
+                var img = document.getElementById('pdfPreviewCVImage'); 
                 img.src = dataURL;
             };
             reader.readAsDataURL(file);
@@ -192,10 +220,20 @@ $(document).ready( function() {
 
     function onJobsFormSubmit(e) {
         e.preventDefault();
+        const alertPlaceholder = document.getElementById('jobsFormAlert');
+        const jobsForm = new Form([new TextRegexChecker('applicantNameInput'), new TextRegexChecker('applicantSurnameInput'), new EmailRegexChecker('applicantMailInput'), new TextLengthChecker('applicantCommentTextArea')]);
+
+        
+        if (!jobsForm.isValid()){
+            const alertPlaceholder = document.getElementById('jobsFormAlert');
+            alertPlaceholder.innerHTML = [
+                `<div class="alert alert-danger alert-dismissible" role="alert"> Eingabe unvollständig </div>`
+            ].join('')
+            return;
+        }
+        
 
         var formData = new FormData($('#jobsForm')[0]);
-        const alertPlaceholder = document.getElementById('jobsFormAlert')
-        const wrapper = document.createElement('div')
 
         $.ajax({
             url: '/jobs/apply',
@@ -212,13 +250,11 @@ $(document).ready( function() {
                     <p class="mb-0">Zusätzlich zu Ihrer E-Mail Bestätigung, kontaktieren wir Sie in den nächsten Tagen per Mail.</p>
                   </div>`
                 ].join('')
-                setAllBinds()
             },
             error: function(){
                 alertPlaceholder.innerHTML = [
                     `<div class="alert alert-danger alert-dismissible" role="alert"> Naah </div>`
                 ].join('')
-                setAllBinds()
             }
         });
     }
@@ -228,10 +264,10 @@ $(document).ready( function() {
 
         var formData = new FormData($('#iceCreamForm')[0]);
         
-        // const iceForm = new IceForm([new TextRegexChecker(formData.get('name')), new TextRegexChecker(formData.get('description'))]);
-        // if(!iceForm.isValid()){
-        //     alert('nnnnnnah');
-        // }
+        const iceForm = new Form([new TextRegexChecker('iceCreamNameInput'), new TextRegexChecker('iceCreamDescriptionInput')]);
+        if(!iceForm.isValid()){
+            alert('nnnnnnah');
+        }
         
 
         $.ajax({
@@ -280,15 +316,6 @@ $(document).ready( function() {
         };
         reader.readAsDataURL(input.files[0]);
     }
-
-    function commentCharCounter(val) {
-        var n = val.value.length;
-        if (n >= 254) {
-          val.value = val.value.substring(0, 254);
-        } else {
-          $('#TextAreaEval').text(254 - n);
-        }
-      };
 
     setAllBinds()
 })

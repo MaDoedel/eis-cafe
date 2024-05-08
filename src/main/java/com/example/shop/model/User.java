@@ -36,7 +36,6 @@ public class User {
     private String email; 
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
     private File cv;
 
     protected User() {}

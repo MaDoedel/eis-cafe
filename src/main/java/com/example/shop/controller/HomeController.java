@@ -90,9 +90,6 @@ public class HomeController {
             return ResponseEntity.badRequest().body("Error saving flavour");
         }
 
-        // pass the updated list to the view
-        flavours.add(flavour);
-
         //safe image
         Path filePath = destinationFolder.resolve(fileName);
         Files.write(filePath, imageFile.getBytes());
@@ -118,6 +115,7 @@ public class HomeController {
         try {
             flavourRepository.deleteById(id);
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.internalServerError().body("Error deleting flavour");
         }
 

@@ -6,18 +6,19 @@
                     <div class="col-md-3">
                         <div class="input-group">
                             <span class="input-group-text">Vorname</span>
-                            <input type="text" class="form-control" name="name" placeholder="Max" aria-label="name" required>
+                            <input type="text" class="form-control" name="name" placeholder="Max" aria-label="name" id="applicantNameInput" required>
                         </div>
 
                         <div class="input-group">
                             <span class="input-group-text" id="MailID">@</span>
-                            <input type="text" class="form-control"  name="email" placeholder="max.mustermann@example.com" aria-label="email">
+                            <input type="text" class="form-control"  name="email" placeholder="max.mustermann@example.com" aria-label="email" id="applicantMailInput">
                             <div id="MailInputEval"></div>
                         </div>
 
                         <div class="form-floating">
-                            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
-                            <label for="floatingTextarea2">Comments</label>
+                            <textarea class="form-control" placeholder="Leave a comment here" id="applicantCommentTextArea" style="height: 100px"></textarea>
+                            <label for="applicantCommentInput">Kommentar</label>
+                            <small class="form-text text-muted" id="applicantCommentTextAreaCount">0/255</small>
                             <div id="TextAreaEval"></div>
                         </div>
                     </div>
@@ -25,13 +26,13 @@
                     <div class="col-md-3">
                         <div class="input-group">
                             <span class="input-group-text">Nachname</span>
-                            <input type="text" class="form-control" name="surname" placeholder="Mustermann" aria-label="surname" required>
+                            <input type="text" class="form-control" name="surname" placeholder="Mustermann" aria-label="surname" id="applicantSurnameInput" required>
                             <div id="SurnameInputEval"></div>
                         </div>
                       
                         <div class="input-group">
-                            <label class="input-group-text" for="inputGroupSelect01">Bewerbung für</label>
-                            <select class="form-select" id="inputGroupSelect01">
+                            <label class="input-group-text" for="applicantTypeInput">Bewerbung für</label>
+                            <select class="form-select" id="applicantTypeInput">
                                 <option selected>...</option>
                                 <option value="MiniJob">MiniJob</option>
                                 <option value="Praktikum">Praktikum</option>
@@ -41,12 +42,12 @@
                         
                         <div class="input-group">
                             <div class="card" style="width: 9rem;">
-                                <img id="pdfPreviewImage" th:src="@{${'/images/flavours/placeholder.png'}}" class="card-img-top" alt="...">
+                                <img id="pdfPreviewCVImage" th:src="@{${'/images/flavours/placeholder.png'}}" class="card-img-top" alt="...">
                                 <div class="card-body">
                                   <h5 class="card-title">Lebenslauf</h5>
                                   <p class="card-text" id="cvTitle">CV Title</p>
                                   <button tabindex="0" id="CVButton" type="submit" class="btn btn-primary" >Change</button>
-                                  <input type="file" class="d-none"name="CV" id="CVInput" accept="application/pdf">
+                                  <input type="file" class="d-none" name="CV" id="CVInput" accept="application/pdf">
                                 </div>
                             </div>
                             <div id="CVInputEval"></div>
@@ -55,8 +56,6 @@
                     <button tabindex="0" type="submit" class="btn btn-primary" >Anfrage senden</button>
                 </form>
                 <div id="jobsFormAlert"></div>
-
-
                 <table class="table">
                     <thead>
                       <tr>
