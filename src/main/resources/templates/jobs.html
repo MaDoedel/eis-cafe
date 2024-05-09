@@ -2,8 +2,9 @@
 <html lang="en", xmlns:th="http://www.thymeleaf.org">
     <body>
         <div th:fragment="jobs">
+            <div class="jobsContainer">
                 <form method="POST" action="/jobs/apply" id="jobsForm" enctype="multipart/form-data" class="row g-3">
-                    <div class="col-md-3">
+                    <div class="col-md-6">
                         <div class="input-group">
                             <span class="input-group-text">Vorname</span>
                             <input type="text" class="form-control" name="name" placeholder="Max" aria-label="name" id="applicantNameInput" required>
@@ -14,75 +15,86 @@
                             <input type="text" class="form-control"  name="email" placeholder="max.mustermann@example.com" aria-label="email" id="applicantMailInput">
                             <div id="MailInputEval"></div>
                         </div>
+                    </div>
 
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text">Nachname</span>
+                            <input type="text" class="form-control" name="surname" placeholder="Mustermann" aria-label="surname" id="applicantSurnameInput" required>
+                            <div id="SurnameInputEval"></div>
+                        </div>
+                    
+                        <div class="input-group">
+                            <label class="input-group-text" for="applicantTypeInput">Bewerbung für</label>
+                            <select class="form-select" name="applicantType" id="applicantTypeInput">
+                                <option selected value="MiniJob">MiniJob</option>
+                                <option value="Praktikum">Praktikum</option>
+                            </select>
+                            <div id="SelectInputEval"></div>
+                        </div>   
+                    </div>
+
+                    <div class="col-md-12">
                         <div class="form-floating">
-                            <textarea class="form-control" placeholder="Leave a comment here" id="applicantCommentTextArea" style="height: 100px"></textarea>
+                            <textarea class="form-control" name="comment" placeholder="Leave a comment here" id="applicantCommentTextArea" style="height: 100px"></textarea>
                             <label for="applicantCommentInput">Kommentar</label>
                             <small class="form-text text-muted" id="applicantCommentTextAreaCount">0/255</small>
                             <div id="TextAreaEval"></div>
                         </div>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-4">
+                    </div>
+                    
+                    <div class="col-md-4">
                         <div class="input-group">
-                            <span class="input-group-text">Nachname</span>
-                            <input type="text" class="form-control" name="surname" placeholder="Mustermann" aria-label="surname" id="applicantSurnameInput" required>
-                            <div id="SurnameInputEval"></div>
-                        </div>
-                      
-                        <div class="input-group">
-                            <label class="input-group-text" for="applicantTypeInput">Bewerbung für</label>
-                            <select class="form-select" id="applicantTypeInput">
-                                <option selected>...</option>
-                                <option value="MiniJob">MiniJob</option>
-                                <option value="Praktikum">Praktikum</option>
-                            </select>
-                            <div id="SelectInputEval"></div>
-                        </div>   
-                        
-                        <div class="input-group">
-                            <div class="card" style="width: 9rem;">
+                            <div class="card" style="width: 14rem;">
                                 <img id="pdfPreviewCVImage" th:src="@{${'/images/flavours/placeholder.png'}}" class="card-img-top" alt="...">
                                 <div class="card-body">
-                                  <h5 class="card-title">Lebenslauf</h5>
-                                  <p class="card-text" id="cvTitle">CV Title</p>
-                                  <button tabindex="0" id="CVButton" type="submit" class="btn btn-primary" >Change</button>
-                                  <input type="file" class="d-none" name="CV" id="CVInput" accept="application/pdf">
+                                    <h5 class="card-title">Lebenslauf</h5>
+                                    <p class="card-text" id="cvTitle">CV Title</p>
+                                    <button tabindex="0" id="CVButton" type="submit" class="btn btn-primary" >Change</button>
+                                    <input type="file" class="d-none" name="CV" id="CVInput" accept="application/pdf">
                                 </div>
                             </div>
                             <div id="CVInputEval"></div>
                         </div>
                     </div>
+
+                    <div class="col-md-4">
+                    </div>
+
                     <button tabindex="0" type="submit" class="btn btn-primary" >Anfrage senden</button>
                 </form>
                 <div id="jobsFormAlert"></div>
-                <table class="table">
-                    <thead>
-                      <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Nachname</th>
-                        <th scope="col">E-Mail</th>
-                        <th scope="col">Lebenslauf</th>
-                        <th scope="col"></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="jobRequest : ${jobRequests}">
-                            <th scope="row" th:text="${jobRequest.id}"></th>
-                            <td><span th:text="${jobRequest.getUser().getName()}"></span></td>
-                            <td><span th:text="${jobRequest.getUser().getSurname()}"></span></td>
-                            <td><span th:text="${jobRequest.getUser().getEmail()}"></span></td>
-                            <td><span>
-                                <button th:attr="data-id=${jobRequest.getId()}" type="submit" class="btn btn-primary cv-download-btn" th:text="${jobRequest.getFile().getFileName()}"></button>
-                            </span></td>
-                            <td><span>
-                                <button th:attr="data-id=${jobRequest.getId()}" type="submit" class="btn btn-primary request-accept-btn">Annehmen</button>
-                                <button th:attr="data-id=${jobRequest.getId()}" type="submit" class="btn btn-primary request-reject-btn">Ablehnen</button>
-                            </span></td>
-                        </tr>
-                    </tbody>
-                </table>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Nachname</th>
+                    <th scope="col">E-Mail</th>
+                    <th scope="col">Lebenslauf</th>
+                    <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="jobRequest : ${jobRequests}">
+                        <th scope="row" th:text="${jobRequest.id}"></th>
+                        <td><span th:text="${jobRequest.getUser().getName()}"></span></td>
+                        <td><span th:text="${jobRequest.getUser().getSurname()}"></span></td>
+                        <td><span th:text="${jobRequest.getUser().getEmail()}"></span></td>
+                        <td><span>
+                            <button th:attr="data-id=${jobRequest.getId()}" type="submit" class="btn btn-primary cv-download-btn" th:text="${jobRequest.getFile().getFileName()}"></button>
+                        </span></td>
+                        <td><span>
+                            <button th:attr="data-id=${jobRequest.getId()}" type="submit" class="btn btn-primary request-accept-btn">Annehmen</button>
+                            <button th:attr="data-id=${jobRequest.getId()}" type="submit" class="btn btn-primary request-reject-btn">Ablehnen</button>
+                        </span></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </body>
 </html>

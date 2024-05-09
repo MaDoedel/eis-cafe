@@ -24,7 +24,6 @@ public class JobRequest {
     private File file;
 
     @Column(name = "comment")
-    @NotBlank(message = "Invalid comment")
     private String comment; 
 
     @Column(name = "jobDescription")

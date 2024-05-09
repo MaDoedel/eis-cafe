@@ -112,6 +112,12 @@ class TextRegexChecker extends AbstractCheckerImplementation{
     }
 }
 
+class CommentRegexChecker extends AbstractCheckerImplementation{
+    check(){
+        return /^[a-zA-Z0-9\s\S]*$/.test(this.input);
+    }
+}
+
 class EmailRegexChecker extends AbstractCheckerImplementation{
     check(){
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.input);
@@ -150,7 +156,7 @@ $(document).ready( function() {
                 $('#jobsForm').submit(onJobsFormSubmit);
                 $('#CVButton').on("click", selectCV);
                 $('#CVInput').on("change", previewCV);
-                const ListeningJobsForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'applicantNameInput'), new InputListenerDecorator(new TextRegexChecker(''), 'applicantSurnameInput'), new InputListenerDecorator(new EmailRegexChecker(''), 'applicantMailInput'), new TextAreaListenerDecorator(new TextLengthChecker(''), 'applicantCommentTextArea')]);
+                const ListeningJobsForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'applicantNameInput'), new InputListenerDecorator(new TextRegexChecker(''), 'applicantSurnameInput'), new InputListenerDecorator(new EmailRegexChecker(''), 'applicantMailInput'), new TextAreaListenerDecorator(new CommentRegexChecker(''), 'applicantCommentTextArea')]);
                 ListeningJobsForm.isValid();
 
             },
@@ -164,7 +170,7 @@ $(document).ready( function() {
     function setAllBinds() {
         //var formData = new FormData($('#iceCreamForm')[0]);
         const ListeningIceForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'iceCreamNameInput'), new InputListenerDecorator(new TextRegexChecker(''), 'iceCreamDescriptionInput')]);
-        const ListeningJobsForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'applicantNameInput'), new InputListenerDecorator(new TextRegexChecker(''), 'applicantSurnameInput'), new InputListenerDecorator(new EmailRegexChecker(''), 'applicantMailInput'), new TextAreaListenerDecorator(new TextLengthChecker(''), 'applicantCommentTextArea')]);
+        const ListeningJobsForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'applicantNameInput'), new InputListenerDecorator(new TextRegexChecker(''), 'applicantSurnameInput'), new InputListenerDecorator(new EmailRegexChecker(''), 'applicantMailInput'), new TextAreaListenerDecorator(new CommentRegexChecker(''), 'applicantCommentTextArea')]);
 
         ListeningIceForm.isValid();
         ListeningJobsForm.isValid();
@@ -282,7 +288,7 @@ $(document).ready( function() {
     function onJobsFormSubmit(e) {
         e.preventDefault();
         const alertPlaceholder = document.getElementById('jobsFormAlert');
-        const jobsForm = new Form([new TextRegexChecker('applicantNameInput'), new TextRegexChecker('applicantSurnameInput'), new EmailRegexChecker('applicantMailInput'), new TextLengthChecker('applicantCommentTextArea')]);
+        const jobsForm = new Form([new TextRegexChecker('applicantNameInput'), new TextRegexChecker('applicantSurnameInput'), new EmailRegexChecker('applicantMailInput'), new CommentRegexChecker('applicantCommentTextArea')]);
 
         
         if (!jobsForm.isValid()){
@@ -311,6 +317,7 @@ $(document).ready( function() {
                     <p class="mb-0">Zusätzlich zu Ihrer E-Mail Bestätigung, kontaktieren wir Sie in den nächsten Tagen per Mail.</p>
                   </div>`
                 ].join('')
+                $('#jobsForm')[0].reset();
             },
             error: function(){
                 alertPlaceholder.innerHTML = [

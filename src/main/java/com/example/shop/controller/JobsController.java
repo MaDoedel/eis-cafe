@@ -48,6 +48,8 @@ public class JobsController {
         @RequestParam("name") String name,
         @RequestParam("email") String email,
         @RequestParam("surname") String surname,
+        @RequestParam("comment") String comment, 
+        @RequestParam("applicantType") String applicantType,
         @RequestParam(value = "CV") MultipartFile pdfFile) throws IOException {
             User user = new User(name, surname, email, "pending");
 
@@ -83,7 +85,7 @@ public class JobsController {
             File file = new File(fileName, filePath.toString());
             fileRepository.save(file);
 
-            JobRequest jobRequest = new JobRequest(user, file, "somecomment", "something");
+            JobRequest jobRequest = new JobRequest(user, file, ((comment == null) || (comment.length() == 0)) ? "" : comment, applicantType);
             jobRequestRepository.save(jobRequest);
             
             return ResponseEntity.ok().body(null);
