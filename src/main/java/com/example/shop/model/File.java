@@ -27,21 +27,11 @@ public class File {
     @NotBlank(message = "Invalid url")  
     private String url;
 
-    @Column(name = "isCV")
-    @NotNull(message = "Invalid filename")
-    private boolean isCV;
-
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "user_id")
-    private User user;
-
     public File(){}
 
-    public File(String fileName, String url, boolean isCV){
+    public File(String fileName, String url){
         this.fileName = fileName; 
         this.url = url;
-        this.isCV = isCV; 
     }
 
     public void setId(long id) {
@@ -66,22 +56,5 @@ public class File {
 
     public String getUrl() {
         return url;
-    }
-
-
-    public void setIsCV(boolean isCV) {
-        this.isCV = isCV;
-    }
-
-    public boolean getIsCV() {
-        return isCV;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public User getUser() {
-        return user;
     }
 }

@@ -29,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.shop.repository.ArticleRepository;
 import com.example.shop.repository.FlavourRepository;
+import com.example.shop.repository.JobRequestRepository;
 import com.example.shop.repository.UserRepository;
 
 @CrossOrigin(origins = "https://localhost:8081")
@@ -43,12 +44,15 @@ public class HomeController {
 
     @Autowired
     UserRepository userRepository; 
+
+    @Autowired
+    JobRequestRepository jobRequestRepository; 
     
     @GetMapping(value = "/")
     public String getAllLists(Model model) {
         model.addAttribute("articles", articleRepository.findAll());
         model.addAttribute("flavours", flavourRepository.findAll());
-        model.addAttribute("users", userRepository.findAll());
+        model.addAttribute("jobRequests", jobRequestRepository.findAll());
 
         return "index";
     }
@@ -108,6 +112,12 @@ public class HomeController {
         model.addAttribute("articles", articleRepository.findAll());
         return "ice :: ice(flavours=${flavours}, articles=${articles})";
     }
+
+    @GetMapping(value = "/jobs")
+    public String getJobs(Model model) {
+        model.addAttribute("jobRequests", jobRequestRepository.findAll());
+        return "jobs :: jobs(jobRequests=${jobRequests})";
+    }
     
 
     @DeleteMapping(value = "/ice/deleteFlavour/{id}")
@@ -136,12 +146,12 @@ public class HomeController {
     @GetMapping("/download/cv/{id}")
     public ResponseEntity<Resource> downloadCV(@PathVariable("id") long id) throws IOException {
 
-        Path filePath = Paths.get(userRepository.findById(id).get().getCV().getUrl()).normalize();
-        System.out.println(filePath.toString());
+        Path filePath = Paths.get(jobRequestRepository.findById(id).get().getFile().getUrl()).normalize();
         Resource resource = new UrlResource(filePath.toUri());
 
+
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + userRepository.findById(id).get().getCV().getFileName());
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + jobRequestRepository.findById(id).get().getFile().getFileName());
         
         return ResponseEntity.ok()
                 .headers(headers)

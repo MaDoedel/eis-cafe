@@ -35,15 +35,17 @@ public class User {
     @NotBlank(message = "Invalid email")
     private String email; 
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private File cv;
+    @Column(name = "state")
+    @NotBlank(message = "Invalid state")
+    private String state; 
 
     protected User() {}
 
-    public User(String name, String surname, String email) {
+    public User(String name, String surname, String email, String state) {
         this.name = name;
         this.surname = surname;
         this.email = email;
+        this.state = state;
     }
 
     public void setId(long id) {
@@ -52,14 +54,6 @@ public class User {
 
     public long getId() {
         return id;
-    }
-
-    public void setCV(File file) {
-        this.cv = file;
-    }
-
-    public File getCV() {
-        return cv;
     }
 
     public void setName(String name) {
@@ -84,5 +78,13 @@ public class User {
 
     public String getEmail() {
         return email;
+    }
+
+    public void setState(String email) {
+        this.state = email;
+    }
+
+    public String getState() {
+        return state;
     }
 }

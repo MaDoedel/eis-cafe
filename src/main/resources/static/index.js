@@ -118,9 +118,6 @@ class EmailRegexChecker extends AbstractCheckerImplementation{
     }
 }
 
-
-
-
 $(document).ready( function() {
     // Validation Client-Side
     
@@ -144,6 +141,26 @@ $(document).ready( function() {
         $('#iceCreamForm')[0].reset()
     }
 
+    function refetchJobs() {
+        $.ajax({
+            url: '/jobs',
+            type: 'get',
+            success:function(new_content){
+                $("#tab-3").html(new_content)
+                $('#jobsForm').submit(onJobsFormSubmit);
+                $('#CVButton').on("click", selectCV);
+                $('#CVInput').on("change", previewCV);
+                const ListeningJobsForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'applicantNameInput'), new InputListenerDecorator(new TextRegexChecker(''), 'applicantSurnameInput'), new InputListenerDecorator(new EmailRegexChecker(''), 'applicantMailInput'), new TextAreaListenerDecorator(new TextLengthChecker(''), 'applicantCommentTextArea')]);
+                ListeningJobsForm.isValid();
+
+            },
+            error: function(){
+                alert("Failed refetching jobs")
+            }
+        });
+        $('#jobsForm')[0].reset()
+    }
+
     function setAllBinds() {
         //var formData = new FormData($('#iceCreamForm')[0]);
         const ListeningIceForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'iceCreamNameInput'), new InputListenerDecorator(new TextRegexChecker(''), 'iceCreamDescriptionInput')]);
@@ -156,15 +173,59 @@ $(document).ready( function() {
         $('#iceCreamForm').submit(onIceCreamFormSubmit);
         $('#jobsForm').submit(onJobsFormSubmit);
 
-        $(document).on("click",'.flavour-delete-btn', onFlavourDelete); // because of unique ID, should be the same for all buttons in a loop
-        $(document).on("click",'.cv-download-btn', onDownloadCV); // because of unique ID, should be the same for all buttons in a loop
+        $(document).on("click",'.flavour-delete-btn', onFlavourDelete);
+        $(document).on("click",'.cv-download-btn', onDownloadCV); 
+
+        $(document).on("click",'.request-accept-btn', onRequestAccept);
+        $(document).on("click",'.request-reject-btn', onRequestReject); 
 
         $('#placeholderImage').on("click", selectImage);
         $('#formFile').on("change", previewImage);
 
         $('#CVButton').on("click", selectCV);
         $('#CVInput').on("change", previewCV);
+    }
 
+    function onRequestAccept(e) {
+        e.preventDefault();
+        $.ajax({
+            url: '/jobs/accept/' + $(this).attr('data-id'),
+            type: 'delete',
+            success: function(){
+                refetchJobs()
+            },
+            error: function(data){
+                alert(data.responseText)
+            }
+        });
+    }
+
+    function onRequestReject(e) {
+        e.preventDefault();
+        $.ajax({
+            url: '/jobs/reject/' + $(this).attr('data-id'),
+            type: 'delete',
+            success: function(){
+                refetchJobs()
+            },
+            error: function(data){
+                alert(data.responseText)
+            }
+        });
+    }
+
+    function onFlavourDelete(e) {
+        e.preventDefault();
+        $.ajax({
+            url: '/ice/deleteFlavour/' + $(this).attr('data-id'),
+            type: 'delete',
+            success: function(){
+                refetchIce()
+            },
+            error: function(data){
+                alert(data.responseText)
+            }
+        });
     }
 
     function onLoginSubmit(e){
