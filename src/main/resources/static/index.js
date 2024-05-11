@@ -185,11 +185,19 @@ $(document).ready( function() {
         $(document).on("click",'.request-accept-btn', onRequestAccept);
         $(document).on("click",'.request-reject-btn', onRequestReject); 
 
+
+        $('#showMoreFlavourBtn').on("click", onShowMoreFlavour)
+
         $('#placeholderImage').on("click", selectImage);
         $('#formFile').on("change", previewImage);
 
         $('#CVButton').on("click", selectCV);
         $('#CVInput').on("change", previewCV);
+    }
+
+    function onShowMoreFlavour(e){
+        e.preventDefault();
+        var maxFlavour = $(this).attr('data-count');
     }
 
     function onRequestAccept(e) {

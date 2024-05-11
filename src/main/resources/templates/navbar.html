@@ -4,41 +4,44 @@
         <div th:fragment="navbar" th:with="index_selected=${index_selected} ?: 0" class="d-flex flex-row">
            
             <nav id="navbar" class="navbar navbar-expand-sm">
-                <button class="navbar-brand" th:onclick="|event.preventDefault();$(&quot;.nav-link[data-bs-target='#tab-${index_selected}']&quot;).get(0).click();|">
-                    <img src="image.png" class="logo" alt="Logo" style="width: 150px;">
-                </button>
+                <div class="container">
+                    <button class="navbar-brand button-like" th:onclick="|event.preventDefault();$(&quot;.nav-link[data-bs-target='#tab-${index_selected}']&quot;).get(0).click();|">
+                        <img src="image.png" class="logo" alt="Logo" style="width: 150px;">
+                    </button>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
-                    <span class="navbar-toggler-icon"></span>
-                  </button>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
 
-                <div class="navbar-collapse collapse" id="collapsibleNavbar">
-                    <ul class="navbar-nav nav nav-pills">
-                        
-                        <li class="nav-item fs-2" 
-                            th:each="elem, iter : ${elems_left}" 
-                            >
-                                <a class="nav-link" 
-                                    data-bs-toggle="tab"
-                                    th:classappend="|${iter.index == index_selected ? 'active' : ''}
-                                        ${iter.index == 0 ? 'ms-3' : ''}|"
-                                    th:text="${elem}" 
-                                    th:attr="data-bs-target='#tab-'+${iter.index}"></a>
-                        </li>
+                    <div class="navbar-collapse collapse" id="collapsibleNavbar">
+                        <ul class="navbar-nav nav nav-pills">
+                            
+                            <li class="nav-item fs-2" 
+                                th:each="elem, iter : ${elems_left}" 
+                                >
+                                    <a class="nav-link" 
+                                        data-bs-toggle="tab"
+                                        th:classappend="|${iter.index == index_selected ? 'active' : ''}
+                                            ${iter.index == 0 ? 'ms-3' : ''}|"
+                                        th:text="${elem}" 
+                                        th:attr="data-bs-target='#tab-'+${iter.index}"></a>
+                            </li>
+                            
 
-                        <li class="nav-item fs-2 ms-auto"
-                            th:each="elem, iter : ${elems_right}"  
-                            >
-                                <a class="nav-link" 
-                                    data-bs-toggle="tab"
-                                    th:classappend="|${iter.index+#lists.size(elems_left) == index_selected ? 'active' : ''} 
-                                                ${iter.index == 0 ? 'ms-auto' : ''}
-                                                ${iter.index==#lists.size(elems_right)-1 ? 'me-3' : ''}
-                                                text-end|"
-                                    th:text="${elem}"
-                                    th:attr="data-bs-target='#tab-'+${iter.index+#lists.size(elems_left)}"></a>
-                        </li>
-                    </ul>
+                            <li class="nav-item fs-2 ms-auto justify-content-end"
+                                th:each="elem, iter : ${elems_right}"  
+                                >
+                                    <a class="nav-link" 
+                                        data-bs-toggle="tab"
+                                        th:classappend="|${iter.index+#lists.size(elems_left) == index_selected ? 'active' : ''} 
+                                                    ${iter.index == 0 ? 'ms-auto' : ''}
+                                                    ${iter.index==#lists.size(elems_right)-1 ? 'me-3' : ''}
+                                                    text-end|"
+                                        th:text="${elem}"
+                                        th:attr="data-bs-target='#tab-'+${iter.index+#lists.size(elems_left)}"></a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </nav>
         </div>

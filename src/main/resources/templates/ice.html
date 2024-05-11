@@ -1,68 +1,96 @@
 <!DOCTYPE html>
 <html lang="en", xmlns:th="http://www.thymeleaf.org">
-    <body>
-        <div th:fragment="ice">
-            <h1>Eis</h1>
+  <body>
+      <div th:fragment="ice">
+        <div class="container-fluid text-center">
+          <div class="row">
 
-            <div class="container-fluid text-center">
-                <div class="row row-cols-4 g-2">
-                  <div class="col-lg-4 sm-4 d-flex align-items-stretch" th:each="flav : ${flavours}">
-                    <div class="card mb-3" style="max-width: 540px;">
-                        <div class="row g-0">
-                          <div class="col-md-4">
-                            <img th:src="@{${'/images/flavours/' + flav.id + '.png'}}" class="img-fluid rounded-start" style="object-fit: cover; height: 100%;" alt="...">
-                          </div>
-                          <div class="col-md-8">
-                            <div class="card-body">
-                              <h5 class="card-title text-start" th:text="${flav.name}"></h5>
-                              <p class="card-text text-start" th:text="${flav.description}"></p>
-                              <button th:attr="data-id=${flav.id}" type="submit" class="btn btn-primary flavour-delete-btn text-end" >Delete</button>
-                            </div>
-                          </div>
-                        </div>
-                    </div>
-                  </div>
-                  <div class="col-lg-4 sm-4 d-flex align-items-stretch" >
-                    <form method="POST" action="/ice/addFlavour" id="iceCreamForm" enctype="multipart/form-data">
-                      <div class="card mb-3" style="max-width: 540px;">
-                        <div class="row g-0">
-                          <div class="col-md-4">
-                            <img th:src="@{${'/images/flavours/placeholder.png'}}" class="img-fluid rounded-start" style="object-fit: cover; height: 100%; cursor: pointer;" alt="..." id="placeholderImage">
-                            <input type="file" class="d-none" id="formFile" name="image">
-                          </div>
-                          <div class="col-md-8">
-                            <div class="card-body">
-                              <input type="text" class="form-control card-title text-start" id="iceCreamNameInput" name="name" placeholder="Mintberry Crunch">
-                              <input type="text" class="form-control card-text text-start" id="iceCreamDescriptionInput" name="description" placeholder="creamy">
-                              <button tabindex="0" id="saveButton" type="submit" class="btn btn-primary text-end" >Save</button>
-                            </div>
-                          </div>
+            <div class="col-md-1"></div>
+
+            <div class="col-md-10">
+              <p>
+                Entdecken Sie über 200 köstliche Eiskreationen, handgefertigt aus frischen Früchten, unseren hausgemachten Eissorten und einer Vielfalt an leckeren Soßen und Toppings.
+              </p>
+            </div>
+
+            <div class="col-md-1"></div>
+
+            <div class="col-md-12">   
+              <hr class="hr-text gradient" data-content="Eis">
+            </div>
+          </div>
+        </div>
+
+        <div class="container-fluid text-center">
+            <div class="row row-cols-3 g-2" id="iceRow">
+              <div class="col-lg-3 sm-4 d-flex align-items-stretch" th:each="flav, someState: ${flavours}" th:if="${someState.index < 7}">
+                <div class="card" style="max-width: 540px;">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <img th:src="@{${'/images/flavours/' + flav.id + '.png'}}" class="img-fluid rounded-start" style="object-fit: cover; height: 100%;" alt="...">
+                      </div>
+                      <div class="col-md-8">
+                        <div class="card-body">
+                          <h5 class="card-title text-start" th:text="${flav.name}"></h5>
+                          <p class="card-text text-start" th:text="${flav.description}"></p>
+                          <button th:attr="data-id=${flav.id}" type="submit" class="btn btn-primary flavour-delete-btn text-end">Delete</button>
                         </div>
                       </div>
-                    </form>
+                    </div>
+                </div>
+              </div>
+              <div class="col-lg-3 sm-4 d-flex align-items-stretch" >
+                <form method="POST" action="/ice/addFlavour" id="iceCreamForm" enctype="multipart/form-data">
+                  <div class="card" style="max-width: 540px;">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <img th:src="@{${'/images/flavours/placeholder.png'}}" class="img-fluid rounded-start" style="object-fit: cover; height: 100%; cursor: pointer;" alt="..." id="placeholderImage">
+                        <input type="file" class="d-none" id="formFile" name="image">
+                      </div>
+                      <div class="col-md-8">
+                        <div class="card-body">
+                          <input type="text" class="form-control card-title text-start" id="iceCreamNameInput" name="name" placeholder="Mintberry Crunch">
+                          <input type="text" class="form-control card-text text-start" id="iceCreamDescriptionInput" name="description" placeholder="creamy">
+                          <button tabindex="0" id="saveButton" type="submit" class="btn btn-primary text-end" >Save</button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                </form>
+              </div>
             </div>
-<!--             
-            <form method="POST" action="/ice/addFlavour" id="iceCreamForm" enctype="multipart/form-data">
-                <div class="mb-3">
-                    <input type="text" class="form-control" id="iceCreamNameInput" name="name" placeholder="Mintberry Crunch">
-                    <input type="text" class="form-control" id="iceCreamDescriptionInput" name="description" placeholder="creamy">
-                    <input type="file" class="form-control" id="formFile" name="image" placeholder="/file">
-                    <button tabindex="0" id="saveButton" type="submit" >Save</button>
-                </div>
-            </form> -->
-
-            <h1>Articles</h1>
-            <ul>
-                <li th:each="art : ${articles}">
-                        <span th:text="${art.name}">Name</span>
-                        <span th:text="${art.description}">Description</span>
-                        <span th:text="${art.type}">Type</span>
-                        <span th:text="${art.price}">Price</span>
-                </li>
-            </ul>
         </div>
-    </body>
-        
+        <div class="container-fluid text-center">
+          <div class="row">
+            <div class="col-md-12">
+              <button class="btn btn-primary" th:attr="data-count=${flavours.size}" id="showMoreFlavourBtn">Show More</button>
+            </div>
+          </div>
+        </div>
+        <!--             
+        <form method="POST" action="/ice/addFlavour" id="iceCreamForm" enctype="multipart/form-data">
+            <div class="mb-3">
+                <input type="text" class="form-control" id="iceCreamNameInput" name="name" placeholder="Mintberry Crunch">
+                <input type="text" class="form-control" id="iceCreamDescriptionInput" name="description" placeholder="creamy">
+                <input type="file" class="form-control" id="formFile" name="image" placeholder="/file">
+                <button tabindex="0" id="saveButton" type="submit" >Save</button>
+            </div>
+        </form> -->
+
+        <div class="row">
+          <div class="col-md-12">   
+            <hr class="hr-text gradient" data-content="Becher">
+          </div>
+        </div>
+      
+        <ul>
+          <li th:each="art : ${articles}">
+            <span th:text="${art.name}">Name</span>
+            <span th:text="${art.description}">Description</span>
+            <span th:text="${art.type}">Type</span>
+            <span th:text="${art.price}">Price</span>
+          </li>
+        </ul>
+    </div>
+  </body>
 </html>
