@@ -6,13 +6,18 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.core.io.Resource;
+
+import com.example.shop.model.Cup;
 import com.example.shop.model.Flavour;
+import com.example.shop.model.Spoon;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
@@ -28,8 +33,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.shop.repository.ArticleRepository;
+import com.example.shop.repository.CupRepository;
 import com.example.shop.repository.FlavourRepository;
 import com.example.shop.repository.JobRequestRepository;
+import com.example.shop.repository.SpoonRepository;
 import com.example.shop.repository.UserRepository;
 
 @CrossOrigin(origins = "https://localhost:8081")
@@ -47,12 +54,23 @@ public class HomeController {
 
     @Autowired
     JobRequestRepository jobRequestRepository; 
+
+    @Autowired
+    CupRepository cupRepository; 
+
+    @Autowired
+    SpoonRepository spoonRepository; 
     
     @GetMapping(value = "/")
     public String getAllLists(Model model) {
         model.addAttribute("articles", articleRepository.findAll());
         model.addAttribute("flavours", flavourRepository.findAll());
         model.addAttribute("jobRequests", jobRequestRepository.findAll());
+
+
+        cupRepository.deleteById((long) 4302);
+        cupRepository.deleteById((long) 4303);
+
 
         return "index";
     }

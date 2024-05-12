@@ -10,7 +10,7 @@ public class Spoon {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "flavour_id")
     private Flavour flavour;
 

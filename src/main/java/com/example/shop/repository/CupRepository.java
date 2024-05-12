@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.example.shop.model.Pricing;
+import com.example.shop.model.Cup;
 
-public interface PricingRepository extends JpaRepository<Pricing, Long> {
+public interface CupRepository extends JpaRepository<Cup, Long> {
 }

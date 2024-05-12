@@ -69,4 +69,6 @@ public class Flavour {
     public String getDescription() {
         return description;
     }
+
+    // maybe some incredients here would be good for alergica details
 }
