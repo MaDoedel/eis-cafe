@@ -17,8 +17,9 @@ import org.springframework.core.io.Resource;
 
 import com.example.shop.model.Cup;
 import com.example.shop.model.Flavour;
-import com.example.shop.model.Spoon;
+import com.example.shop.model.Pricing;
 
+import org.hibernate.mapping.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
@@ -36,8 +37,9 @@ import com.example.shop.repository.ArticleRepository;
 import com.example.shop.repository.CupRepository;
 import com.example.shop.repository.FlavourRepository;
 import com.example.shop.repository.JobRequestRepository;
-import com.example.shop.repository.SpoonRepository;
 import com.example.shop.repository.UserRepository;
+import com.example.shop.repository.PricingRepository;
+
 
 @CrossOrigin(origins = "https://localhost:8081")
 @Controller
@@ -59,19 +61,13 @@ public class HomeController {
     CupRepository cupRepository; 
 
     @Autowired
-    SpoonRepository spoonRepository; 
+    PricingRepository pricingRepository;
     
     @GetMapping(value = "/")
     public String getAllLists(Model model) {
         model.addAttribute("articles", articleRepository.findAll());
         model.addAttribute("flavours", flavourRepository.findAll());
         model.addAttribute("jobRequests", jobRequestRepository.findAll());
-
-
-        cupRepository.deleteById((long) 4302);
-        cupRepository.deleteById((long) 4303);
-
-
         return "index";
     }
 
@@ -106,6 +102,11 @@ public class HomeController {
         // save in persistent storage
         String fileName;
         try {
+            for (Pricing p : pricingRepository.findAll()){
+                if (p.getDescription().equals("Spoon")){
+                    flavour.setPricing(p);
+                }
+            }
             flavour = flavourRepository.save(flavour);
             fileName = flavour.getId() + imageFile.getOriginalFilename().substring(imageFile.getOriginalFilename().lastIndexOf('.'));
         } catch (Exception e) {
@@ -158,6 +159,15 @@ public class HomeController {
             }
         }
 
+        return ResponseEntity.ok().body(null);
+    }
+
+    @PostMapping("/ice/addCup")
+    public ResponseEntity<String> submitFlavors(@RequestParam  java.util.Map<String, String> quant) {
+        
+        quant.forEach((key, value) -> {
+            System.out.println("Flavor ID: " + key + ", Quantity: " + value);
+        });
         return ResponseEntity.ok().body(null);
     }
 

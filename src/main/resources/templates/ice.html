@@ -82,6 +82,57 @@
             <hr class="hr-text gradient" data-content="Becher">
           </div>
         </div>
+
+        <a class="btn btn-primary" data-bs-toggle="offcanvas" href="#cupCreator" role="button" aria-controls="cupCreator">
+          Link with href
+        </a>
+
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="cupCreator" aria-labelledby="cupCreator">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="cupCreator">Becher</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <form method="POST" action="/ice/addCup" id="addCupForm">
+            <hr class="hr-text gradient" data-content="Eis">
+            <table class="table">
+              <tbody>
+                <tr th:each="flav, someState: ${flavours}">
+                  <th scope="row"></th>
+                  <td><span th:text="${flav.name}"></span></td>
+                  <td>
+                    <div class="input-group">
+                      <button class="btn btn-outline-secondary btn-number" data-type="minus" th:attr="data-field='quant[' + ${flav.id} + ']', data-type='minus'"  type="button"><span class="bi bi-dash-lg"></span></button>
+                      <input type="number" th:name="'quant[' + ${flav.id} + ']'" class="form-control" value="0" min="0" max="30" >
+                      <button class="btn btn-outline-secondary btn-number" data-type="minus" th:attr="data-field='quant[' + ${flav.id} + ']', data-type='plus'" type="button"><span class="bi bi-plus-lg"></span></button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row"></th>
+                  <td><span>Sahne</span></td>
+                  <td>
+                    <div class="input-group">
+                      <button class="btn btn-outline-secondary btn-number" data-type="minus" th:attr="data-field='quant[0]', data-type='minus'"  type="button"><span class="bi bi-dash-lg"></span></button>
+                      <input type="number" th:name="'quant[0]'" class="form-control" value="0" min="0" max="30" >
+                      <button class="btn btn-outline-secondary btn-number" data-type="minus" th:attr="data-field='quant[0]', data-type='plus'" type="button"><span class="bi bi-plus-lg"></span></button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <hr class="hr-text gradient" data-content="Topping">
+            <!-- Some Toppings -->
+            <hr>
+            <div class="input-group">
+              <input type="text" name="CupName" class="form-control" placeholder="Becher">
+              <input type="number" name="CupPrice" class="form-control" placeholder="0">
+              <button type="submit" class="btn btn-outline-primary">Submit </button>
+            </div>
+            </form>
+          </div>
+        </div>
+        
       
         <ul>
           <li th:each="art : ${articles}">

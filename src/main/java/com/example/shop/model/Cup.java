@@ -19,11 +19,11 @@ public class Cup {
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
-        name = "cup_spoons",
+        name = "cup_flavour",
         joinColumns = @JoinColumn(name = "cup_id"),
-        inverseJoinColumns = @JoinColumn(name = "spoon_id")
+        inverseJoinColumns = @JoinColumn(name = "flavour_id")
     )
-    private List<Spoon> spoons;
+    private List<Flavour> flavours;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
@@ -60,12 +60,12 @@ public class Cup {
         this.name = name;
     }
 
-    public List<Spoon> getSpoons() {
-        return this.spoons;
+    public List<Flavour> getFlavour() {
+        return this.flavours;
     }
 
-    public void setSpoons(List<Spoon> spoons) {
-        this.spoons = spoons;
+    public void setSpoons(List<Flavour> flavours) {
+        this.flavours = flavours;
     }
     
     public List<Topping> getToppings() {

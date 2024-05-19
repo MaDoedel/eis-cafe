@@ -178,9 +178,12 @@ $(document).ready( function() {
         $('#userLoginForm').submit(onLoginSubmit);
         $('#iceCreamForm').submit(onIceCreamFormSubmit);
         $('#jobsForm').submit(onJobsFormSubmit);
+        $('#addCupForm').submit(onAddCupSubmit);
 
         $(document).on("click",'.flavour-delete-btn', onFlavourDelete);
         $(document).on("click",'.cv-download-btn', onDownloadCV); 
+        $(document).on("click",'.btn-number', onCupCreateButtons); 
+
 
         $(document).on("click",'.request-accept-btn', onRequestAccept);
         $(document).on("click",'.request-reject-btn', onRequestReject); 
@@ -193,6 +196,57 @@ $(document).ready( function() {
 
         $('#CVButton').on("click", selectCV);
         $('#CVInput').on("change", previewCV);
+    }
+
+    function onAddCupSubmit(e) {
+        e.preventDefault(); // Prevent the form from submitting the traditional way
+
+        let formData = $(this).serialize(); // Serialize the form data
+
+        $.ajax({
+          type: 'POST',
+          url: '/ice/addCup',
+          data: formData,
+          success: function (response) {
+            // Handle the response here
+            console.log('Form submitted successfully');
+            alert('Form submitted successfully');
+          },
+          error: function (error) {
+            // Handle the error here
+            console.error('Form submission failed');
+            alert('Form submission failed');
+          }
+        });
+    }
+
+    function onCupCreateButtons(e){
+        e.preventDefault();
+        
+        fieldName = $(this).attr('data-field');
+        type      = $(this).attr('data-type');
+        var input = $("input[name='"+fieldName+"']");
+        var currentVal = parseInt(input.val());        
+        if (!isNaN(currentVal)) {
+            if(type == 'minus') {
+                
+                if(currentVal > input.attr('min')) {
+                    input.val(currentVal - 1).change();
+                } else {
+                    input.val = 0;
+                }
+               
+            } else if(type == 'plus') {
+    
+                if(currentVal < input.attr('max')) {
+                    input.val(currentVal + 1).change();
+                } else {
+                    input.val = 30;
+                }
+            }
+        } else {
+            input.val(0);
+        }
     }
 
     function onShowMoreFlavour(e){

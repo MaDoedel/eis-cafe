@@ -30,6 +30,11 @@ public class Flavour {
     @NotBlank(message = "Invalid description")
     private String description; 
 
+    @ManyToOne
+    @JoinColumn(name="price_id")
+    private Pricing pricing;
+
+
     public Flavour(){}
 
     public Flavour(String name, boolean isVegan, String description){
@@ -70,5 +75,10 @@ public class Flavour {
         return description;
     }
 
-    // maybe some incredients here would be good for alergica details
-}
+    public void setPricing(Pricing p) {
+        this.pricing = p;
+    }
+
+    public Pricing getPricing() {
+        return pricing;
+    }}
