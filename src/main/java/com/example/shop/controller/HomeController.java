@@ -9,6 +9,8 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpHeaders;
@@ -62,11 +64,15 @@ public class HomeController {
 
     @Autowired
     PricingRepository pricingRepository;
+
+    @Autowired
+    PricingRepository toppingRepository;
     
     @GetMapping(value = "/")
     public String getAllLists(Model model) {
         model.addAttribute("articles", articleRepository.findAll());
         model.addAttribute("flavours", flavourRepository.findAll());
+        model.addAttribute("toppings", toppingRepository.findAll());
         model.addAttribute("jobRequests", jobRequestRepository.findAll());
         return "index";
     }
@@ -129,7 +135,9 @@ public class HomeController {
     public String getFlavours(Model model) {
         model.addAttribute("flavours", flavourRepository.findAll());
         model.addAttribute("articles", articleRepository.findAll());
-        return "ice :: ice(flavours=${flavours}, articles=${articles})";
+        model.addAttribute("toppings", toppingRepository.findAll());
+
+        return "ice :: ice(flavours=${flavours}, articles=${articles}, toppings=${toppings})";
     }
 
     @GetMapping(value = "/jobs")
@@ -163,10 +171,19 @@ public class HomeController {
     }
 
     @PostMapping("/ice/addCup")
-    public ResponseEntity<String> submitFlavors(@RequestParam  java.util.Map<String, String> quant) {
+    public ResponseEntity<String> submitFlavors(
+        @RequestParam java.util.Map<String, String> flavour,
+        @RequestParam java.util.Map<String, String> topping) {
+
+        // just understood namespaces in html, what a time to be alive ... actually... I should investigate on that
+        Pattern pattern = Pattern.compile("^(flavour|topping)\\[(\\d+)\\]$");
         
-        quant.forEach((key, value) -> {
-            System.out.println("Flavor ID: " + key + ", Quantity: " + value);
+        flavour.forEach((key, value) -> {
+            Matcher matcher = pattern.matcher(key);
+            if (matcher.matches()) {
+                long id = Long.parseLong(matcher.group(2));
+                System.out.println("Flavour ID: " + id + ", Quantity: " + value);
+            }
         });
         return ResponseEntity.ok().body(null);
     }
