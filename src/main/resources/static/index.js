@@ -89,7 +89,7 @@ class TextAreaListenerDecorator extends CheckerDecorator{
         var self = this;
         inputElement.addEventListener('input', function() {
             self.checker.input = inputElement.value;
-
+            
             if (!self.checker.check()) {
                 inputElement.value = inputElement.value.substring(0, 255);
             }
@@ -156,7 +156,7 @@ $(document).ready( function() {
                 $('#jobsForm').submit(onJobsFormSubmit);
                 $('#CVButton').on("click", selectCV);
                 $('#CVInput').on("change", previewCV);
-                const ListeningJobsForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'applicantNameInput'), new InputListenerDecorator(new TextRegexChecker(''), 'applicantSurnameInput'), new InputListenerDecorator(new EmailRegexChecker(''), 'applicantMailInput'), new TextAreaListenerDecorator(new CommentRegexChecker(''), 'applicantCommentTextArea')]);
+                const ListeningJobsForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'applicantNameInput'), new InputListenerDecorator(new TextRegexChecker(''), 'applicantSurnameInput'), new InputListenerDecorator(new EmailRegexChecker(''), 'applicantMailInput'), new TextLengthChecker(new CommentRegexChecker(''), 'applicantCommentTextArea')]);
                 ListeningJobsForm.isValid();
 
             },
@@ -170,7 +170,7 @@ $(document).ready( function() {
     function setAllBinds() {
         //var formData = new FormData($('#iceCreamForm')[0]);
         const ListeningIceForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'iceCreamNameInput'), new InputListenerDecorator(new TextRegexChecker(''), 'iceCreamDescriptionInput')]);
-        const ListeningJobsForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'applicantNameInput'), new InputListenerDecorator(new TextRegexChecker(''), 'applicantSurnameInput'), new InputListenerDecorator(new EmailRegexChecker(''), 'applicantMailInput'), new TextAreaListenerDecorator(new CommentRegexChecker(''), 'applicantCommentTextArea')]);
+        const ListeningJobsForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'applicantNameInput'), new InputListenerDecorator(new TextRegexChecker(''), 'applicantSurnameInput'), new InputListenerDecorator(new EmailRegexChecker(''), 'applicantMailInput'), new TextAreaListenerDecorator(new TextLengthChecker(''), 'applicantCommentTextArea')]);
 
         ListeningIceForm.isValid();
         ListeningJobsForm.isValid();
