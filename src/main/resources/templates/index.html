@@ -7,7 +7,7 @@
         <div class="tab-content">
           <div th:insert="~{home :: home}" class="tab-pane fade show active" id="tab-0"></div>
 
-          <div th:insert="~{ice :: ice(flavours=${flavours}, articles=${articles}, toppings=${toppings})}" class="tab-pane fade" id="tab-1"></div>
+          <div th:insert="~{ice :: ice(flavours=${flavours}, articles=${articles}, toppings=${toppings}, cups=${cups})}" class="tab-pane fade" id="tab-1"></div>
 
           <div th:insert="~{drinks :: drinks(drinks=drinks)}" class="tab-pane fade" id="tab-2"></div>
 

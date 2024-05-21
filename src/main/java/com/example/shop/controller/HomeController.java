@@ -54,16 +54,10 @@ public class HomeController {
     FlavourRepository flavourRepository; 
 
     @Autowired
-    UserRepository userRepository; 
-
-    @Autowired
     JobRequestRepository jobRequestRepository; 
 
     @Autowired
     CupRepository cupRepository; 
-
-    @Autowired
-    PricingRepository pricingRepository;
 
     @Autowired
     PricingRepository toppingRepository;
@@ -73,58 +67,11 @@ public class HomeController {
         model.addAttribute("articles", articleRepository.findAll());
         model.addAttribute("flavours", flavourRepository.findAll());
         model.addAttribute("toppings", toppingRepository.findAll());
+        model.addAttribute("cups", cupRepository.findAll());
         model.addAttribute("jobRequests", jobRequestRepository.findAll());
         return "index";
     }
 
-    @PostMapping(value = "/ice/addFlavour", produces = "text/plain")
-    public ResponseEntity<String> addFlavour(@ModelAttribute Flavour flavour, @RequestParam("image") MultipartFile imageFile, Model model) throws IOException {
-        
-        // Does path exist 
-        // TODO make this final
-        Path destinationFolder = Path.of("src", "main", "resources", "static", "images", "flavours");
-        if (!Files.exists(destinationFolder)) {
-            Files.createDirectories(destinationFolder);
-        }
-
-        // Check if there is any image
-        if (imageFile == null){
-            return ResponseEntity.badRequest().body("No image.");
-        }
-        if (!imageFile.getContentType().startsWith("image/")) {
-            return ResponseEntity.badRequest().body("Uploaded file is not an image.");
-        }
-
-        // verify flavour is not already in the list
-        // note: technically multiple users could add the same flavour at the same time,
-        //       consider a lock for the database to prevent this
-        List<Flavour> flavours = flavourRepository.findAll();
-        for(Flavour f : flavours){
-            if(f.getName().equals(flavour.getName())){
-                return ResponseEntity.badRequest().body("Flavour already exists");
-            }
-        }
-
-        // save in persistent storage
-        String fileName;
-        try {
-            for (Pricing p : pricingRepository.findAll()){
-                if (p.getDescription().equals("Spoon")){
-                    flavour.setPricing(p);
-                }
-            }
-            flavour = flavourRepository.save(flavour);
-            fileName = flavour.getId() + imageFile.getOriginalFilename().substring(imageFile.getOriginalFilename().lastIndexOf('.'));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error saving flavour");
-        }
-
-        //safe image
-        Path filePath = destinationFolder.resolve(fileName);
-        Files.write(filePath, imageFile.getBytes());
-        
-        return ResponseEntity.ok().body(null);
-    }
 
     @PostMapping(value = "/login", produces = "text/plain")
     public ResponseEntity<String> login() {
@@ -136,56 +83,16 @@ public class HomeController {
         model.addAttribute("flavours", flavourRepository.findAll());
         model.addAttribute("articles", articleRepository.findAll());
         model.addAttribute("toppings", toppingRepository.findAll());
+        model.addAttribute("cups", cupRepository.findAll());
 
-        return "ice :: ice(flavours=${flavours}, articles=${articles}, toppings=${toppings})";
+
+        return "ice :: ice(flavours=${flavours}, articles=${articles}, toppings=${toppings}, cups=${cups})";
     }
 
     @GetMapping(value = "/jobs")
     public String getJobs(Model model) {
         model.addAttribute("jobRequests", jobRequestRepository.findAll());
         return "jobs :: jobs(jobRequests=${jobRequests})";
-    }
-    
-
-    @DeleteMapping(value = "/ice/deleteFlavour/{id}")
-    public ResponseEntity<String> deleteFlavour(@PathVariable("id") long id) throws IOException{
-        try {
-            flavourRepository.deleteById(id);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().body("Error deleting flavour");
-        }
-
-        Path destinationFolder = Path.of("src", "main", "resources", "static", "images", "flavours");
-        if (!Files.exists(destinationFolder)) {
-            Files.createDirectories(destinationFolder);
-        }
-
-        for (File file : destinationFolder.toFile().listFiles()){
-            if (file.getName().contains(Long.toString(id))) {
-                file.delete();
-            }
-        }
-
-        return ResponseEntity.ok().body(null);
-    }
-
-    @PostMapping("/ice/addCup")
-    public ResponseEntity<String> submitFlavors(
-        @RequestParam java.util.Map<String, String> flavour,
-        @RequestParam java.util.Map<String, String> topping) {
-
-        // just understood namespaces in html, what a time to be alive ... actually... I should investigate on that
-        Pattern pattern = Pattern.compile("^(flavour|topping)\\[(\\d+)\\]$");
-        
-        flavour.forEach((key, value) -> {
-            Matcher matcher = pattern.matcher(key);
-            if (matcher.matches()) {
-                long id = Long.parseLong(matcher.group(2));
-                System.out.println("Flavour ID: " + id + ", Quantity: " + value);
-            }
-        });
-        return ResponseEntity.ok().body(null);
     }
 
     @GetMapping("/download/cv/{id}")

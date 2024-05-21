@@ -51,7 +51,11 @@
                         <div class="card-body">
                           <input type="text" class="form-control card-title text-start" id="iceCreamNameInput" name="name" placeholder="Mintberry Crunch">
                           <input type="text" class="form-control card-text text-start" id="iceCreamDescriptionInput" name="description" placeholder="creamy">
-                          <button tabindex="0" id="saveButton" type="submit" class="btn btn-primary text-end" >Save</button>
+                          <div class="form-check form-switch form-check-reverse">
+                            <input class="form-check-input" type="checkbox" id="iceCreamVeganInput" name="isVegan">
+                            <label class="form-check-label" for="iceCreamVeganInput">Vegan</label>
+                          </div>
+                          <button tabindex="0" id="saveButton" type="submit" class="btn btn-outline-primary text-end" >Speichern</button>
                         </div>
                       </div>
                     </div>
@@ -67,6 +71,33 @@
             </div>
           </div>
         </div>
+
+        <div class="row">
+          <div class="col-md-12">   
+            <hr class="hr-text gradient" data-content="Becher">
+          </div>
+        </div>
+
+        <div class="container-fluid text-center">
+          <div class="row row-cols-3 g-2" id="cupRow">
+            <div class="col-lg-3 sm-4 d-flex align-items-stretch" th:each="cup: ${cups}">
+              <div class="card" style="max-width: 540px;">
+                  <div class="row">
+                    <div class="col-md-4">
+                      <img th:src="@{${'/images/flavours/placeholder.png'}}" class="img-fluid rounded-start" style="object-fit: cover; height: 100%;" alt="...">
+                    </div>
+                    <div class="col-md-8">
+                      <div class="card-body">
+                        <h5 class="card-title text-start" th:text="${cup.name}"></h5>
+                        <!-- <button th:attr="data-id=${cup.id}" type="submit" class="btn btn-primary flavour-delete-btn text-end">Delete</button> -->
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
         <!--             
         <form method="POST" action="/ice/addFlavour" id="iceCreamForm" enctype="multipart/form-data">
             <div class="mb-3">
@@ -76,12 +107,6 @@
                 <button tabindex="0" id="saveButton" type="submit" >Save</button>
             </div>
         </form> -->
-
-        <div class="row">
-          <div class="col-md-12">   
-            <hr class="hr-text gradient" data-content="Becher">
-          </div>
-        </div>
 
         <a class="btn btn-primary" data-bs-toggle="offcanvas" href="#cupCreator" role="button" aria-controls="cupCreator">
           Link with href
@@ -94,58 +119,78 @@
           </div>
           <div class="offcanvas-body">
             <form method="POST" action="/ice/addCup" id="addCupForm">
-            <hr class="hr-text gradient" data-content="Eis">
-            <table class="table">
-              <tbody>
-                <tr th:each="flav, someState: ${flavours}">
-                  <th scope="row"></th>
-                  <td><span th:text="${flav.name}"></span></td>
-                  <td>
-                    <div class="input-group">
-                      <button class="btn btn-outline-secondary btn-number" data-type="minus" th:attr="data-field='flavour[' + ${flav.id} + ']', data-type='minus'"  type="button"><span class="bi bi-dash-lg"></span></button>
-                      <input type="number" th:name="'flavour[' + ${flav.id} + ']'" class="form-control" value="0" min="0" max="30" >
-                      <button class="btn btn-outline-secondary btn-number" data-type="minus" th:attr="data-field='flavour[' + ${flav.id} + ']', data-type='plus'" type="button"><span class="bi bi-plus-lg"></span></button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row"></th>
-                  <td><span>Sahne</span></td>
-                  <td>
-                    <div class="input-group">
-                      <button class="btn btn-outline-secondary btn-number" data-type="minus" th:attr="data-field='flavour[0]', data-type='minus'"  type="button"><span class="bi bi-dash-lg"></span></button>
-                      <input type="number" th:name="'flavour[0]'" class="form-control" value="0" min="0" max="30" >
-                      <button class="btn btn-outline-secondary btn-number" data-type="minus" th:attr="data-field='flavour[0]', data-type='plus'" type="button"><span class="bi bi-plus-lg"></span></button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <hr class="hr-text gradient" data-content="Topping">
-            <!--
-            <table class="table">
-              <tbody>
-                <tr th:each="topp: ${toppings}">
-                  <th scope="row"></th>
-                  <td><span th:text="${topp.name}"></span></td>
-                  <td>
-                    <div class="input-group">
-                      <button class="btn btn-outline-secondary btn-number" data-type="minus" th:attr="data-field='topping[' + ${topp.id} + ']', data-type='minus'"  type="button"><span class="bi bi-dash-lg"></span></button>
-                      <input type="number" th:name="'topping[' + ${topp.id} + ']'" class="form-control" value="0" min="0" max="30" >
-                      <button class="btn btn-outline-secondary btn-number" data-type="minus" th:attr="data-field='topping[' + ${topp.id} + ']', data-type='plus'" type="button"><span class="bi bi-plus-lg"></span></button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            -->
-            <hr>
-            <div class="input-group">
-              <input type="text" name="CupName" class="form-control" placeholder="Becher">
-              <input type="number" name="CupPrice" class="form-control" placeholder="0">
-              <button type="submit" class="btn btn-outline-primary">Submit </button>
-            </div>
+              <hr class="hr-text gradient" data-content="Eis">
+              <table class="table">
+                <tbody>
+                  <tr th:each="flav, someState: ${flavours}">
+                    <th scope="row"></th>
+                    <td><span th:text="${flav.name}"></span></td>
+                    <td>
+                      <div class="input-group">
+                        <button class="btn btn-outline-secondary btn-number" data-type="minus" th:attr="data-field='flavour[' + ${flav.id} + ']', data-type='minus'"  type="button"><span class="bi bi-dash-lg"></span></button>
+                        <input type="number" th:name="'flavour[' + ${flav.id} + ']'" class="form-control" value="0" min="0" max="30" >
+                        <button class="btn btn-outline-secondary btn-number" data-type="minus" th:attr="data-field='flavour[' + ${flav.id} + ']', data-type='plus'" type="button"><span class="bi bi-plus-lg"></span></button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row"></th>
+                    <td><span>Sahne</span></td>
+                    <td>
+                      <div class="input-group">
+                        <button class="btn btn-outline-secondary btn-number" data-type="minus" th:attr="data-field='flavour[0]', data-type='minus'"  type="button"><span class="bi bi-dash-lg"></span></button>
+                        <input type="number" th:name="'flavour[0]'" class="form-control" value="0" min="0" max="30" >
+                        <button class="btn btn-outline-secondary btn-number" data-type="minus" th:attr="data-field='flavour[0]', data-type='plus'" type="button"><span class="bi bi-plus-lg"></span></button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <hr class="hr-text gradient" data-content="Topping">
+              <!--
+              <table class="table">
+                <tbody>
+                  <tr th:each="topp: ${toppings}">
+                    <th scope="row"></th>
+                    <td><span th:text="${topp.name}"></span></td>
+                    <td>
+                      <div class="input-group">
+                        <button class="btn btn-outline-secondary btn-number" data-type="minus" th:attr="data-field='topping[' + ${topp.id} + ']', data-type='minus'"  type="button"><span class="bi bi-dash-lg"></span></button>
+                        <input type="number" th:name="'topping[' + ${topp.id} + ']'" class="form-control" value="0" min="0" max="30" >
+                        <button class="btn btn-outline-secondary btn-number" data-type="minus" th:attr="data-field='topping[' + ${topp.id} + ']', data-type='plus'" type="button"><span class="bi bi-plus-lg"></span></button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              -->
+              <hr>
+              <div class="input-group">
+                <input type="text" name="CupName" class="form-control" placeholder="Becher" id="cupNameInput"/>
+                <input type="number" name="CupPrice" class="form-control" min="1" step="any" valur="0" id="cupPriceInput" />
+                <button type="submit" class="btn btn-outline-primary">Speichern</button>
+              </div>
             </form>
+            <!--             
+            <div class="container text-center">
+              <div class="row row-cols-3 g-2">
+                <div class="col-lg-3 sm-4 d-flex align-items-stretch">
+                  <div class="card" style="max-width: 540px;">
+                      <div class="row">
+                        <div class="col-md-4">
+                          <img th:src="@{${'/images/flavours/placeholder.png}}" class="img-fluid rounded-start" style="object-fit: cover; height: 100%;" alt="...">
+                        </div>
+                        <div class="col-md-8">
+                          <div class="card-body">
+                            <h5 class="card-title text-start">Title</h5>
+                            <p class="card-text text-start">Description</p>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </div> -->
           </div>
         </div>
         

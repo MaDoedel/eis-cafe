@@ -108,13 +108,19 @@ class TextLengthChecker extends AbstractCheckerImplementation{
 
 class TextRegexChecker extends AbstractCheckerImplementation{
     check(){
-        return /^[a-zA-Z]+$/.test(this.input);
+        return /^[a-zA-Z-_]+$/.test(this.input);
     }
 }
 
 class CommentRegexChecker extends AbstractCheckerImplementation{
     check(){
         return /^[a-zA-Z0-9\s\S]*$/.test(this.input);
+    }
+}
+
+class PriceRegexChecker extends AbstractCheckerImplementation{
+    check(){
+        return /^\d+(\.\d{1,2})?$/.test(this.input);
     }
 }
 
@@ -136,7 +142,7 @@ $(document).ready( function() {
                 $('#iceCreamForm').submit(onIceCreamFormSubmit);
                 $('#placeholderImage').on("click", selectImage);
                 $('#formFile').on("change", previewImage);
-                ListeningIceForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'iceCreamNameInput'), new InputListenerDecorator(new TextRegexChecker(''), 'iceCreamDescriptionInput')]);
+                ListeningIceForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'iceCreamNameInput'), new InputListenerDecorator(new CommentRegexChecker(''), 'iceCreamDescriptionInput')]);
                 ListeningIceForm.isValid();
 
             },
@@ -169,11 +175,14 @@ $(document).ready( function() {
 
     function setAllBinds() {
         //var formData = new FormData($('#iceCreamForm')[0]);
-        const ListeningIceForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'iceCreamNameInput'), new InputListenerDecorator(new TextRegexChecker(''), 'iceCreamDescriptionInput')]);
+        const ListeningIceForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'iceCreamNameInput'), new InputListenerDecorator(new CommentRegexChecker(''), 'iceCreamDescriptionInput')]);
         const ListeningJobsForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'applicantNameInput'), new InputListenerDecorator(new TextRegexChecker(''), 'applicantSurnameInput'), new InputListenerDecorator(new EmailRegexChecker(''), 'applicantMailInput'), new TextAreaListenerDecorator(new TextLengthChecker(''), 'applicantCommentTextArea')]);
+        const ListeningCupForm = new ListeningForm([new InputListenerDecorator(new PriceRegexChecker(''), 'cupPriceInput'), new InputListenerDecorator(new TextRegexChecker(''), 'cupNameInput')]);
+
 
         ListeningIceForm.isValid();
         ListeningJobsForm.isValid();
+        ListeningCupForm.isValid()
 
         $('#userLoginForm').submit(onLoginSubmit);
         $('#iceCreamForm').submit(onIceCreamFormSubmit);

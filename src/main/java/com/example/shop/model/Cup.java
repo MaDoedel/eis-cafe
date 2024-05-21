@@ -17,9 +17,12 @@ public class Cup {
     @Column(name = "name")
     String name;
 
+    @Column(name = "isVegan")
+    boolean isVegan = false;
+
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
-        name = "cup_flavour",
+        name = "cup_flavours",
         joinColumns = @JoinColumn(name = "cup_id"),
         inverseJoinColumns = @JoinColumn(name = "flavour_id")
     )
@@ -60,12 +63,12 @@ public class Cup {
         this.name = name;
     }
 
-    public List<Flavour> getFlavour() {
-        return this.flavours;
+    public void setFlavours(List<Flavour> flav) {
+        this.flavours = flav;
     }
 
-    public void setSpoons(List<Flavour> flavours) {
-        this.flavours = flavours;
+    public List<Flavour> getFlavours() {
+        return this.flavours;
     }
     
     public List<Topping> getToppings() {
@@ -82,6 +85,17 @@ public class Cup {
 
     public void setPrice(BigDecimal bd) {
         this.price = bd;
+    }
+
+    public void calculateVegan(){
+        for (Flavour f : flavours) {
+            if (!f.getIsVegan()) {this.isVegan = false; return;}
+        }
+
+        for (Topping t : toppings) {
+            if (!t.getIsVegan()) {this.isVegan = false; return;}
+        }
+        this.isVegan = true;
     }
 
 }
