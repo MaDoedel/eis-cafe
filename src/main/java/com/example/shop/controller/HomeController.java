@@ -41,6 +41,7 @@ import com.example.shop.repository.FlavourRepository;
 import com.example.shop.repository.JobRequestRepository;
 import com.example.shop.repository.UserRepository;
 import com.example.shop.repository.PricingRepository;
+import com.example.shop.repository.ToppingRepository;
 
 
 @CrossOrigin(origins = "https://localhost:8081")
@@ -60,7 +61,7 @@ public class HomeController {
     CupRepository cupRepository; 
 
     @Autowired
-    PricingRepository toppingRepository;
+    ToppingRepository toppingRepository;
     
     @GetMapping(value = "/")
     public String getAllLists(Model model) {

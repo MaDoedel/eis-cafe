@@ -22,6 +22,7 @@ import org.springframework.core.io.Resource;
 import com.example.shop.model.Cup;
 import com.example.shop.model.Flavour;
 import com.example.shop.model.Pricing;
+import com.example.shop.model.Topping;
 
 import org.hibernate.mapping.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -150,44 +151,38 @@ public class IceController {
     
     @PostMapping("/ice/addCup")
     public ResponseEntity<String> submitFlavors(
-        @RequestParam java.util.Map<String, String> flavour,
-        @RequestParam java.util.Map<String, String> topping,
+        @RequestParam java.util.Map<String, String> params,
         @RequestParam("CupName") String name,
         @RequestParam("CupPrice") BigDecimal price
         ) {
 
-        // just understood namespaces in html, what a time to be alive ... actually... I should investigate on that
-        Pattern pattern = Pattern.compile("^(flavour|topping)\\[(\\d+)\\]$");
-        
+        Pattern fpattern = Pattern.compile("^(flavour)\\[(\\d+)\\]$");
+        Pattern tpattern = Pattern.compile("^(topping)\\[(\\d+)\\]$");
+
         Cup cup = new Cup(name, price);
-        
         List<Flavour> cupFlavours = new ArrayList<Flavour>(); 
-        flavour.forEach((key, value) -> {
-            Matcher matcher = pattern.matcher(key);
+        params.forEach((key, value) -> {
+            Matcher matcher = fpattern.matcher(key);
             if (matcher.matches()) {
                 long id = Long.parseLong(matcher.group(2));
                 for (int i = 0; i < Integer.parseInt(value); i++){
-                    System.out.println(id);
                     cupFlavours.add(flavourRepository.findById(id).get());
                 }
             }
         });
-
-
-        System.out.println("--");
-
-        // topping.forEach((key, value) -> {
-        //     Matcher matcher = pattern.matcher(key);
-        //     if (matcher.matches()) {
-        //         long id = Long.parseLong(matcher.group(2));
-        //         for (int i = 0; i < Integer.parseInt(value); i++){
-        //             System.out.println(id);
-        //             //cup.getToppings().add(toppingRepository.findById(id).get());
-        //         }
-        //     }
-        // });
-
         cup.setFlavours(cupFlavours);
+        
+        List<Topping> cupToppings = new ArrayList<Topping>(); 
+        params.forEach((key, value) -> {
+            Matcher matcher = tpattern.matcher(key);
+            if (matcher.matches()) {
+                long id = Long.parseLong(matcher.group(2));
+                for (int i = 0; i < Integer.parseInt(value); i++){
+                    cupToppings.add(toppingRepository.findById(id).get());
+                }
+            }
+        });
+
 
         try{
             cup.calculateVegan();

@@ -74,6 +74,12 @@
 
         <div class="row">
           <div class="col-md-12">   
+            <hr class="hr-text gradient" data-content="Topping">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">   
             <hr class="hr-text gradient" data-content="Becher">
           </div>
         </div>
@@ -98,16 +104,6 @@
           </div>
         </div>
         
-        <!--             
-        <form method="POST" action="/ice/addFlavour" id="iceCreamForm" enctype="multipart/form-data">
-            <div class="mb-3">
-                <input type="text" class="form-control" id="iceCreamNameInput" name="name" placeholder="Mintberry Crunch">
-                <input type="text" class="form-control" id="iceCreamDescriptionInput" name="description" placeholder="creamy">
-                <input type="file" class="form-control" id="formFile" name="image" placeholder="/file">
-                <button tabindex="0" id="saveButton" type="submit" >Save</button>
-            </div>
-        </form> -->
-
         <a class="btn btn-primary" data-bs-toggle="offcanvas" href="#cupCreator" role="button" aria-controls="cupCreator">
           Link with href
         </a>
@@ -139,7 +135,7 @@
                     <td>
                       <div class="input-group">
                         <button class="btn btn-outline-secondary btn-number" data-type="minus" th:attr="data-field='flavour[0]', data-type='minus'"  type="button"><span class="bi bi-dash-lg"></span></button>
-                        <input type="number" th:name="'flavour[0]'" class="form-control" value="0" min="0" max="30" >
+                        <input type="number" th:name="flavour[0]" class="form-control" value="0" min="0" max="30" >
                         <button class="btn btn-outline-secondary btn-number" data-type="minus" th:attr="data-field='flavour[0]', data-type='plus'" type="button"><span class="bi bi-plus-lg"></span></button>
                       </div>
                     </td>
@@ -147,7 +143,7 @@
                 </tbody>
               </table>
               <hr class="hr-text gradient" data-content="Topping">
-              <!--
+              
               <table class="table">
                 <tbody>
                   <tr th:each="topp: ${toppings}">
@@ -163,7 +159,7 @@
                   </tr>
                 </tbody>
               </table>
-              -->
+              
               <hr>
               <div class="input-group">
                 <input type="text" name="CupName" class="form-control" placeholder="Becher" id="cupNameInput"/>
