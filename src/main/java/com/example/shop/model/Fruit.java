@@ -13,8 +13,12 @@ public class Fruit extends Topping {
     public Fruit() {
     }
 
-    public Fruit(String name, String description, boolean isVegan) {
-        super(name, description, isVegan);
+    public Fruit(String name, String description) {
+        super(name, description, true);
     }
+
+    @Override
+    public boolean isFruit(){return true;}
+    
         
 }

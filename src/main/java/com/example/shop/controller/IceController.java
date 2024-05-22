@@ -19,10 +19,16 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.core.io.Resource;
 
+import com.example.shop.model.Candy;
 import com.example.shop.model.Cup;
 import com.example.shop.model.Flavour;
+import com.example.shop.model.Fruit;
 import com.example.shop.model.Pricing;
+import com.example.shop.model.Sauce;
 import com.example.shop.model.Topping;
+import com.example.shop.patterns.CandyFactory;
+import com.example.shop.patterns.FruitFactory;
+import com.example.shop.patterns.SauceFactory;
 
 import org.hibernate.mapping.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +81,147 @@ public class IceController {
     @Autowired
     ToppingRepository toppingRepository;
         
+
+    @PostMapping(value = "/ice/addFruit", produces = "text/plain")
+    public ResponseEntity<String> addFruit(
+        @ModelAttribute Fruit fruit, 
+        @RequestParam("image") MultipartFile imageFile) throws IOException {
+
+        FruitFactory ff = new FruitFactory(pricingRepository);
+                    
+        // Does path exist 
+        // TODO make this final
+        // if (!Files.exists(flavourFolder)) {
+        //     Files.createDirectories(flavourFolder);
+        // }
+
+        // // Check if there is any image
+        // if (imageFile == null){
+        //     return ResponseEntity.badRequest().body("No image.");
+        // }
+        // if (!imageFile.getContentType().startsWith("image/")) {
+        //     return ResponseEntity.badRequest().body("Uploaded file is not an image.");
+        // }
+
+        // verify flavour is not already in the list
+        // note: technically multiple users could add the same flavour at the same time,
+        //       consider a lock for the database to prevent this
+        List<Topping> toppings = toppingRepository.findAll();
+        for(Topping t : toppings){
+            if(t.getName().equals(fruit.getName())){
+                return ResponseEntity.badRequest().body("Fruit already exists");
+            }
+        }
+
+        // save in persistent storage
+        // String fileName;
+        try {
+            Topping nfruit = ff.createTopping(fruit.getName(), fruit.getDescription(), false);
+            toppingRepository.save(nfruit);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error saving Fruit");
+        }
+
+        // //safe image
+        // Path filePath = flavourFolder.resolve(fileName);
+        // Files.write(filePath, imageFile.getBytes());
+        
+        return ResponseEntity.ok().body(null);
+    }
+
+    @PostMapping(value = "/ice/addSauce", produces = "text/plain")
+    public ResponseEntity<String> addSauce(
+        @ModelAttribute Sauce sauce, 
+        @RequestParam("image") MultipartFile imageFile) throws IOException {
+
+        SauceFactory ff = new SauceFactory(pricingRepository);
+                    
+        // Does path exist 
+        // TODO make this final
+        // if (!Files.exists(flavourFolder)) {
+        //     Files.createDirectories(flavourFolder);
+        // }
+
+        // // Check if there is any image
+        // if (imageFile == null){
+        //     return ResponseEntity.badRequest().body("No image.");
+        // }
+        // if (!imageFile.getContentType().startsWith("image/")) {
+        //     return ResponseEntity.badRequest().body("Uploaded file is not an image.");
+        // }
+
+        // verify flavour is not already in the list
+        // note: technically multiple users could add the same flavour at the same time,
+        //       consider a lock for the database to prevent this
+        List<Topping> toppings = toppingRepository.findAll();
+        for(Topping t : toppings){
+            if(t.getName().equals(sauce.getName())){
+                return ResponseEntity.badRequest().body("Fruit already exists");
+            }
+        }
+
+        // save in persistent storage
+        // String fileName;
+        try {
+            Topping nSauce = ff.createTopping(sauce.getName(), sauce.getDescription(), sauce.getIsVegan());
+            toppingRepository.save(nSauce);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error saving Fruit");
+        }
+
+        // //safe image
+        // Path filePath = flavourFolder.resolve(fileName);
+        // Files.write(filePath, imageFile.getBytes());
+        
+        return ResponseEntity.ok().body(null);
+    }
+
+    @PostMapping(value = "/ice/addCandy", produces = "text/plain")
+    public ResponseEntity<String> addCandy(
+        @ModelAttribute Candy candy, 
+        @RequestParam("image") MultipartFile imageFile) throws IOException {
+
+        CandyFactory ff = new CandyFactory(pricingRepository);
+                    
+        // Does path exist 
+        // TODO make this final
+        // if (!Files.exists(flavourFolder)) {
+        //     Files.createDirectories(flavourFolder);
+        // }
+
+        // // Check if there is any image
+        // if (imageFile == null){
+        //     return ResponseEntity.badRequest().body("No image.");
+        // }
+        // if (!imageFile.getContentType().startsWith("image/")) {
+        //     return ResponseEntity.badRequest().body("Uploaded file is not an image.");
+        // }
+
+        // verify flavour is not already in the list
+        // note: technically multiple users could add the same flavour at the same time,
+        //       consider a lock for the database to prevent this
+        List<Topping> toppings = toppingRepository.findAll();
+        for(Topping t : toppings){
+            if(t.getName().equals(candy.getName())){
+                return ResponseEntity.badRequest().body("Fruit already exists");
+            }
+        }
+
+        // save in persistent storage
+        // String fileName;
+        try {
+            Topping nCandy = ff.createTopping(candy.getName(), candy.getDescription(), candy.getIsVegan());
+            toppingRepository.save(nCandy);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error saving Fruit");
+        }
+
+        // //safe image
+        // Path filePath = flavourFolder.resolve(fileName);
+        // Files.write(filePath, imageFile.getBytes());
+        
+        return ResponseEntity.ok().body(null);
+    }
        
     
     @PostMapping(value = "/ice/addFlavour", produces = "text/plain")
@@ -182,6 +329,7 @@ public class IceController {
                 }
             }
         });
+        cup.setToppings(cupToppings);
 
 
         try{

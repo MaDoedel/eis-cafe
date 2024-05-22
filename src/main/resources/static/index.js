@@ -140,6 +140,11 @@ $(document).ready( function() {
             success:function(new_content){
                 $("#tab-1").html(new_content)
                 $('#iceCreamForm').submit(onIceCreamFormSubmit);
+
+                $('#fruitForm').submit(onFruitFormSubmit);
+                $('#candyForm').submit(onCandyFormSubmit);
+                $('#sauceForm').submit(onSauceFormSubmit);
+
                 $('#placeholderImage').on("click", selectImage);
                 $('#formFile').on("change", previewImage);
                 ListeningIceForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'iceCreamNameInput'), new InputListenerDecorator(new CommentRegexChecker(''), 'iceCreamDescriptionInput')]);
@@ -188,6 +193,10 @@ $(document).ready( function() {
         $('#iceCreamForm').submit(onIceCreamFormSubmit);
         $('#jobsForm').submit(onJobsFormSubmit);
         $('#addCupForm').submit(onAddCupSubmit);
+
+        $('#fruitForm').submit(onFruitFormSubmit);
+        $('#candyForm').submit(onCandyFormSubmit);
+        $('#sauceForm').submit(onSauceFormSubmit);
 
         $(document).on("click",'.flavour-delete-btn', onFlavourDelete);
         $(document).on("click",'.cv-download-btn', onDownloadCV); 
@@ -411,6 +420,84 @@ $(document).ready( function() {
 
         $.ajax({
             url: '/ice/addFlavour',
+            type: 'post',
+            data: formData,
+            contentType: false, // Set contentType to false, FormData will automatically set it correctly
+            processData: false, // Set processData to false to prevent jQuery from processing the data
+            success: function(){
+                refetchIce()
+            },
+            error: function(data){
+                alert(data.responseText)
+            }
+        });
+    }
+
+    function onFruitFormSubmit(e) {
+        e.preventDefault();
+
+        var formData = new FormData($('#fruitForm')[0]);
+        
+        // const iceForm = new Form([new TextRegexChecker('iceCreamNameInput'), new TextRegexChecker('iceCreamDescriptionInput')]);
+        // if(!iceForm.isValid()){
+        //     alert('nnnnnnah');
+        // }
+        
+
+        $.ajax({
+            url: '/ice/addFruit',
+            type: 'post',
+            data: formData,
+            contentType: false, // Set contentType to false, FormData will automatically set it correctly
+            processData: false, // Set processData to false to prevent jQuery from processing the data
+            success: function(){
+                refetchIce()
+            },
+            error: function(data){
+                alert(data.responseText)
+            }
+        });
+    }
+
+    function onCandyFormSubmit(e) {
+        e.preventDefault();
+
+        var formData = new FormData($('#candyForm')[0]);
+        
+        // const iceForm = new Form([new TextRegexChecker('iceCreamNameInput'), new TextRegexChecker('iceCreamDescriptionInput')]);
+        // if(!iceForm.isValid()){
+        //     alert('nnnnnnah');
+        // }
+        
+
+        $.ajax({
+            url: '/ice/addCandy',
+            type: 'post',
+            data: formData,
+            contentType: false, // Set contentType to false, FormData will automatically set it correctly
+            processData: false, // Set processData to false to prevent jQuery from processing the data
+            success: function(){
+                refetchIce()
+            },
+            error: function(data){
+                alert(data.responseText)
+            }
+        });
+    }
+
+    function onSauceFormSubmit(e) {
+        e.preventDefault();
+
+        var formData = new FormData($('#sauceForm')[0]);
+        
+        // const iceForm = new Form([new TextRegexChecker('iceCreamNameInput'), new TextRegexChecker('iceCreamDescriptionInput')]);
+        // if(!iceForm.isValid()){
+        //     alert('nnnnnnah');
+        // }
+        
+
+        $.ajax({
+            url: '/ice/addSauce',
             type: 'post',
             data: formData,
             contentType: false, // Set contentType to false, FormData will automatically set it correctly

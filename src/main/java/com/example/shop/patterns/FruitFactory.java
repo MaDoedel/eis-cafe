@@ -14,7 +14,7 @@ public class FruitFactory extends ToppingFactory{
 
     @Override
     public Topping createTopping(String name, String description, boolean isVegan){
-        Topping fruit = new Fruit(name, description, isVegan);
+        Fruit fruit = new Fruit(name, description);
         for (Pricing p : pricingRepo.findAll()){
             if (p.getDescription().equals("Fruit")){
                 fruit.setPricing(p);

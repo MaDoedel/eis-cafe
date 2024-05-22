@@ -17,4 +17,7 @@ public class Sauce extends Topping {
         super(name, description, isVegan);
     }
 
+    @Override
+    public boolean isSauce(){return true;}
+
 }

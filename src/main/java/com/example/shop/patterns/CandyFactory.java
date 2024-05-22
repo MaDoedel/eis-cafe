@@ -14,7 +14,7 @@ public class CandyFactory extends ToppingFactory{
 
     @Override
     public Topping createTopping(String name, String description, boolean isVegan){
-        Topping candy = new Candy(name, description, isVegan);
+        Candy candy = new Candy(name, description, isVegan);
         for (Pricing p : pricingRepo.findAll()){
             if (p.getDescription().equals("Candy")){
                 candy.setPricing(p);

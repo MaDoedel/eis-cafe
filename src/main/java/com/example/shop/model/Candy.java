@@ -16,4 +16,6 @@ public class Candy extends Topping {
         super(name, description, isVegan);
     }
         
+    @Override
+    public boolean isCandy(){return true;}
 }

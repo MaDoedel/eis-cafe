@@ -83,4 +83,8 @@ public abstract class Topping {
         this.pricing = pricing;
     }
 
+    public boolean isFruit() {return false;}
+    public boolean isSauce() {return false;}
+    public boolean isCandy() {return false;}
+
 }

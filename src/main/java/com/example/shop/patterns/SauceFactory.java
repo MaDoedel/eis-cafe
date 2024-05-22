@@ -14,7 +14,7 @@ public class SauceFactory extends ToppingFactory{
 
     @Override
     public Topping createTopping(String name, String description, boolean isVegan){
-        Topping sauce = new Sauce(name, description, isVegan);
+        Sauce sauce = new Sauce(name, description, isVegan);
         for (Pricing p : pricingRepo.findAll()){
             if (p.getDescription().equals("Sauce")){
                 sauce.setPricing(p);
