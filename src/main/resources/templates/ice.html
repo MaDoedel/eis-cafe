@@ -22,212 +22,231 @@
         </div>
 
         <div class="container-fluid text-center">
-            <div class="row row-cols-3 g-2" id="iceRow">
-              <div class="col-lg-3 sm-4 d-flex align-items-stretch" th:each="flav, someState: ${flavours}" th:if="${someState.index < 7}">
-                <div class="card" style="max-width: 540px;">
-                    <div class="row">
-                      <div class="col-md-4">
-                        <img th:src="@{${'/images/flavours/' + flav.id + '.png'}}" class="img-fluid rounded-start" style="object-fit: cover; height: 100%;" alt="...">
-                      </div>
-                      <div class="col-md-8">
-                        <div class="card-body">
-                          <h5 class="card-title text-start" th:text="${flav.name}"></h5>
-                          <p class="card-text text-start" th:text="${flav.description}"></p>
-                          <button th:attr="data-id=${flav.id}" type="submit" class="btn btn-primary flavour-delete-btn text-end">Delete</button>
-                        </div>
+          <div class="row" id="iceRow">
+            <div class="col-lg-3 align-items-stretch mb-2" th:each="flav : ${flavours}">
+              <div class="card" >
+                  <div class="row">
+                    <div class="col-md-4">
+                      <img th:src="@{${'/images/flavours/' + flav.id + '.png'}}" class="img-fluid rounded-start" style="object-fit: cover; height: 100%; width: 100%" alt="...">
+                    </div>
+                    <div class="col-md-5">
+                      <div class="card-body">
+                        <h5 class="card-title text-start" th:text="${flav.name}"></h5>
+                        <p class="card-text text-start" th:text="${flav.description}"></p>
                       </div>
                     </div>
-                </div>
-              </div>
-              <div class="col-lg-3 sm-4 d-flex align-items-stretch" >
-                <form method="POST" action="/ice/addFlavour" id="iceCreamForm" enctype="multipart/form-data">
-                  <div class="card" style="max-width: 540px;">
-                    <div class="row">
-                      <div class="col-md-4">
-                        <img th:src="@{${'/images/flavours/placeholder.png'}}" class="img-fluid rounded-start" style="object-fit: cover; height: 100%; cursor: pointer;" alt="..." id="placeholderImage">
-                        <input type="file" class="d-none" id="formFile" name="image">
-                      </div>
-                      <div class="col-md-8">
-                        <div class="card-body">
-                          <input type="text" class="form-control card-title text-start" id="iceCreamNameInput" name="name" placeholder="Mintberry Crunch">
-                          <input type="text" class="form-control card-text text-start" id="iceCreamDescriptionInput" name="description" placeholder="creamy">
-                          <div class="form-check form-switch form-check-reverse">
-                            <input class="form-check-input" type="checkbox" id="iceCreamVeganInput" name="isVegan">
-                            <label class="form-check-label" for="iceCreamVeganInput">Vegan</label>
-                          </div>
-                          <button tabindex="0" id="saveButton" type="submit" class="btn btn-outline-primary text-end" >Speichern</button>
-                        </div>
+                    <div class="col-md-3 "> 
+                      <div class="input-group">
+                        <button th:attr="data-id=${flav.id}" type="submit" class="btn btn-outline-secondary flavour-edit-btn"><span class="bi bi-pen"></span></button>
+                        <button th:attr="data-id=${flav.id}" type="submit" class="btn btn-outline-secondary flavour-delete-btn"><span class="bi bi-x-lg"></span></button>
                       </div>
                     </div>
                   </div>
-                </form>
               </div>
             </div>
+            
+            <div class="col-lg-3 align-items-stretch mb-2" >
+              <form method="POST" action="/ice/addFlavour" id="iceCreamForm" enctype="multipart/form-data">
+                <div class="card" >
+                  <div class="row">
+                    <div class="col-md-4">
+                      <img th:src="@{${'/images/flavours/placeholder.png'}}" class="img-fluid rounded-start" style="object-fit: cover; width: 100%; cursor: pointer; height: 100%;" alt="..." id="placeholderImage">
+                      <input type="file" class="d-none" id="formFile" name="image">
+                    </div>
+                    <div class="col-md-8">
+                      <div class="card-body">
+                        <input type="text" class="form-control card-title text-start" id="iceCreamNameInput" name="name" placeholder="Mintberry Crunch">
+                        <input type="text" class="form-control card-text text-start" id="iceCreamDescriptionInput" name="description" placeholder="creamy">
+                        <div class="form-check form-switch form-check-reverse">
+                          <input class="form-check-input" type="checkbox" id="iceCreamVeganInput" name="isVegan">
+                          <label class="form-check-label" for="iceCreamVeganInput">Vegan</label>
+                        </div>
+                        <button tabindex="0" id="saveButton" type="submit" class="btn btn-outline-primary text-center" >Speichern</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
-        <div class="container-fluid text-center">
+
+        <!-- <div class="container-fluid text-center">
           <div class="row">
             <div class="col-md-12">
               <button class="btn btn-primary" th:attr="data-count=${flavours.size}" id="showMoreFlavourBtn">Show More</button>
             </div>
           </div>
-        </div>
+        </div> -->
 
-        <div class="row">
+        <div class="container-fluid text-center">
           <div class="col-md-12">   
             <hr class="hr-text gradient" data-content="Topping">
           </div>
+        </div>
 
-          <div class="col-md-1"></div>
+        <ul class="nav nav-underline justify-content-center" id="myTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="fruit-tab" data-bs-toggle="tab" data-bs-target="#fruit-tab-pane" type="button" role="tab" aria-controls="fruit-tab-pane" aria-selected="true">Frucht</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="sauce-tab" data-bs-toggle="tab" data-bs-target="#sauce-tab-pane" type="button" role="tab" aria-controls="sauce-tab-pane" aria-selected="false">Soße</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="candy-tab" data-bs-toggle="tab" data-bs-target="#candy-tab-pane" type="button" role="tab" aria-controls="candy-tab-pane" aria-selected="false">Süßes</button>
+          </li>
+        </ul>
 
-          <div class="col-md-10">   
-            <ul class="nav nav-underline justify-content-center" id="myTab" role="tablist">
-              <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="fruit-tab" data-bs-toggle="tab" data-bs-target="#fruit-tab-pane" type="button" role="tab" aria-controls="fruit-tab-pane" aria-selected="true">Frucht</button>
-              </li>
-              <li class="nav-item" role="presentation">
-                <button class="nav-link" id="sauce-tab" data-bs-toggle="tab" data-bs-target="#sauce-tab-pane" type="button" role="tab" aria-controls="sauce-tab-pane" aria-selected="false">Soße</button>
-              </li>
-              <li class="nav-item" role="presentation">
-                <button class="nav-link" id="candy-tab" data-bs-toggle="tab" data-bs-target="#candy-tab-pane" type="button" role="tab" aria-controls="candy-tab-pane" aria-selected="false">Süßes</button>
-              </li>
-            </ul>
+        <!-- look the next div, something is wrong here, as following divs are nor displayed, help me -->
 
-            <div class="tab-content" id="myTabContent">
-              <div class="tab-pane fade show active" id="fruit-tab-pane" role="tabpanel" aria-labelledby="fruit-tab" tabindex="0">
-                <div class="row row-cols-3 g-2" id="fruitRow">
-                  <div class="col-lg-3 sm-4 d-flex align-items-stretch" th:each="topp: ${toppings}" th:if="${topp.isFruit()}">
-                    <div class="card" style="max-width: 540px;">
-                      <div class="row">
-                        <div class="col-md-4">
-                          <img th:src="@{${'/images/flavours/placeholder.png'}}" class="img-fluid rounded-start" style="object-fit: cover; height: 100%;" alt="...">
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="fruit-tab-pane" role="tabpanel" aria-labelledby="fruit-tab" tabindex="0">
+            <div class="container-fluid text-center">
+              <div class="row" id="fruitRow">
+                <div class="col-lg-3 align-items-stretch mb-2" th:each="topp: ${toppings}" th:if="${topp.isFruit()}">
+                  <div class="card">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <img th:src="@{${'/images/flavours/placeholder.png'}}" class="img-fluid rounded-start" style="object-fit: cover; height: 100%; width: 100%;" alt="...">
+                      </div>
+                      <div class="col-md-5">
+                        <div class="card-body">
+                          <h5 class="card-title text-start" th:text="${topp.name}"></h5>
+                          <p class="card-text text-start" th:text="${topp.description}"></p>
                         </div>
-                        <div class="col-md-8">
-                          <div class="card-body">
-                            <h5 class="card-title text-start" th:text="${topp.name}"></h5>
-                            <p class="card-text text-start" th:text="${topp.description}"></p>
-                            <button th:attr="data-id=${topp.id}" type="submit" class="btn btn-primary topping-delete-btn text-end">Delete</button>
-                          </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="input-group">
+                          <button th:attr="data-id=${topp.id}" type="submit" class="btn btn-outline-secondary topping-edit-btn"><span class="bi bi-pen"></span></button>
+                          <button th:attr="data-id=${topp.id}" type="submit" class="btn btn-outline-secondary topping-delete-btn"><span class="bi bi-x-lg"></span></button>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div class="col-lg-3 sm-4 d-flex align-items-stretch" >
-                    <form method="POST" action="/ice/addFruit" id="fruitForm" enctype="multipart/form-data">
-                      <div class="card" style="max-width: 540px;">
-                        <div class="row">
-                          <div class="col-md-4">
-                            <img th:src="@{${'/images/flavours/placeholder.png'}}" class="img-fluid rounded-start" style="object-fit: cover; height: 100%; cursor: pointer;" alt="...">
-                            <input type="file" class="d-none" id="formFile" name="image">
-                          </div>
-                          <div class="col-md-8">
-                            <div class="card-body">
-                              <input type="text" class="form-control card-title text-start" id="fruitNameInput" name="name" placeholder="Banana">
-                              <input type="text" class="form-control card-text text-start" id="fruitDescriptionInput" name="description" placeholder="sweet">
-                              <button tabindex="0" id="saveButton" type="submit" class="btn btn-outline-primary text-end" >Speichern</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </form>
                   </div>
                 </div>
-              </div>
-              <div class="tab-pane fade" id="sauce-tab-pane" role="tabpanel" aria-labelledby="sauce-tab" tabindex="0">
-                <div class="row row-cols-3 g-2" id="sauceRow">
-                  <div class="col-lg-3 sm-4 d-flex align-items-stretch" th:each="topp: ${toppings}" th:if="${topp.isSauce()}">
-                    <div class="card" style="max-width: 540px;">
+                <div class="col-lg-3 align-items-stretch mb-2" >
+                  <form method="POST" action="/ice/addFruit" id="fruitForm" enctype="multipart/form-data">
+                    <div class="card">
                       <div class="row">
                         <div class="col-md-4">
-                          <img th:src="@{${'/images/flavours/placeholder.png'}}" class="img-fluid rounded-start" style="object-fit: cover; height: 100%;" alt="...">
+                          <img th:src="@{${'/images/flavours/placeholder.png'}}" class="img-fluid rounded-start" style="object-fit: cover; height: 100%; cursor: pointer;width: 100%;" alt="...">
+                          <input type="file" class="d-none" id="formFile" name="image">
                         </div>
                         <div class="col-md-8">
                           <div class="card-body">
-                            <h5 class="card-title text-start" th:text="${topp.name}"></h5>
-                            <p class="card-text text-start" th:text="${topp.description}"></p>
-                            <button th:attr="data-id=${topp.id}" type="submit" class="btn btn-primary topping-delete-btn text-end">Delete</button>
+                            <input type="text" class="form-control card-title text-start" id="fruitNameInput" name="name" placeholder="Banana">
+                            <input type="text" class="form-control card-text text-start" id="fruitDescriptionInput" name="description" placeholder="sweet">
+                            <button tabindex="0" id="saveButton" type="submit" class="btn btn-outline-primary text-center" >Speichern</button>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div class="col-lg-3 sm-4 d-flex align-items-stretch" >
-                    <form method="POST" action="/ice/addSauce" id="sauceForm" enctype="multipart/form-data">
-                      <div class="card" style="max-width: 540px;">
-                        <div class="row">
-                          <div class="col-md-4">
-                            <img th:src="@{${'/images/flavours/placeholder.png'}}" class="img-fluid rounded-start" style="object-fit: cover; height: 100%; cursor: pointer;" alt="...">
-                            <input type="file" class="d-none" id="formFile" name="image">
-                          </div>
-                          <div class="col-md-8">
-                            <div class="card-body">
-                              <input type="text" class="form-control card-title text-start" id="sauceNameInput" name="name" placeholder="Erdbeer Soße">
-                              <input type="text" class="form-control card-text text-start" id="sauceDescriptionInput" name="description" placeholder="sweet">
-                              <div class="form-check form-switch form-check-reverse">
-                                <input class="form-check-input" type="checkbox" id="sauceVeganInput" name="isVegan">
-                                <label class="form-check-label" for="sauceVeganInput">Vegan</label>
-                              </div>
-                              <button tabindex="0" id="saveButton" type="submit" class="btn btn-outline-primary text-end" >Speichern</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </div>
-              <div class="tab-pane fade" id="candy-tab-pane" role="tabpanel" aria-labelledby="candy-tab" tabindex="0">
-                <div class="row row-cols-3 g-2" id="candyRow">
-                  <div class="col-lg-3 sm-4 d-flex align-items-stretch" th:each="topp: ${toppings}" th:if="${topp.isCandy()}">
-                    <div class="card" style="max-width: 540px;">
-                      <div class="row">
-                        <div class="col-md-4">
-                          <img th:src="@{${'/images/flavours/placeholder.png'}}" class="img-fluid rounded-start" style="object-fit: cover; height: 100%;" alt="...">
-                        </div>
-                        <div class="col-md-8">
-                          <div class="card-body">
-                            <h5 class="card-title text-start" th:text="${topp.name}"></h5>
-                            <p class="card-text text-start" th:text="${topp.description}"></p>
-                            <button th:attr="data-id=${topp.id}" type="submit" class="btn btn-primary topping-delete-btn text-end">Delete</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-lg-3 sm-4 d-flex align-items-stretch" >
-                    <form method="POST" action="/ice/addCandy" id="candyForm" enctype="multipart/form-data">
-                      <div class="card" style="max-width: 540px;">
-                        <div class="row">
-                          <div class="col-md-4">
-                            <img th:src="@{${'/images/flavours/placeholder.png'}}" class="img-fluid rounded-start" style="object-fit: cover; height: 100%; cursor: pointer;" alt="...">
-                            <input type="file" class="d-none" id="formFile" name="image">
-                          </div>
-                          <div class="col-md-8">
-                            <div class="card-body">
-                              <input type="text" class="form-control card-title text-start" id="candyNameInput" name="name" placeholder="Müsli">
-                              <input type="text" class="form-control card-text text-start" id="candyDescriptionInput" name="description" placeholder="sweet">
-                              <div class="form-check form-switch form-check-reverse">
-                                <input class="form-check-input" type="checkbox" id="candyVeganInput" name="isVegan">
-                                <label class="form-check-label" for="candyVeganInput">Vegan</label>
-                              </div>
-                              <button tabindex="0" id="saveButton" type="submit" class="btn btn-outline-primary text-end" >Speichern</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </form>
-                  </div>
+                  </form>
                 </div>
               </div>
             </div>
           </div>
-
-          <div class="col-md-1"></div>
-
+          <div class="tab-pane fade" id="sauce-tab-pane" role="tabpanel" aria-labelledby="sauce-tab" tabindex="0">
+            <div class="container-fluid text-center">
+              <div class="row" id="sauceRow">
+                <div class="col-lg-3 align-items-stretch mb-2" th:each="topp: ${toppings}" th:if="${topp.isSauce()}">
+                  <div class="card">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <img th:src="@{${'/images/flavours/placeholder.png'}}" class="img-fluid rounded-start" style="object-fit: cover; height: 100%; width: 100%;" alt="...">
+                      </div>
+                      <div class="col-md-5">
+                        <div class="card-body">
+                          <h5 class="card-title text-start" th:text="${topp.name}"></h5>
+                          <p class="card-text text-start" th:text="${topp.description}"></p>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="input-group">
+                          <button th:attr="data-id=${topp.id}" type="submit" class="btn btn-outline-secondary topping-edit-btn"><span class="bi bi-pen"></span></button>
+                          <button th:attr="data-id=${topp.id}" type="submit" class="btn btn-outline-secondary topping-delete-btn"><span class="bi bi-x-lg"></span></button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-3 align-items-stretch mb-2" >
+                  <form method="POST" action="/ice/addSauce" id="sauceForm" enctype="multipart/form-data">
+                    <div class="card">
+                      <div class="row">
+                        <div class="col-md-4">
+                          <img th:src="@{${'/images/flavours/placeholder.png'}}" class="img-fluid rounded-start" style="object-fit: cover; cursor: pointer; height: 100%; width: 100%;" alt="...">
+                          <input type="file" class="d-none" id="formFile" name="image">
+                        </div>
+                        <div class="col-md-8">
+                          <div class="card-body">
+                            <input type="text" class="form-control card-title text-start" id="sauceNameInput" name="name" placeholder="Erdbeer Soße">
+                            <input type="text" class="form-control card-text text-start" id="sauceDescriptionInput" name="description" placeholder="sweet">
+                            <div class="form-check form-switch form-check-reverse">
+                              <input class="form-check-input" type="checkbox" id="sauceVeganInput" name="isVegan">
+                              <label class="form-check-label" for="sauceVeganInput">Vegan</label>
+                            </div>
+                            <button tabindex="0" id="saveButton" type="submit" class="btn btn-outline-primary text-end" >Speichern</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="candy-tab-pane" role="tabpanel" aria-labelledby="candy-tab" tabindex="0">
+            <div class="container-fluid text-center">
+              <div class="row" id="candyRow">
+                <div class="col-lg-3 align-items-stretch mb-2" th:each="topp: ${toppings}" th:if="${topp.isCandy()}">
+                  <div class="card">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <img th:src="@{${'/images/flavours/placeholder.png'}}" class="img-fluid rounded-start" style="object-fit: cover; height: 100%; width: 100%;" alt="...">
+                      </div>
+                      <div class="col-md-5">
+                        <div class="card-body">
+                          <h5 class="card-title text-start" th:text="${topp.name}"></h5>
+                          <p class="card-text text-start" th:text="${topp.description}"></p>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="input-group">
+                          <button th:attr="data-id=${topp.id}" type="submit" class="btn btn-outline-secondary topping-edit-btn"><span class="bi bi-pen"></span></button>
+                          <button th:attr="data-id=${topp.id}" type="submit" class="btn btn-outline-secondary topping-delete-btn"><span class="bi bi-x-lg"></span></button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-3 align-items-stretch mb-2" >
+                  <form method="POST" action="/ice/addCandy" id="candyForm" enctype="multipart/form-data">
+                    <div class="card">
+                      <div class="row">
+                        <div class="col-md-4">
+                          <img th:src="@{${'/images/flavours/placeholder.png'}}" class="img-fluid rounded-start" style="object-fit: cover; cursor: pointer; height: 100%; width: 100%;" alt="...">
+                          <input type="file" class="d-none" id="formFile" name="image">
+                        </div>
+                        <div class="col-md-8">
+                          <div class="card-body">
+                            <input type="text" class="form-control card-title text-start" id="candyNameInput" name="name" placeholder="Müsli">
+                            <input type="text" class="form-control card-text text-start" id="candyDescriptionInput" name="description" placeholder="sweet">
+                            <div class="form-check form-switch form-check-reverse">
+                              <input class="form-check-input" type="checkbox" id="candyVeganInput" name="isVegan">
+                              <label class="form-check-label" for="candyVeganInput">Vegan</label>
+                            </div>
+                            <button tabindex="0" id="saveButton" type="submit" class="btn btn-outline-primary text-end" >Speichern</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-
-        
-        
-        
 
         <div class="row">
           <div class="col-md-12">   
@@ -236,20 +255,34 @@
         </div>
 
         <div class="container-fluid text-center">
-          <div class="row row-cols-3 g-2" id="cupRow">
-            <div class="col-lg-3 sm-4 d-flex align-items-stretch" th:each="cup: ${cups}">
-              <div class="card" style="max-width: 540px;">
+          <div class="row row-cols-1 row-cols-md-5 mb-2" id="cupRow">
+            <div class="col" th:each="cup: ${cups}">
+              <div class="card h-100">
+                <img th:src="@{${'/images/flavours/placeholder.png'}}" class="card-img-top" style="object-fit: cover; height: 100%; width: 100%;" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title" th:text="${cup.name}"></h5>
+                  <p class="card-text">something</p>
+                </div>
+                <div class="card-footer">
                   <div class="row">
-                    <div class="col-md-4">
-                      <img th:src="@{${'/images/flavours/placeholder.png'}}" class="img-fluid rounded-start" style="object-fit: cover; height: 100%;" alt="...">
+                    <div class="col-6">
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">€</span>
+                        </div>
+                        <small class="form-control" th:text="${cup.price}"></small>
+                      </div>
                     </div>
-                    <div class="col-md-8">
-                      <div class="card-body">
-                        <h5 class="card-title text-start" th:text="${cup.name}"></h5>
-                        <!-- <button th:attr="data-id=${cup.id}" type="submit" class="btn btn-primary flavour-delete-btn text-end">Delete</button> -->
+                    <div class="col-3"></div>
+
+                    <div class="col-3">
+                      <div class="input-group">
+                        <button th:attr="data-id=${cup.id}" type="submit" class="btn btn-sm btn-outline-secondary cup-edit-btn"><span class="bi bi-pen"></span></button>
+                        <button th:attr="data-id=${cup.id}" type="submit" class="btn btn-sm btn-outline-secondary cup-delete-btn"><span class="bi bi-x-lg"></span></button>
                       </div>
                     </div>
                   </div>
+                </div>
               </div>
             </div>
           </div>
