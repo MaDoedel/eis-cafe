@@ -199,6 +199,9 @@ $(document).ready( function() {
         $('#sauceForm').submit(onSauceFormSubmit);
 
         $(document).on("click",'.flavour-delete-btn', onFlavourDelete);
+        $(document).on("click",'.topping-delete-btn', onToppingDelete);
+        $(document).on("click",'.cup-delete-btn', onCupDelete);
+
         $(document).on("click",'.cv-download-btn', onDownloadCV); 
         $(document).on("click",'.btn-number', onCupCreateButtons); 
 
@@ -216,8 +219,42 @@ $(document).ready( function() {
         $('#CVInput').on("change", previewCV);
     }
 
+    function onCupDelete(e) {
+        e.preventDefault(); 
+
+        cups = $(this).attr('data-field');
+
+        $.ajax({
+            url: '/ice/deleteCup/' + $(this).attr('data-id'),
+            type: 'delete',
+            success: function(){
+                refetchIce()
+            },
+            error: function(data){
+                alert(data.responseText)
+            }
+        });
+    }
+
+    function onToppingDelete(e) {
+        e.preventDefault(); 
+
+        cups = $(this).attr('data-field');
+
+        $.ajax({
+            url: '/ice/deleteTopping/' + $(this).attr('data-id'),
+            type: 'delete',
+            success: function(){
+                refetchIce()
+            },
+            error: function(data){
+                alert(data.responseText)
+            }
+        });
+    }
+
     function onAddCupSubmit(e) {
-        e.preventDefault(); // Prevent the form from submitting the traditional way
+        e.preventDefault(); 
 
         let formData = $(this).serialize(); // Serialize the form data
 
@@ -448,8 +485,8 @@ $(document).ready( function() {
             url: '/ice/addFruit',
             type: 'post',
             data: formData,
-            contentType: false, // Set contentType to false, FormData will automatically set it correctly
-            processData: false, // Set processData to false to prevent jQuery from processing the data
+            contentType: false,
+            processData: false, 
             success: function(){
                 refetchIce()
             },

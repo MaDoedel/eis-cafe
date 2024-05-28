@@ -295,6 +295,28 @@ public class IceController {
 
         return ResponseEntity.ok().body(null);
     }
+
+    @DeleteMapping(value = "/ice/deleteTopping/{id}")
+    public ResponseEntity<String> deleteTopping(@PathVariable("id") long id) throws IOException{
+        try {
+            toppingRepository.deleteById(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("Error deleting topping");
+        }
+        return ResponseEntity.ok().body(null);
+    }
+
+    @DeleteMapping(value = "/ice/deleteCup/{id}")
+    public ResponseEntity<String> deleteCup(@PathVariable("id") long id) throws IOException{
+        try {
+            cupRepository.deleteById(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("Error deleting topping");
+        }
+        return ResponseEntity.ok().body(null);
+    }
     
     @PostMapping("/ice/addCup")
     public ResponseEntity<String> submitFlavors(
