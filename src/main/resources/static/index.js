@@ -148,7 +148,15 @@ $(document).ready( function() {
                 $('#placeholderImage').on("click", selectImage);
                 $('#formFile').on("change", previewImage);
                 ListeningIceForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'iceCreamNameInput'), new InputListenerDecorator(new CommentRegexChecker(''), 'iceCreamDescriptionInput')]);
+                ListeningFruitForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'fruitNameInput'), new InputListenerDecorator(new CommentRegexChecker(''), 'fruitDescriptionInput')]);
+                ListeningCandyForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'candyNameInput'), new InputListenerDecorator(new CommentRegexChecker(''), 'candyDescriptionInput')]);
+                ListeningSauceForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'sauceNameInput'), new InputListenerDecorator(new CommentRegexChecker(''), 'sauceDescriptionInput')]);
+
                 ListeningIceForm.isValid();
+                ListeningFruitForm.isValid();
+                ListeningCandyForm.isValid();
+                ListeningSauceForm.isValid();
+                
 
             },
             error: function(){
@@ -183,11 +191,20 @@ $(document).ready( function() {
         const ListeningIceForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'iceCreamNameInput'), new InputListenerDecorator(new CommentRegexChecker(''), 'iceCreamDescriptionInput')]);
         const ListeningJobsForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'applicantNameInput'), new InputListenerDecorator(new TextRegexChecker(''), 'applicantSurnameInput'), new InputListenerDecorator(new EmailRegexChecker(''), 'applicantMailInput'), new TextAreaListenerDecorator(new TextLengthChecker(''), 'applicantCommentTextArea')]);
         const ListeningCupForm = new ListeningForm([new InputListenerDecorator(new PriceRegexChecker(''), 'cupPriceInput'), new InputListenerDecorator(new TextRegexChecker(''), 'cupNameInput')]);
+        const ListeningFruitForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'fruitNameInput'), new InputListenerDecorator(new CommentRegexChecker(''), 'fruitDescriptionInput')]);
+        const ListeningCandyForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'candyNameInput'), new InputListenerDecorator(new CommentRegexChecker(''), 'candyDescriptionInput')]);
+        const ListeningSauceForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'sauceNameInput'), new InputListenerDecorator(new CommentRegexChecker(''), 'sauceDescriptionInput')]);
+
 
 
         ListeningIceForm.isValid();
         ListeningJobsForm.isValid();
-        ListeningCupForm.isValid()
+        ListeningCupForm.isValid();
+        ListeningFruitForm.isValid();
+        ListeningCandyForm.isValid();
+        ListeningSauceForm.isValid();
+
+
 
         $('#userLoginForm').submit(onLoginSubmit);
         $('#iceCreamForm').submit(onIceCreamFormSubmit);
@@ -449,7 +466,7 @@ $(document).ready( function() {
 
         var formData = new FormData($('#iceCreamForm')[0]);
         
-        const iceForm = new Form([new TextRegexChecker('iceCreamNameInput'), new TextRegexChecker('iceCreamDescriptionInput')]);
+        const iceForm = new Form([new TextRegexChecker('iceCreamNameInput'), new CommentRegexChecker('iceCreamDescriptionInput')]);
         if(!iceForm.isValid()){
             alert('nnnnnnah');
         }
