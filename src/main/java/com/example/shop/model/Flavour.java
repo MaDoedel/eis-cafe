@@ -34,6 +34,11 @@ public class Flavour {
     @JoinColumn(name="price_id")
     private Pricing pricing;
 
+    // Gets deleted 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "file_id", referencedColumnName = "id")
+    private File file;
+
 
     public Flavour(){}
 
@@ -43,6 +48,12 @@ public class Flavour {
         this.description = description;
     }
 
+    public File getFile(){
+        return file;
+    }
+    public void setFile(File file){
+        this.file = file;
+    }
     public void setId(long id) {
         this.id = id;
     }
@@ -81,4 +92,5 @@ public class Flavour {
 
     public Pricing getPricing() {
         return pricing;
-    }}
+    }
+}

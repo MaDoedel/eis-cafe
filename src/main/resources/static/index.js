@@ -273,20 +273,16 @@ $(document).ready( function() {
     function onAddCupSubmit(e) {
         e.preventDefault(); 
 
-        let formData = $(this).serialize(); // Serialize the form data
+        let formData = $(this).serialize(); 
 
         $.ajax({
           type: 'POST',
           url: '/ice/addCup',
           data: formData,
-          success: function (response) {
-            // Handle the response here
-            console.log('Form submitted successfully');
-            alert('Form submitted successfully');
+          success: function () {
+            refetchIce();
           },
-          error: function (error) {
-            // Handle the error here
-            console.error('Form submission failed');
+          error: function () {
             alert('Form submission failed');
           }
         });

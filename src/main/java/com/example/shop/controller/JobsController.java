@@ -72,7 +72,7 @@ public class JobsController {
             try {
                 System.out.println(user.getEmail());
                 user = userRepository.save(user);
-                fileName = user.getId() + pdfFile.getOriginalFilename().substring(pdfFile.getOriginalFilename().lastIndexOf('.'));
+                fileName = user.getId() + ".pdf";
             } catch (Exception e) {
                 e.printStackTrace();
                 return ResponseEntity.badRequest().body("Something went wrong");
@@ -82,7 +82,7 @@ public class JobsController {
             Path filePath = urdir.resolve(fileName);
             Files.write(filePath, pdfFile.getBytes());
 
-            File file = new File(fileName, filePath.toString());
+            File file = new File(fileName, filePath.toString(), "pdf");
             fileRepository.save(file);
 
             JobRequest jobRequest = new JobRequest(user, file, ((comment == null) || (comment.length() == 0)) ? "" : comment, applicantType);

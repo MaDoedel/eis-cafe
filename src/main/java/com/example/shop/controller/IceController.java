@@ -19,13 +19,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.core.io.Resource;
 
-import com.example.shop.model.Candy;
-import com.example.shop.model.Cup;
-import com.example.shop.model.Flavour;
-import com.example.shop.model.Fruit;
-import com.example.shop.model.Pricing;
-import com.example.shop.model.Sauce;
-import com.example.shop.model.Topping;
+import com.example.shop.model.*;
 import com.example.shop.patterns.CandyFactory;
 import com.example.shop.patterns.FruitFactory;
 import com.example.shop.patterns.SauceFactory;
@@ -46,6 +40,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.shop.repository.ArticleRepository;
 import com.example.shop.repository.CupRepository;
+import com.example.shop.repository.FileRepository;
 import com.example.shop.repository.FlavourRepository;
 import com.example.shop.repository.JobRequestRepository;
 import com.example.shop.repository.UserRepository;
@@ -80,6 +75,10 @@ public class IceController {
 
     @Autowired
     ToppingRepository toppingRepository;
+        
+
+    @Autowired
+    FileRepository fileRepository;
         
 
     @PostMapping(value = "/ice/addFruit", produces = "text/plain")
@@ -243,6 +242,16 @@ public class IceController {
             return ResponseEntity.badRequest().body("Uploaded file is not an image.");
         }
 
+        Pattern pattern = Pattern.compile("image/(.*)");
+        Matcher matcher = pattern.matcher(imageFile.getContentType());
+        String fileformat = "";
+
+        if (matcher.find()) {
+            fileformat = matcher.group(1);
+        } else {
+            throw new IllegalArgumentException("Invalid MIME type. It should be in the format 'image/...'");
+        }
+
         // verify flavour is not already in the list
         // note: technically multiple users could add the same flavour at the same time,
         //       consider a lock for the database to prevent this
@@ -262,7 +271,7 @@ public class IceController {
                 }
             }
             flavour = flavourRepository.save(flavour);
-            fileName = flavour.getId() + imageFile.getOriginalFilename().substring(imageFile.getOriginalFilename().lastIndexOf('.'));
+            fileName = flavour.getId() + "." + fileformat;
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error saving flavour");
         }
@@ -270,7 +279,14 @@ public class IceController {
         //safe image
         Path filePath = flavourFolder.resolve(fileName);
         Files.write(filePath, imageFile.getBytes());
-        
+
+
+        com.example.shop.model.File file = new com.example.shop.model.File(fileName, filePath.toString(), fileformat);
+        fileRepository.save(file);
+
+        flavour.setFile(file);
+        flavourRepository.save(flavour);
+
         return ResponseEntity.ok().body(null);
     }
     

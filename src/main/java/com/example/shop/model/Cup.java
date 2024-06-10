@@ -28,7 +28,7 @@ public class Cup {
     )
     private List<Flavour> flavours;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
         name = "cup_toppings",
         joinColumns = @JoinColumn(name = "cup_id"),

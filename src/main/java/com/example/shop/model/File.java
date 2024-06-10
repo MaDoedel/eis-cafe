@@ -27,11 +27,24 @@ public class File {
     @NotBlank(message = "Invalid url")  
     private String url;
 
+    @Column(name = "type")
+    @NotBlank(message = "Invalid type")  
+    private String type;
+
     public File(){}
 
-    public File(String fileName, String url){
+    public File(String fileName, String url, String type){
         this.fileName = fileName; 
         this.url = url;
+        this.type = type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+    
+    public String getType() {
+        return type;
     }
 
     public void setId(long id) {
