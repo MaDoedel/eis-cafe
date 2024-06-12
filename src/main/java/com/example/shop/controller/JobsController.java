@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -22,10 +23,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.shop.model.File;
 import com.example.shop.model.JobRequest;
+import com.example.shop.model.Role;
 import com.example.shop.model.User;
 import com.example.shop.repository.FileRepository;
 import com.example.shop.repository.JobRequestRepository;
+import com.example.shop.repository.RoleRepository;
 import com.example.shop.repository.UserRepository;
+
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import ch.qos.logback.core.model.Model;
 
@@ -43,6 +48,11 @@ public class JobsController {
     @Autowired
     JobRequestRepository jobRequestRepository; 
 
+    @Autowired
+    RoleRepository roleRepository; 
+
+    //PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     @PostMapping(value = "/jobs/apply", produces = "text/plain")
     public ResponseEntity<String> addUser(
         @RequestParam("name") String name,
@@ -52,6 +62,8 @@ public class JobsController {
         @RequestParam("applicantType") String applicantType,
         @RequestParam(value = "CV") MultipartFile pdfFile) throws IOException {
             User user = new User(name, surname, email, "pending");
+            user.setRoles(roleRepository.findByName("ROLE_NONE"));
+            user.setPassword("egal");
 
             if (!Files.exists(urdir)) {
                 Files.createDirectories(urdir);
