@@ -364,6 +364,7 @@ $(document).ready( function() {
         });
     }
 
+    
     function onLoginSubmit(e){
         e.preventDefault();
         const alertPlaceholder = document.getElementById('liveAlertPlaceholder')

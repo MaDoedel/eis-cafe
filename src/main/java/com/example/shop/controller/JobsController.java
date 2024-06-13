@@ -30,7 +30,7 @@ import com.example.shop.repository.JobRequestRepository;
 import com.example.shop.repository.RoleRepository;
 import com.example.shop.repository.UserRepository;
 
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import ch.qos.logback.core.model.Model;
 
@@ -51,7 +51,7 @@ public class JobsController {
     @Autowired
     RoleRepository roleRepository; 
 
-    //PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    PasswordEncoder passwordEncoder;
 
     @PostMapping(value = "/jobs/apply", produces = "text/plain")
     public ResponseEntity<String> addUser(
@@ -63,7 +63,7 @@ public class JobsController {
         @RequestParam(value = "CV") MultipartFile pdfFile) throws IOException {
             User user = new User(name, surname, email, "pending");
             user.setRoles(roleRepository.findByName("ROLE_NONE"));
-            user.setPassword("egal");
+            user.setPassword(passwordEncoder.encode("egal"));
 
             if (!Files.exists(urdir)) {
                 Files.createDirectories(urdir);

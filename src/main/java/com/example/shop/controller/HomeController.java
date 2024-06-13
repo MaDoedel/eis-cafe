@@ -90,6 +90,12 @@ public class HomeController {
         return "ice :: ice(flavours=${flavours}, articles=${articles}, toppings=${toppings}, cups=${cups})";
     }
 
+    @GetMapping(value = "/login")
+    public String getLogin() {
+        return "login :: login";
+    }
+
+
     @GetMapping(value = "/jobs")
     public String getJobs(Model model) {
         model.addAttribute("jobRequests", jobRequestRepository.findAll());
