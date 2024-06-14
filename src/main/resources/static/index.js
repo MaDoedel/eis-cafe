@@ -373,6 +373,7 @@ $(document).ready( function() {
         $.ajax({
             url: '/login',
             type: 'post',
+            data: $('#userLoginForm').serialize(),
             success:function(){
                 alertPlaceholder.innerHTML = [
                     `<div class="alert alert-success alert-dismissible" role="alert"> You in </div>`

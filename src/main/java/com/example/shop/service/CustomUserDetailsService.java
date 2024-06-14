@@ -3,9 +3,11 @@ package com.example.shop.service;
 import java.util.Collection;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.example.shop.model.Role;
@@ -19,18 +21,21 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
     
+    @Autowired
     private UserRepository userRepository;
 
-    public CustomUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public CustomUserDetailsService() {
+        super();
     }
 
     @Override
     public UserDetails loadUserByUsername(String mail) {
+        System.out.println(mail);
+
         List<User> users = userRepository.findByEmail(mail);
 
         if (users.isEmpty()) {
-            throw new RuntimeException("User not found");
+            throw new UsernameNotFoundException("Username not found");
         }
 
         return new org.springframework.security.core.userdetails.User(users.get(0).getEmail(), users.get(0).getPassword(), mapRolesToAuthorities(users.get(0).getRoles()));
