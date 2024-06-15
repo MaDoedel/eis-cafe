@@ -368,23 +368,25 @@ $(document).ready( function() {
     function onLoginSubmit(e){
         e.preventDefault();
         const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
-        const wrapper = document.createElement('div')
 
         $.ajax({
             url: '/login',
             type: 'post',
             data: $('#userLoginForm').serialize(),
+            Credentials: 'include',
             success:function(){
                 alertPlaceholder.innerHTML = [
                     `<div class="alert alert-success alert-dismissible" role="alert"> You in </div>`
                 ].join('')
                 $('#userLoginForm').remove();
             },
-            error: function(){
+            error: function(jqXHR, textStatus, errorThrown) {
+                // Handle failed login
                 alertPlaceholder.innerHTML = [
-                    `<div class="alert alert-danger alert-dismissible" role="alert"> Naah </div>`
+                    `<div class="alert alert-danger alert-dismissible" role="alert"> Something Wrong</div>`
                 ].join('')
                 $('#userLoginForm')[0].reset();
+                
             }
         });            
     }

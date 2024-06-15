@@ -4,11 +4,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@Controller
 public class LoginController {
 
 	private final AuthenticationManager authenticationManager;
@@ -19,6 +20,7 @@ public class LoginController {
 
 	@PostMapping("/login")
 	public ResponseEntity<String> login(@RequestParam("username") String username, @RequestParam("password") String password) {
+		System.out.println(username + ":" + password);
 		Authentication authenticationRequest =
 			UsernamePasswordAuthenticationToken.unauthenticated(username, password);
 		Authentication authenticationResponse =

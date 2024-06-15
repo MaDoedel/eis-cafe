@@ -4,7 +4,8 @@
         <div th:fragment="login">
           <div class="jobsContainer">
             <h2>Login</h2>
-            <form method="POST" id="userLoginForm">
+            <!-- <form method="POST" id="userLoginForm"> -->
+            <form method="POST" th:action="@{/login}" id="userLoginForm">
               <div class="me-3">
                 <label for="nameInput" class="form-label">Username</label>
                 <input type="text" name="username" class="form-control" id="username" aria-describedby="userHelp">
@@ -16,7 +17,9 @@
               </div>
               <button type="submit" class="btn btn-primary" id="userLogin">Sign Up</button>            
             </form>
-            <div id="liveAlertPlaceholder"></div>
+            <div class="me-3">
+              <div id="liveAlertPlaceholder"></div>
+            </div>
           </div>
         </div>
     </body>

@@ -24,10 +24,11 @@ Design of a RESTful Web Application dedicated to a particular Ice Coffee Shop! T
 - **Database**: H2
 - **Frameworks**: Jakarta, JPA, Hibernate
 - **Build Tool**: Gradle
+- **Security**: Spring Security
 
 ## Architecture
 
-The Ice Coffee Shop application follows the Model-View-Controller (MVC) architectural pattern, ensuring a clear separation of concerns and facilitating maintainable and scalable code.
+The Ice Coffee Shop (single page) application follows the Model-View-Controller (MVC) architectural pattern, ensuring a clear separation of concerns and facilitating maintainable and scalable code.
 
 ### Models
 
@@ -57,11 +58,23 @@ The Menu feature enables users to browse the available products, including cups,
 
 ![Menu Database Schema](docs/ice.png)
 
+## Spring Security Authentication
+
+The application uses Spring Security for authentication, providing a robust and secure framework for managing user access. Several aspects of the default Spring Security configuration have been modified to better suit the needs of modern reactive applications.
+
+### Custom Login Page
+
+Instead of using the default Spring Security login page, a custom login page has been created. This approach allows for a more user-friendly interface and ensures seamless integration of the login form with the rest of the application's design. The custom login page is configured in the Spring Security configuration using the `.loginPage("/login")` method.
+
+### Custom UserDetailsService
+
+To authenticate users against the application's database, a custom `UserDetailsService` has been implemented. This service overrides the `loadUserByUsername` method to retrieve user details from the database. The returned `UserDetails` object includes the username, password, and granted authorities for the user. 
+
+### Custom AuthenticationFailureHandler
+
+To enhance the user experience when authentication fails, a custom `AuthenticationFailureHandler` has been implemented. This handler sends an HTTP error status and a custom error message to the client upon authentication failure. This setup allows handling authentication errors in the AJAX error function and provides more reactive interactions using alerts and without distracting redirects.
+
 ## TODO
 - [ ] Write something about the JavaScript input validation bridge with and without Event Listeners. Although it is implemented and used, it has not been introduced.
 - [ ] Write something about the factory pattern, which is used to resolve the pricing entity for toppings or flavors.
-- [ ] Configure Spring Security and secure the API calls, as well as removing admin options from views.
-- [ ] Edit the file entity for better utilization with different data types.
-- [ ] Handle Cup submissions properly within Java.
-- [ ] Add custom-cup calculations.
 - [ ] Need a more stylish landing page.

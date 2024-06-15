@@ -21,11 +21,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
     
-    @Autowired
     private UserRepository userRepository;
 
-    public CustomUserDetailsService() {
+    public CustomUserDetailsService(UserRepository userRepository) {
         super();
+        this.userRepository = userRepository;
     }
 
     @Override
