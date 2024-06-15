@@ -64,6 +64,11 @@ class InputListenerDecorator extends CheckerDecorator{
     check(){
         const inputElement = document.getElementById(this.id);
         var self = this;
+
+        if (inputElement === null) {
+            return;
+        }
+        
         inputElement.addEventListener('input', function() {
             self.checker.input = inputElement.value;
             if (!self.checker.check()) {
@@ -86,6 +91,11 @@ class TextAreaListenerDecorator extends CheckerDecorator{
 
     check(){
         const inputElement = document.getElementById(this.id);
+
+        if (inputElement === null) {
+            return;
+        }
+
         var self = this;
         inputElement.addEventListener('input', function() {
             self.checker.input = inputElement.value;
@@ -165,6 +175,20 @@ $(document).ready( function() {
         });
         $('#iceCreamForm')[0].reset()
     }
+
+    function refetchProfile() {
+        $.ajax({
+            url: '/profile',
+            type: 'get',
+            success:function(new_content){
+                $("#tab-3").html(new_content)
+            },
+            error: function(){
+                alert("Failed refetching jobs")
+            }
+        });
+    }
+
 
     function refetchJobs() {
         $.ajax({
@@ -375,10 +399,7 @@ $(document).ready( function() {
             data: $('#userLoginForm').serialize(),
             Credentials: 'include',
             success:function(){
-                alertPlaceholder.innerHTML = [
-                    `<div class="alert alert-success alert-dismissible" role="alert"> You in </div>`
-                ].join('')
-                $('#userLoginForm').remove();
+                window.location.reload();
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 // Handle failed login

@@ -4,8 +4,9 @@
         <div th:fragment="login">
           <div class="jobsContainer">
             <h2>Login</h2>
-            <!-- <form method="POST" id="userLoginForm"> -->
-            <form method="POST" th:action="@{/login}" id="userLoginForm">
+            <form method="POST" id="userLoginForm"> 
+            <!-- <form method="POST" th:action="@{/login}" id="userLoginForm" th:if="${#request.getUserPrincipal().isAnonymous()}"> -->
+              <!-- <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" /> -->
               <div class="me-3">
                 <label for="nameInput" class="form-label">Username</label>
                 <input type="text" name="username" class="form-control" id="username" aria-describedby="userHelp">

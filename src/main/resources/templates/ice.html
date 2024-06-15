@@ -35,7 +35,7 @@
                   <p class="card-text text-start" th:text="${flav.description}"></p>
                   </div>
                 </div>
-                <div class="col-md-3 "> 
+                <div class="col-md-3 " sec:authorize="hasRole('ROLE_ADMIN')"> 
                   <div class="input-group">
                   <button th:attr="data-id=${flav.id}" type="submit" class="btn btn-outline-secondary flavour-edit-btn"><span class="bi bi-pen"></span></button>
                   <button th:attr="data-id=${flav.id}" type="submit" class="btn btn-outline-secondary flavour-delete-btn"><span class="bi bi-x-lg"></span></button>
@@ -45,7 +45,7 @@
               </div>
             </div>
             
-            <div class="col-lg-3 align-items-stretch mb-2" >
+            <div class="col-lg-3 align-items-stretch mb-2" sec:authorize="hasRole('ROLE_ADMIN')" >
               <form method="POST" action="/ice/addFlavour" id="iceCreamForm" enctype="multipart/form-data">
                 <div class="card" >
                   <div class="row">
@@ -115,7 +115,7 @@
                           <p class="card-text text-start" th:text="${topp.description}"></p>
                         </div>
                       </div>
-                      <div class="col-md-3">
+                      <div class="col-md-3" sec:authorize="hasRole('ROLE_ADMIN')">
                         <div class="input-group">
                           <button th:attr="data-id=${topp.id}" type="submit" class="btn btn-outline-secondary topping-edit-btn"><span class="bi bi-pen"></span></button>
                           <button th:attr="data-id=${topp.id}, data-field=${cups}" type="submit" class="btn btn-outline-secondary topping-delete-btn"><span class="bi bi-x-lg"></span></button>
@@ -124,7 +124,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-lg-3 align-items-stretch mb-2" >
+                <div class="col-lg-3 align-items-stretch mb-2" sec:authorize="hasRole('ROLE_ADMIN')" >
                   <form method="POST" action="/ice/addFruit" id="fruitForm" enctype="multipart/form-data">
                     <div class="card">
                       <div class="row">
@@ -162,7 +162,7 @@
                         </div>
                       </div>
                       <div class="col-md-3">
-                        <div class="input-group">
+                        <div class="input-group" sec:authorize="hasRole('ROLE_ADMIN')">
                           <button th:attr="data-id=${topp.id}" type="submit" class="btn btn-outline-secondary topping-edit-btn"><span class="bi bi-pen"></span></button>
                           <button th:attr="data-id=${topp.id}" type="submit" class="btn btn-outline-secondary topping-delete-btn"><span class="bi bi-x-lg"></span></button>
                         </div>
@@ -170,7 +170,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-lg-3 align-items-stretch mb-2" >
+                <div class="col-lg-3 align-items-stretch mb-2" sec:authorize="hasRole('ROLE_ADMIN')" >
                   <form method="POST" action="/ice/addSauce" id="sauceForm" enctype="multipart/form-data">
                     <div class="card">
                       <div class="row">
@@ -211,7 +211,7 @@
                           <p class="card-text text-start" th:text="${topp.description}"></p>
                         </div>
                       </div>
-                      <div class="col-md-3">
+                      <div class="col-md-3" sec:authorize="hasRole('ROLE_ADMIN')">
                         <div class="input-group">
                           <button th:attr="data-id=${topp.id}" type="submit" class="btn btn-outline-secondary topping-edit-btn"><span class="bi bi-pen"></span></button>
                           <button th:attr="data-id=${topp.id}" type="submit" class="btn btn-outline-secondary topping-delete-btn"><span class="bi bi-x-lg"></span></button>
@@ -220,7 +220,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-lg-3 align-items-stretch mb-2" >
+                <div class="col-lg-3 align-items-stretch mb-2" sec:authorize="hasRole('ROLE_ADMIN')">
                   <form method="POST" action="/ice/addCandy" id="candyForm" enctype="multipart/form-data">
                     <div class="card">
                       <div class="row">
@@ -274,7 +274,7 @@
                       </div>
                     </div>
                     <div class="col-3"></div>
-                    <div class="col-3">
+                    <div class="col-3" sec:authorize="hasRole('ROLE_ADMIN')">
                       <div class="input-group">
                         <button th:attr="data-id=${cup.id}" type="submit" class="btn btn-sm btn-outline-secondary cup-edit-btn"><span class="bi bi-pen"></span></button>
                         <button th:attr="data-id=${cup.id}" type="submit" class="btn btn-sm btn-outline-secondary cup-delete-btn"><span class="bi bi-x-lg"></span></button>
@@ -284,7 +284,7 @@
                 </div>
               </div>
             </div>
-            <div class="col">
+            <div class="col" sec:authorize="hasRole('ROLE_ADMIN')">
               <div class="card h-100" aria-hidden="true">
                 <img th:src="@{${'/images/cups/placeholder.png'}}" class="card-img-top" alt="...">
                 <div class="card-body">
@@ -305,7 +305,7 @@
           </div>
         </div>
   
-        <div class="offcanvas offcanvas-start" tabindex="-1" id="cupCreator" aria-labelledby="cupCreator">
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="cupCreator" aria-labelledby="cupCreator" sec:authorize="hasRole('ROLE_ADMIN')">
           <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="cupCreator">Becher</h5>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>

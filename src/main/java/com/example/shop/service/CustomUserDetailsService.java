@@ -33,6 +33,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         System.out.println(mail);
 
         List<User> users = userRepository.findByEmail(mail);
+        
 
         if (users.isEmpty()) {
             throw new UsernameNotFoundException("Username not found");
@@ -43,6 +44,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection <Role> roles) {
         Collection<? extends GrantedAuthority> authorities = roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+
         return authorities;
     }
 }

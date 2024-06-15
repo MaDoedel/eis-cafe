@@ -1,5 +1,6 @@
 package com.example.shop.controller;
 
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,8 +10,11 @@ import org.springframework.security.authentication.event.AuthenticationFailureBa
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
@@ -44,19 +48,28 @@ public class SecurityConfiguarion {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/resources/**", "/", "/style.css", "/index.js", "/favicon.ico", "/image.png", "/images/**", "/user/**").permitAll()
-                .anyRequest().authenticated())
-                .formLogin(config -> 
-                    config
-                    .loginPage("/login")
-                    .passwordParameter("password")
-                    .usernameParameter("username")
-                    .permitAll()
-                    .failureHandler(authenticationFailureHandler())
-                )                    
-                .logout(LogoutConfigurer::permitAll);
+                .requestMatchers("/login").permitAll() // if not, somehow login is denied
+                .requestMatchers("/","/style.css", "/index.js", "/favicon.ico", "/image.png", "/images/**", "/h2-console/**", "/h2-ui/**").permitAll()
+                .requestMatchers("/new").hasAnyAuthority("ADMIN", "CREATOR")
+                .requestMatchers("/edit/**").hasAnyAuthority("ADMIN", "EDITOR")
+                .requestMatchers("/delete/**").hasAuthority("ADMIN")
+                .anyRequest().authenticated()
+            )
+            .formLogin(login -> login 
+                .loginPage("/login")
+                .passwordParameter("password")
+                .usernameParameter("username")
+                .permitAll()
+                .failureHandler(authenticationFailureHandler())
+                .defaultSuccessUrl("/profile")
+                )
+            .logout(logout -> logout.permitAll())
+            .exceptionHandling(eh -> eh.accessDeniedPage("/403"))
+            .csrf(csrf -> csrf.disable());            
+         
         return http.build();
     }
+
 
     @Bean
     public AuthenticationFailureHandler authenticationFailureHandler() {
