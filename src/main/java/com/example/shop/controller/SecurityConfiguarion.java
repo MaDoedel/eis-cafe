@@ -49,10 +49,8 @@ public class SecurityConfiguarion {
 
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/login").permitAll() // if not, somehow login is denied
-                .requestMatchers("/","/style.css", "/index.js", "/favicon.ico", "/image.png", "/images/**", "/h2-console/**", "/h2-ui/**").permitAll()
-                .requestMatchers("/new").hasAnyAuthority("ADMIN", "CREATOR")
-                .requestMatchers("/edit/**").hasAnyAuthority("ADMIN", "EDITOR")
-                .requestMatchers("/delete/**").hasAuthority("ADMIN")
+                .requestMatchers("/","/style.css", "/index.js", "/favicon.ico", "/image.png", "/images/**", "/jobs/apply").permitAll()
+                .requestMatchers("/ice/**", "/jobs/reject/**", "/jobs/accept/**").hasAnyAuthority("ROLE_ADMIN")
                 .anyRequest().authenticated()
             )
             .formLogin(login -> login 
