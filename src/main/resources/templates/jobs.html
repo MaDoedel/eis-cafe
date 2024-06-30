@@ -68,33 +68,6 @@
                 </form>
                 <div id="jobsFormAlert"></div>
             </div>
-            <table class="table">
-                <thead>
-                    <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Nachname</th>
-                    <th scope="col">E-Mail</th>
-                    <th scope="col">Lebenslauf</th>
-                    <th scope="col"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="jobRequest : ${jobRequests}">
-                        <th scope="row" th:text="${jobRequest.id}"></th>
-                        <td><span th:text="${jobRequest.getUser().getName()}"></span></td>
-                        <td><span th:text="${jobRequest.getUser().getSurname()}"></span></td>
-                        <td><span th:text="${jobRequest.getUser().getEmail()}"></span></td>
-                        <td><span>
-                            <button th:attr="data-id=${jobRequest.getId()}" type="submit" class="btn btn-primary cv-download-btn" th:text="${jobRequest.getFile().getFileName()}"></button>
-                        </span></td>
-                        <td><span>
-                            <button th:attr="data-id=${jobRequest.getId()}" type="submit" class="btn btn-primary request-accept-btn">Annehmen</button>
-                            <button th:attr="data-id=${jobRequest.getId()}" type="submit" class="btn btn-primary request-reject-btn">Ablehnen</button>
-                        </span></td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
     </body>
 </html>

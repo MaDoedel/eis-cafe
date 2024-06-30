@@ -2,7 +2,61 @@
 <html lang="en", xmlns:th="http://www.thymeleaf.org">
     <body>
         <div th:fragment="me">
-            <h1>ME</h1>
+            <div class = "container-fluid">
+                <div class = "row">
+                    <div class = "col-md-4">
+                        <div class = "card h-100">
+                            <div class = "card-header">
+                                <h2 th:text="'Hey ' + ${user.name} + ' ' + ${user.surname}"></h2>
+                            </div>
+                            <div class = "card-body">
+                                <div class="card-text" sec:authentication="principal.authorities">[ROLE_USER, ROLE_ADMIN]</div>
+                                <div class="card-text"> Some more information</div>
+                                <form th:action="@{/logout}" method="post">
+                                    <!-- <input type="hidden" name="_csrf" th:value="${_csrf.token}"/> -->
+                                    <button type="submit" class="btn btn-primary" id="logout">Logout</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class = "col-md-8">
+                        <div class = "card h-100">
+                            <div class = "card-header">
+                                <h2>Jobanfragen</h2>
+                            </div>
+                            <div class = "card-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Nachname</th>
+                                        <th scope="col">E-Mail</th>
+                                        <th scope="col">Lebenslauf</th>
+                                        <th scope="col"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="jobRequest : ${jobRequests}">
+                                            <th scope="row" th:text="${jobRequest.id}"></th>
+                                            <td><span th:text="${jobRequest.getUser().getName()}"></span></td>
+                                            <td><span th:text="${jobRequest.getUser().getSurname()}"></span></td>
+                                            <td><span th:text="${jobRequest.getUser().getEmail()}"></span></td>
+                                            <td><span>
+                                                <button th:attr="data-id=${jobRequest.getId()}" type="submit" class="btn btn-primary cv-download-btn" th:text="${jobRequest.getFile().getFileName()}"></button>
+                                            </span></td>
+                                            <td><span>
+                                                <button th:attr="data-id=${jobRequest.getId()}" type="submit" class="btn btn-primary request-accept-btn">Annehmen</button>
+                                                <button th:attr="data-id=${jobRequest.getId()}" type="submit" class="btn btn-primary request-reject-btn">Ablehnen</button>
+                                            </span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </body>
 </html>

@@ -7,6 +7,7 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +15,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -80,7 +83,13 @@ public class HomeController {
     RoleRepository roleRepository;
     
     @GetMapping(value = "/")
-    public String getAllLists(Model model) {
+    public String getAllLists(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+
+        if (userDetails != null) {
+            User user = userRepository.findByEmail(userDetails.getUsername()).get(0);
+            model.addAttribute("user", user);
+        }
+
         model.addAttribute("articles", articleRepository.findAll());
         model.addAttribute("flavours", flavourRepository.findAll());
         model.addAttribute("toppings", toppingRepository.findAll());
@@ -104,7 +113,13 @@ public class HomeController {
     }
 
     @GetMapping(value = "/profile")
-    public String profil(Model model) {
+    public String profil(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+
+        // Get user without overriding the CustomUserDetailsService loadUserByUsername
+        if (userDetails != null) {
+            User user = userRepository.findByEmail(userDetails.getUsername()).get(0);
+            model.addAttribute("user", user);
+        }
         model.addAttribute("articles", articleRepository.findAll());
         model.addAttribute("flavours", flavourRepository.findAll());
         model.addAttribute("toppings", toppingRepository.findAll());

@@ -51,6 +51,7 @@ public class JobsController {
     @Autowired
     RoleRepository roleRepository; 
 
+    @Autowired
     PasswordEncoder passwordEncoder;
 
     @PostMapping(value = "/jobs/apply", produces = "text/plain")

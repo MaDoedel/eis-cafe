@@ -210,6 +210,19 @@ $(document).ready( function() {
         $('#jobsForm')[0].reset()
     }
 
+    function refetchMe() {
+        $.ajax({
+            url: '/profile',
+            type: 'get',
+            success:function(new_content){
+                $("#tab-3").html(new_content)
+            },
+            error: function(){
+                alert("Failed refetching me")
+            }
+        });
+    }
+
     function setAllBinds() {
         //var formData = new FormData($('#iceCreamForm')[0]);
         const ListeningIceForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'iceCreamNameInput'), new InputListenerDecorator(new CommentRegexChecker(''), 'iceCreamDescriptionInput')]);
@@ -352,7 +365,7 @@ $(document).ready( function() {
             url: '/jobs/accept/' + $(this).attr('data-id'),
             type: 'delete',
             success: function(){
-                refetchJobs()
+                refetchMe()
             },
             error: function(data){
                 alert(data.responseText)
@@ -366,7 +379,7 @@ $(document).ready( function() {
             url: '/jobs/reject/' + $(this).attr('data-id'),
             type: 'delete',
             success: function(){
-                refetchJobs()
+                refetchMe()
             },
             error: function(data){
                 alert(data.responseText)

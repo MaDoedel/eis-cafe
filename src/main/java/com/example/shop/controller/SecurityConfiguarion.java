@@ -31,7 +31,7 @@ public class SecurityConfiguarion {
     private CustomUserDetailsService customUserDetailsService;
 
     @Bean
-    public static PasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -59,9 +59,11 @@ public class SecurityConfiguarion {
                 .usernameParameter("username")
                 .permitAll()
                 .failureHandler(authenticationFailureHandler())
-                .defaultSuccessUrl("/profile")
+                .defaultSuccessUrl("/")
                 )
-            .logout(logout -> logout.permitAll())
+            .logout(logout -> logout
+                .logoutSuccessUrl("/")
+                .permitAll())
             .exceptionHandling(eh -> eh.accessDeniedPage("/403"))
             .csrf(csrf -> csrf.disable());            
          
