@@ -38,7 +38,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.shop.repository.ArticleRepository;
 import com.example.shop.repository.CupRepository;
 import com.example.shop.repository.FileRepository;
 import com.example.shop.repository.FlavourRepository;
@@ -53,10 +52,6 @@ public class IceController {
 
     static final Path flavourFolder = Path.of("src", "main", "resources", "static", "images", "flavours");
     static final Path cupFolder = Path.of("src", "main", "resources", "static", "images", "cup");
-
-        
-    @Autowired
-    ArticleRepository articleRepository; 
 
     @Autowired
     FlavourRepository flavourRepository; 

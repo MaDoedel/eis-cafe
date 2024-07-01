@@ -210,7 +210,7 @@ $(document).ready( function() {
         $('#jobsForm')[0].reset()
     }
 
-    function refetchMe() {
+    function refetchProfile() {
         $.ajax({
             url: '/profile',
             type: 'get',
@@ -365,7 +365,7 @@ $(document).ready( function() {
             url: '/jobs/accept/' + $(this).attr('data-id'),
             type: 'delete',
             success: function(){
-                refetchMe()
+                refetchProfile()
             },
             error: function(data){
                 alert(data.responseText)
@@ -379,7 +379,7 @@ $(document).ready( function() {
             url: '/jobs/reject/' + $(this).attr('data-id'),
             type: 'delete',
             success: function(){
-                refetchMe()
+                refetchProfile()
             },
             error: function(data){
                 alert(data.responseText)

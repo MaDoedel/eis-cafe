@@ -41,7 +41,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.shop.repository.ArticleRepository;
 import com.example.shop.repository.CupRepository;
 import com.example.shop.repository.FlavourRepository;
 import com.example.shop.repository.JobRequestRepository;
@@ -62,9 +61,6 @@ public class HomeController {
     PasswordEncoder passwordEncoder;
 
     @Autowired
-    ArticleRepository articleRepository; 
-
-    @Autowired
     FlavourRepository flavourRepository; 
 
     @Autowired
@@ -81,6 +77,9 @@ public class HomeController {
 
     @Autowired
     RoleRepository roleRepository;
+
+    @Autowired
+    PricingRepository pricingRepository;
     
     @GetMapping(value = "/")
     public String getAllLists(Model model, @AuthenticationPrincipal UserDetails userDetails) {
@@ -90,11 +89,13 @@ public class HomeController {
             model.addAttribute("user", user);
         }
 
-        model.addAttribute("articles", articleRepository.findAll());
         model.addAttribute("flavours", flavourRepository.findAll());
         model.addAttribute("toppings", toppingRepository.findAll());
         model.addAttribute("cups", cupRepository.findAll());
         model.addAttribute("jobRequests", jobRequestRepository.findAll());
+        model.addAttribute("roles", roleRepository.findAll());
+        model.addAttribute("users", userRepository.findAll());
+        model.addAttribute("prices", pricingRepository.findAll());
 
         // User user = new User("Matteo", "Anedda", "matteo.aneddama@gmail.com", "active");
         // user.setRoles(roleRepository.findByName("ROLE_ADMIN"));
@@ -120,23 +121,26 @@ public class HomeController {
             User user = userRepository.findByEmail(userDetails.getUsername()).get(0);
             model.addAttribute("user", user);
         }
-        model.addAttribute("articles", articleRepository.findAll());
         model.addAttribute("flavours", flavourRepository.findAll());
         model.addAttribute("toppings", toppingRepository.findAll());
         model.addAttribute("cups", cupRepository.findAll());
         model.addAttribute("jobRequests", jobRequestRepository.findAll());
-        return "me :: me";
+        model.addAttribute("roles", roleRepository.findAll());
+        model.addAttribute("users", userRepository.findAll());
+        model.addAttribute("prices", pricingRepository.findAll());
+
+
+        return "profile :: profile";
     }
     
     @GetMapping(value = "/ice")
     public String getFlavours(Model model) {
         model.addAttribute("flavours", flavourRepository.findAll());
-        model.addAttribute("articles", articleRepository.findAll());
         model.addAttribute("toppings", toppingRepository.findAll());
         model.addAttribute("cups", cupRepository.findAll());
 
 
-        return "ice :: ice(flavours=${flavours}, articles=${articles}, toppings=${toppings}, cups=${cups})";
+        return "ice :: ice(flavours=${flavours}, toppings=${toppings}, cups=${cups})";
     }
 
     @GetMapping(value = "/login")
