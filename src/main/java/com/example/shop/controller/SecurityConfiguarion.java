@@ -15,11 +15,15 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 import com.example.shop.service.CustomAuthentificationHandler;
 import com.example.shop.service.CustomUserDetailsService;
+import com.example.shop.service.CustomAccessDeniedHandler;
+import com.example.shop.service.CustomAuthenticationEntryPoint;
 
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
@@ -64,7 +68,9 @@ public class SecurityConfiguarion {
             .logout(logout -> logout
                 .logoutSuccessUrl("/")
                 .permitAll())
-            .exceptionHandling(eh -> eh.accessDeniedPage("/403"))
+            .exceptionHandling(eh -> eh
+                .authenticationEntryPoint(getAuthenticationEntryPoint())
+                .accessDeniedHandler(getAccessDeniedHandler()))
             .csrf(csrf -> csrf.disable());            
          
         return http.build();
@@ -74,5 +80,15 @@ public class SecurityConfiguarion {
     @Bean
     public AuthenticationFailureHandler authenticationFailureHandler() {
         return new CustomAuthentificationHandler();
+    }
+
+    @Bean
+    public AccessDeniedHandler getAccessDeniedHandler() {
+        return new CustomAccessDeniedHandler();
+    }
+
+    @Bean
+    public AuthenticationEntryPoint getAuthenticationEntryPoint() {
+        return new CustomAuthenticationEntryPoint();
     }
 }

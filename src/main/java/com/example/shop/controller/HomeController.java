@@ -145,7 +145,7 @@ public class HomeController {
 
     @GetMapping(value = "/login")
     public String getLogin() {
-        return "login :: login";
+        return "index";
     }
 
 
@@ -153,21 +153,5 @@ public class HomeController {
     public String getJobs(Model model) {
         model.addAttribute("jobRequests", jobRequestRepository.findAll());
         return "jobs :: jobs(jobRequests=${jobRequests})";
-    }
-
-    @GetMapping("/download/cv/{id}")
-    public ResponseEntity<Resource> downloadCV(@PathVariable("id") long id) throws IOException {
-
-        Path filePath = Paths.get(jobRequestRepository.findById(id).get().getFile().getUrl()).normalize();
-        Resource resource = new UrlResource(filePath.toUri());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + jobRequestRepository.findById(id).get().getFile().getFileName());
-        
-        return ResponseEntity.ok()
-                .headers(headers)
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(resource);
     }
 }
