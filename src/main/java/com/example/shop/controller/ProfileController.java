@@ -56,7 +56,7 @@ public class ProfileController {
 
             Long user_id = jobRequestRepository.findById(id).get().getUser().getId();
             // Now delete the request, prior to the user
-            // The file is cascaded, so its deleted once is request is gone
+            // The file is cascaded, so its deleted once its request is gone
             jobRequestRepository.deleteById(id);
             userRepository.deleteById(user_id);
 

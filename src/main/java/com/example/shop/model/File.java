@@ -16,7 +16,7 @@ import jakarta.validation.constraints.NotNull;
 public class File {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
 
     @Column(name = "filename")

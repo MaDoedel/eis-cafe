@@ -154,4 +154,6 @@ public class HomeController {
         model.addAttribute("jobRequests", jobRequestRepository.findAll());
         return "jobs :: jobs(jobRequests=${jobRequests})";
     }
+
+    
 }
