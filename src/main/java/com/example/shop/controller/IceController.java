@@ -28,6 +28,7 @@ import org.hibernate.mapping.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -218,25 +219,21 @@ public class IceController {
     }
        
     
+    @Transactional
     @PostMapping(value = "/ice/addFlavour", produces = "text/plain")
     public ResponseEntity<String> addFlavour(
         @ModelAttribute Flavour flavour, 
-        @RequestParam("image") MultipartFile imageFile) throws IOException {
+        @RequestParam(value= "image", required = true) MultipartFile imageFile) throws IOException {
                     
-        // Does path exist 
-        // TODO make this final
-        if (!Files.exists(flavourFolder)) {
-            Files.createDirectories(flavourFolder);
-        }
+        // if (!Files.exists(flavourFolder)) {
+        //     Files.createDirectories(flavourFolder);
+        // }
 
-        // Check if there is any image
-        if (imageFile == null){
-            return ResponseEntity.badRequest().body("No image.");
-        }
-        if (!imageFile.getContentType().startsWith("image/")) {
+        if (!imageFile.getContentType().startsWith("image/")){
             return ResponseEntity.badRequest().body("Uploaded file is not an image.");
         }
 
+        // Get the exact type
         Pattern pattern = Pattern.compile("image/(.*)");
         Matcher matcher = pattern.matcher(imageFile.getContentType());
         String fileformat = "";
@@ -244,27 +241,19 @@ public class IceController {
         if (matcher.find()) {
             fileformat = matcher.group(1);
         } else {
-            throw new IllegalArgumentException("Invalid MIME type. It should be in the format 'image/...'");
+            return ResponseEntity.badRequest().body("Invalid type. It should be in the format 'image/...'");
         }
 
         // verify flavour is not already in the list
-        // note: technically multiple users could add the same flavour at the same time,
-        //       consider a lock for the database to prevent this
-        List<Flavour> flavours = flavourRepository.findAll();
-        for(Flavour f : flavours){
-            if(f.getName().equals(flavour.getName())){
-                return ResponseEntity.badRequest().body("Flavour already exists");
-            }
+        if(!flavourRepository.findByName(flavour.getName()).isEmpty()){
+            return ResponseEntity.badRequest().body("Flavour already exists");
         }
 
         // save in persistent storage
         String fileName;
         try {
-            for (Pricing p : pricingRepository.findAll()){
-                if (p.getDescription().equals("Spoon")){
-                    flavour.setPricing(p);
-                }
-            }
+            flavour.setPricing(pricingRepository.findByDescripton("Spoon").get(0));
+            flavour.setFile(null); // Just in case you know
             flavour = flavourRepository.save(flavour);
             fileName = flavour.getId() + "." + fileformat;
         } catch (Exception e) {

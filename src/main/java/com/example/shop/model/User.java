@@ -38,7 +38,7 @@ public class User implements UserDetails {
     @NotBlank(message = "Invalid surname")
     private String surname; 
 
-    @Column(name = "email")
+    @Column(name = "email", unique=true)
     @NotBlank(message = "Invalid email")
     private String email; 
 

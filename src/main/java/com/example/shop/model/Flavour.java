@@ -18,7 +18,7 @@ public class Flavour {
     @GeneratedValue(strategy = GenerationType.TABLE)
     private long id;
 
-    @Column(name = "name")
+    @Column(name = "name", unique=true)
     @NotBlank(message = "Invalid name")
     private String name; 
 
@@ -33,8 +33,7 @@ public class Flavour {
     @ManyToOne
     @JoinColumn(name="price_id")
     private Pricing pricing;
-
-    // Gets deleted 
+ 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "file_id", referencedColumnName = "id")
     private File file;
