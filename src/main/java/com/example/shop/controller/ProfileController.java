@@ -32,17 +32,23 @@ public class ProfileController {
     @GetMapping("/download/cv/{id}")
     public ResponseEntity<Resource> downloadCV(@PathVariable("id") long id) throws IOException {
 
-        Path filePath = Paths.get(jobRequestRepository.findById(id).get().getFile().getUrl()).normalize();
-        Resource resource = new UrlResource(filePath.toUri());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + jobRequestRepository.findById(id).get().getFile().getFileName());
+        try{
+            Path filePath = Paths.get(jobRequestRepository.findById(id).get().getFile().getUrl()).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+    
+    
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + jobRequestRepository.findById(id).get().getFile().getFileName());
+            
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .body(resource);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(null);
+        }
         
-        return ResponseEntity.ok()
-                .headers(headers)
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(resource);
     }
 
     @DeleteMapping("/jobs/reject/{id}")
@@ -62,7 +68,7 @@ public class ProfileController {
 
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.badRequest().body("Something went wrong");
+            return ResponseEntity.badRequest().body("Wrong ID: " + id);
         }
 
         return ResponseEntity.ok().body("");
@@ -88,7 +94,7 @@ public class ProfileController {
 
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.badRequest().body("Something went wrong");
+            return ResponseEntity.badRequest().body("Wrong ID: " + id );
         }
 
         return ResponseEntity.ok().body("");

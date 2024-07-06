@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,20 +52,34 @@ class ProfileControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 
+	static final Path cvdir = Path.of("src", "test", "resources");
+
+
 	@BeforeEach
 	@WithMockUser(username="admin")
-    public void setUp() {
+    public void setUp() throws Exception{
+
+		if (!Files.exists(cvdir)) {
+			Files.createDirectories(cvdir);
+		}
+
 		// Jesus lord, I need factories for that... 
 		User bonnie = new User("Bonnie", "Elizabeth Parker", "Bonnie@example.com", "pending");
 		bonnie.setPassword("admin");
 		bonnie = userRepository.save(bonnie);
+
+		Path filePath1 = cvdir.resolve(bonnie.getId() + ".pdf");
+		Files.write(filePath1, "test".getBytes());
 	
 		User clyde = new User("Clyde", "Chestnut Barrow", "Clyde@example.com", "pending");
 		clyde.setPassword("admin");
 		clyde = userRepository.save(clyde);
+
+		Path filePath2 = cvdir.resolve(clyde.getId() + ".pdf");
+		Files.write(filePath2, "test".getBytes());
 	
-		File bonnieCV = new File("BonnieCV", "src/test/resources/BonnieCV.pdf", "application/pdf");	
-		File clydeCV = new File("ClydeCV", "src/test/resources/ClydeCV.pdf", "application/pdf");
+		File bonnieCV = new File(bonnie.getId() + ".pdf", filePath1.toString(), "pdf");	
+		File clydeCV = new File(clyde.getId() + ".pdf", filePath2.toString(), "pdf");
 	
 		JobRequest jobRequestBonnie = new JobRequest(bonnie, bonnieCV, "pending", "miniJob");
 		jobRequestBonnie = jobRequestRepository.save(jobRequestBonnie);
@@ -74,7 +89,7 @@ class ProfileControllerTest {
     }
 
 	@AfterEach
-	public void tearDown() {
+	public void tearDown() throws Exception{
 
 		jobRequestRepository.findAll().forEach(jobRequest -> {
 			if (Files.exists(Paths.get(jobRequest.getFile().getUrl()).normalize())) {
@@ -93,6 +108,10 @@ class ProfileControllerTest {
 
 		if (fileRepository.count() > 0) {
 			fileRepository.deleteAll();
+		}
+
+		if (Files.exists(cvdir)) {
+			Files.delete(cvdir);
 		}
 	}
 
@@ -120,19 +139,34 @@ class ProfileControllerTest {
 
 	@WithMockUser(username="admin", roles = {"ADMIN"})
 	@Test	
+	void testAuthorizedDownload() throws Exception {
+		long id = jobRequestRepository.findByEmail("Bonnie@example.com").get(0).getId(); 
+		
+		mockMvc.perform(MockMvcRequestBuilders.get("/download/cv/" + id))
+			.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
+	@WithMockUser(username="admin", roles = {"ADMIN"})
+	@Test	
+	void testAuthorizedDownloadWrongId() throws Exception {
+		long id = 0;
+		while (jobRequestRepository.existsById(id)){
+			id++;
+		}
+		
+		mockMvc.perform(MockMvcRequestBuilders.get("/download/cv/" + id))
+			.andExpect(MockMvcResultMatchers.status().isBadRequest());
+	}
+
+	@WithMockUser(username="admin", roles = {"ADMIN"})
+	@Test	
 	void testAuthorizedAccept() throws Exception {
 
 		long jrC = jobRequestRepository.count();
 		long uC = userRepository.count();
 		long fC = fileRepository.count();
 
-		//lets accept bonnie
-		long id = 0; 
-		for (JobRequest jr : jobRequestRepository.findAll()){
-			if (jr.getUser().getName().equals("Bonnie")){
-				id = jr.getId();
-			}
-		}
+		long id = jobRequestRepository.findByEmail("Bonnie@example.com").get(0).getId(); 
 		
 		mockMvc.perform(MockMvcRequestBuilders.delete("/jobs/accept/" + id))
 		    .andDo(MockMvcResultHandlers.print()) // Print request and response details
@@ -148,7 +182,53 @@ class ProfileControllerTest {
 
 	@WithMockUser(username="admin", roles = {"ADMIN"})
 	@Test	
+	void testAuthorizedAcceptWrongId() throws Exception {
+
+		long jrC = jobRequestRepository.count();
+		long uC = userRepository.count();
+		long fC = fileRepository.count();
+
+		long id = 0;
+		while (jobRequestRepository.existsById(id)){
+			id++;
+		}
+
+		mockMvc.perform(MockMvcRequestBuilders.delete("/jobs/accept/" + id))
+		    .andDo(MockMvcResultHandlers.print()) // Print request and response details
+			.andExpect(MockMvcResultMatchers.status().isBadRequest())
+			.andExpect(result -> {
+        		assertAll(
+					() -> assertEquals(jrC, jobRequestRepository.count(), "Job request count should be equal"),
+					() -> assertEquals(uC, userRepository.count(), "User count should be equal"),
+					() -> assertEquals(fC, fileRepository.count(), "File count should be equal")
+        	);
+    	});
+	}
+
+	@WithMockUser(username="admin", roles = {"ADMIN"})
+	@Test	
 	void testAuthorizedReject() throws Exception {
+
+		long jrC = jobRequestRepository.count();
+		long uC = userRepository.count();
+		long fC = fileRepository.count();
+
+		long id = jobRequestRepository.findByEmail("Clyde@example.com").get(0).getId(); 
+
+		mockMvc.perform(MockMvcRequestBuilders.delete("/jobs/reject/" + id))
+			.andExpect(MockMvcResultMatchers.status().isOk())
+			.andExpect(result -> {
+        		assertAll(
+					() -> assertEquals(jrC - 1, jobRequestRepository.count(), "Job request count should decrease by 1"),
+					() -> assertEquals(uC -1 , userRepository.count(), "User count should decrease by 1"),
+					() -> assertEquals(fC - 1, fileRepository.count(), "File count should decrease by 1")
+        	);
+    	});
+	}
+
+	@WithMockUser(username="admin", roles = {"ADMIN"})
+	@Test	
+	void testAuthorizedRejectWrongId() throws Exception {
 
 		long jrC = jobRequestRepository.count();
 		long uC = userRepository.count();
@@ -156,20 +236,17 @@ class ProfileControllerTest {
 
 		//lets accept bonnie
 		long id = 0; 
-		for (JobRequest jr : jobRequestRepository.findAll()){
-			if (jr.getUser().getName().equals("Clyde")){
-				id = jr.getId();
-			}
+		while (jobRequestRepository.existsById(id)) {
+			id++;
 		}
-		
+
 		mockMvc.perform(MockMvcRequestBuilders.delete("/jobs/reject/" + id))
-		    .andDo(MockMvcResultHandlers.print()) // Print request and response details
-			.andExpect(MockMvcResultMatchers.status().isOk())
+			.andExpect(MockMvcResultMatchers.status().isBadRequest())
 			.andExpect(result -> {
         		assertAll(
-					() -> assertEquals(jrC - 1, jobRequestRepository.count(), "Job request count should decrease by 1"),
-					() -> assertEquals(uC -1 , userRepository.count(), "User count should decrease by 1"),
-					() -> assertEquals(fC - 1, fileRepository.count(), "File count should decrease by 1")
+					() -> assertEquals(jrC, jobRequestRepository.count(), "Job request count should be equal"),
+					() -> assertEquals(uC, userRepository.count(), "User count should be equal"),
+					() -> assertEquals(fC, fileRepository.count(), "File count should be equal")
         	);
     	});
 	}
