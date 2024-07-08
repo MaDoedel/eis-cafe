@@ -31,6 +31,7 @@ import com.example.shop.model.User;
 import com.example.shop.repository.FileRepository;
 import com.example.shop.repository.CupRepository;
 import com.example.shop.repository.FlavourRepository;
+import com.example.shop.repository.PricingRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.transaction.Transactional;
@@ -52,6 +53,9 @@ public class IceControllerTest {
     private FileRepository fileRepository;
 
     @Autowired
+    private PricingRepository pricingRepository;
+
+    @Autowired
     private MockMvc mockMvc;
 
     static final Path fdir = Path.of("src", "main", "resources", "static", "images", "flavours");
@@ -64,18 +68,40 @@ public class IceControllerTest {
 			Files.createDirectories(fdir);
 		}
 
+        Flavour flavour = new Flavour("IchigoSando", false, "Delicious flavor");
+        flavour.setPricing(pricingRepository.findByDescripton("Spoon").get(0));
+        flavour = flavourRepository.save(flavour);
+
+        String fileName = flavour.getId() + ".png" ;
+        Path filePath = fdir.resolve(fileName);
+        Files.write(filePath, "IchigoSando".getBytes());
+
+        com.example.shop.model.File file = new com.example.shop.model.File(fileName, filePath.toString(), "png");
+        fileRepository.save(file);
+
+        flavour.setFile(file);
+        flavourRepository.save(flavour);
     }
 
 	@AfterEach
 	public void tearDown() throws Exception{
-
-        flavourRepository.findAll().forEach(flavour -> {
-            if (flavour.getFile() != null && Files.exists(Paths.get(flavour.getFile().getUrl()).normalize())) {
-                Paths.get(flavour.getFile().getUrl()).normalize().toFile().delete();
+        
+        try{
+        Flavour flav1 = flavourRepository.findByName("IchigoSando").get(0);
+            if (Files.exists(Paths.get(flav1.getFile().getUrl()).normalize())) {
+                Paths.get(flav1.getFile().getUrl()).normalize().toFile().delete();
             }
-
-            flavourRepository.delete(flavour);
-        });
+            flavourRepository.delete(flav1);
+        } catch (Exception e) { 
+        }
+        try{
+            Flavour flav2 = flavourRepository.findByName("Vanilla").get(0);
+            if (Files.exists(Paths.get(flav2.getFile().getUrl()).normalize())) {
+                Paths.get(flav2.getFile().getUrl()).normalize().toFile().delete();
+            }
+            flavourRepository.delete(flav2);
+        } catch (Exception e) {
+        }
 	}
 
     @Test
@@ -101,6 +127,10 @@ public class IceControllerTest {
         // Need a File object to be created first
         MockMultipartFile file = new MockMultipartFile("image", "something.png", MediaType.IMAGE_PNG_VALUE, "I'm a pdf".getBytes());
 
+        long flC = flavourRepository.count();
+        long fileC = fileRepository.count();
+
+
         mockMvc.perform(MockMvcRequestBuilders.multipart("/ice/addFlavour")
             .file(file)
             .param("name", "Vanilla")  
@@ -109,6 +139,44 @@ public class IceControllerTest {
             .param("pricing.id", "1") 
             .param("file.id", "1")
             .param("description", "Vanilla flavour"))
-            .andExpect(MockMvcResultMatchers.status().isOk());
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(result -> {
+        		assertAll(
+					() -> assertEquals(fileC + 1, fileRepository.count(), "Files count should increase by 1"),
+					() -> assertEquals(flC + 1, flavourRepository.count(), "Flavours count should increase by 1")
+        	    );
+            });
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(username ="admin", roles={"ADMIN"})
+    public void testDeleteFlavour() throws Exception {
+        Flavour flavour = flavourRepository.findByName("IchigoSando").get(0);
+
+        long flC = flavourRepository.count();
+        long fileC = fileRepository.count();
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/ice/deleteFlavour/" + flavour.getId()))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(result -> {
+        		assertAll(
+					() -> assertEquals(fileC - 1, fileRepository.count(), "Files count should decrease by 1"),
+					() -> assertEquals(flC - 1, flavourRepository.count(), "Flavours count should decrease by 1")
+        	    );
+            });
+    }
+
+
+    @Test
+    @WithMockUser(username ="admin", roles={"ADMIN"})
+    public void testDeleteFlavourWrongId() throws Exception {
+        long id = 0;
+        while (flavourRepository.existsById(id)) {
+            id++;
+        }
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/ice/deleteFlavour/" + id))
+            .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 }

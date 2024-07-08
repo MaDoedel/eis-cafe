@@ -15,7 +15,7 @@ public abstract class Topping {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     @NotBlank(message = "Need some name")
     private String name;
 
@@ -30,6 +30,11 @@ public abstract class Topping {
     @Column(name = "isVegan")
     private boolean isVegan;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "file_id", referencedColumnName = "id")
+    private File file;
+
+
     public Topping() {
     }
 
@@ -37,6 +42,14 @@ public abstract class Topping {
         this.name = name;
         this.description = description;
         this.isVegan = isVegan;
+    }
+    
+    public void setFile(File file){
+        this.file = file;
+    }
+
+    public File getFile(){
+        return file;
     }
 
     public Long getId() {

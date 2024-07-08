@@ -52,6 +52,10 @@ import com.example.shop.repository.ToppingRepository;
 public class IceController {
 
     static final Path flavourFolder = Path.of("src", "main", "resources", "static", "images", "flavours");
+    static final Path toppingsFruitsFolder = Path.of("src", "main", "resources", "static", "images", "toppings", "fruits");
+    static final Path toppingsCandiesFolder = Path.of("src", "main", "resources", "static", "images", "toppings", "candies");
+    static final Path toppingsSauceFolder = Path.of("src", "main", "resources", "static", "images", "toppings", "sauce");
+
     static final Path cupFolder = Path.of("src", "main", "resources", "static", "images", "cup");
 
     @Autowired
@@ -77,50 +81,47 @@ public class IceController {
     FileRepository fileRepository;
         
 
+    @Transactional
     @PostMapping(value = "/ice/addFruit", produces = "text/plain")
     public ResponseEntity<String> addFruit(
         @ModelAttribute Fruit fruit, 
         @RequestParam("image") MultipartFile imageFile) throws IOException {
-
-        FruitFactory ff = new FruitFactory(pricingRepository);
-                    
-        // Does path exist 
-        // TODO make this final
-        // if (!Files.exists(flavourFolder)) {
-        //     Files.createDirectories(flavourFolder);
-        // }
-
-        // // Check if there is any image
-        // if (imageFile == null){
-        //     return ResponseEntity.badRequest().body("No image.");
-        // }
-        // if (!imageFile.getContentType().startsWith("image/")) {
-        //     return ResponseEntity.badRequest().body("Uploaded file is not an image.");
-        // }
-
-        // verify flavour is not already in the list
-        // note: technically multiple users could add the same flavour at the same time,
-        //       consider a lock for the database to prevent this
-        List<Topping> toppings = toppingRepository.findAll();
-        for(Topping t : toppings){
-            if(t.getName().equals(fruit.getName())){
-                return ResponseEntity.badRequest().body("Fruit already exists");
-            }
-        }
-
-        // save in persistent storage
-        // String fileName;
-        try {
-            Topping nfruit = ff.createTopping(fruit.getName(), fruit.getDescription(), false);
-            toppingRepository.save(nfruit);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error saving Fruit");
-        }
-
-        // //safe image
-        // Path filePath = flavourFolder.resolve(fileName);
-        // Files.write(filePath, imageFile.getBytes());
         
+        Pattern pattern = Pattern.compile("image/(.*)");
+        Matcher matcher = pattern.matcher(imageFile.getContentType());
+        String fileformat = "";
+
+        try{
+            if (!matcher.find()) {
+                return ResponseEntity.badRequest().body("Invalid type. It should be in the format 'image/...'");
+            }
+            fileformat = matcher.group(1);
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Invalid type. It should be in the format 'image/...'");
+        }
+
+        String fileName;
+        try {
+            fruit.setPricing(pricingRepository.findByDescripton("Fruit").get(0));
+            fruit.setFile(null);
+            fruit = toppingRepository.save(fruit);
+            fileName = fruit.getId() + "." + fileformat;
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error saving topping");
+        }
+
+        //safe image
+        Path filePath = toppingsFruitsFolder.resolve(fileName);
+        Files.write(filePath, imageFile.getBytes());
+
+
+        com.example.shop.model.File file = new com.example.shop.model.File(fileName, filePath.toString(), fileformat);
+        fileRepository.save(file);
+
+        fruit.setFile(file);
+        toppingRepository.save(fruit);
+
         return ResponseEntity.ok().body(null);
     }
 
@@ -225,29 +226,25 @@ public class IceController {
         @ModelAttribute Flavour flavour, 
         @RequestParam(value= "image", required = true) MultipartFile imageFile) throws IOException {
                     
-        // if (!Files.exists(flavourFolder)) {
-        //     Files.createDirectories(flavourFolder);
-        // }
-
-        if (!imageFile.getContentType().startsWith("image/")){
-            return ResponseEntity.badRequest().body("Uploaded file is not an image.");
-        }
-
         // Get the exact type
         Pattern pattern = Pattern.compile("image/(.*)");
         Matcher matcher = pattern.matcher(imageFile.getContentType());
         String fileformat = "";
 
-        if (matcher.find()) {
+        try{
+            if (!matcher.find()) {
+                return ResponseEntity.badRequest().body("Invalid type. It should be in the format 'image/...'");
+            }
             fileformat = matcher.group(1);
-        } else {
+        } catch (Exception e){
+            e.printStackTrace();
             return ResponseEntity.badRequest().body("Invalid type. It should be in the format 'image/...'");
         }
 
         // verify flavour is not already in the list
-        if(!flavourRepository.findByName(flavour.getName()).isEmpty()){
-            return ResponseEntity.badRequest().body("Flavour already exists");
-        }
+        // if(!flavourRepository.findByName(flavour.getName()).isEmpty()){
+        //     return ResponseEntity.badRequest().body("Flavour already exists");
+        // }
 
         // save in persistent storage
         String fileName;
@@ -274,36 +271,59 @@ public class IceController {
         return ResponseEntity.ok().body(null);
     }
     
+    @Transactional
     @DeleteMapping(value = "/ice/deleteFlavour/{id}")
     public ResponseEntity<String> deleteFlavour(@PathVariable("id") long id) throws IOException{
         try {
-            flavourRepository.deleteById(id);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().body("Error deleting flavour");
-        }
-
-        if (!Files.exists(flavourFolder)) {
-            Files.createDirectories(flavourFolder);
-        }
-
-        for (File file : flavourFolder.toFile().listFiles()){
-            if (file.getName().contains(Long.toString(id))) {
-                file.delete();
+            if (!flavourRepository.existsById(id)){
+                return ResponseEntity.badRequest().body("Flavour with id " + id + " does not exist");
             }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("ID is null");
         }
 
-        return ResponseEntity.ok().body(null);
+
+        if(flavourFolder.resolve(flavourRepository.findById(id).get().getFile().getFileName()).toFile().exists()){
+            flavourFolder.resolve(flavourRepository.findById(id).get().getFile().getFileName()).toFile().delete();
+        }
+
+        flavourRepository.deleteById(id);
+
+        return ResponseEntity.ok().body("Flavour with id " + id + " deleted");
     }
 
+    @Transactional
     @DeleteMapping(value = "/ice/deleteTopping/{id}")
     public ResponseEntity<String> deleteTopping(@PathVariable("id") long id) throws IOException{
         try {
-            toppingRepository.deleteById(id);
+            if (!toppingRepository.existsById(id)){
+                return ResponseEntity.badRequest().body("Topping with id " + id + " does not exist");
+            }
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().body("Error deleting topping");
+            return ResponseEntity.badRequest().body("ID is null");
         }
+
+
+        // TODO: Refactor this
+        if (toppingRepository.findById(id).get().isFruit()){
+            if(toppingsFruitsFolder.resolve(toppingRepository.findById(id).get().getFile().getFileName()).toFile().exists()){
+                toppingsFruitsFolder.resolve(toppingRepository.findById(id).get().getFile().getFileName()).toFile().delete();
+            }
+        }
+
+        if (toppingRepository.findById(id).get().isCandy()){
+            if(toppingsCandiesFolder.resolve(toppingRepository.findById(id).get().getFile().getFileName()).toFile().exists()){
+                toppingsCandiesFolder.resolve(toppingRepository.findById(id).get().getFile().getFileName()).toFile().delete();
+            }
+        }
+
+        if (toppingRepository.findById(id).get().isSauce()){
+            if(toppingsSauceFolder.resolve(toppingRepository.findById(id).get().getFile().getFileName()).toFile().exists()){
+                toppingsSauceFolder.resolve(toppingRepository.findById(id).get().getFile().getFileName()).toFile().delete();
+            }
+        }
+
+        toppingRepository.deleteById(id);
         return ResponseEntity.ok().body(null);
     }
 

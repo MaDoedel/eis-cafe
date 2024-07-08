@@ -155,8 +155,17 @@ $(document).ready( function() {
                 $('#candyForm').submit(onCandyFormSubmit);
                 $('#sauceForm').submit(onSauceFormSubmit);
 
+                // This must be solvable through patterns and stuff, or react
                 $('#placeholderImage').on("click", selectImage);
+                $('#placeholderCandiesImage').on("click", selectCandiesImage);
+                $('#placeholderSauceImage').on("click", selectSauceImage);
+                $('#placeholderFruitsImage').on("click", selectFruitsImage);
+
                 $('#formFile').on("change", previewImage);
+                $('#formFileCandies').on("change", previewCandiesImage);
+                $('#formFileSauce').on("change", previewSauceImage);
+                $('#formFileFruits').on("change", previewFruitsImage);
+
                 ListeningIceForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'iceCreamNameInput'), new InputListenerDecorator(new CommentRegexChecker(''), 'iceCreamDescriptionInput')]);
                 ListeningFruitForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'fruitNameInput'), new InputListenerDecorator(new CommentRegexChecker(''), 'fruitDescriptionInput')]);
                 ListeningCandyForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'candyNameInput'), new InputListenerDecorator(new CommentRegexChecker(''), 'candyDescriptionInput')]);
@@ -264,10 +273,17 @@ $(document).ready( function() {
         $(document).on("click",'.request-reject-btn', onRequestReject); 
 
 
-        $('#showMoreFlavourBtn').on("click", onShowMoreFlavour)
+        //$('#showMoreFlavourBtn').on("click", onShowMoreFlavour)
 
         $('#placeholderImage').on("click", selectImage);
+        $('#placeholderCandiesImage').on("click", selectCandiesImage);
+        $('#placeholderSauceImage').on("click", selectSauceImage);
+        $('#placeholderFruitsImage').on("click", selectFruitsImage);
+
         $('#formFile').on("change", previewImage);
+        $('#formFileCandies').on("change", previewCandiesImage);
+        $('#formFileSauce').on("change", previewSauceImage);
+        $('#formFileFruits').on("change", previewFruitsImage);
 
         $('#CVButton').on("click", selectCV);
         $('#CVInput').on("change", previewCV);
@@ -428,6 +444,18 @@ $(document).ready( function() {
 
     function selectImage() {
         document.getElementById('formFile').click();
+    }
+
+    function selectCandiesImage() {
+        document.getElementById('formFileCandies').click();
+    }
+
+    function selectFruitsImage() {
+        document.getElementById('formFileFruits').click();
+    }
+
+    function selectSauceImage() {
+        document.getElementById('formFileSauce').click();
     }
 
     function selectCV(e) {
@@ -630,6 +658,43 @@ $(document).ready( function() {
         };
         reader.readAsDataURL(input.files[0]);
     }
+
+    function previewCandiesImage(event) {
+        event.preventDefault();
+        var input = event.target;
+        var reader = new FileReader();
+        reader.onload = function(){
+          var dataURL = reader.result;
+          var img = document.getElementById('placeholderCandiesImage'); 
+          img.src = dataURL;
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+
+    function previewFruitsImage(event) {
+        event.preventDefault();
+        var input = event.target;
+        var reader = new FileReader();
+        reader.onload = function(){
+          var dataURL = reader.result;
+          var img = document.getElementById('placeholderFruitsImage'); 
+          img.src = dataURL;
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+
+    function previewSauceImage(event) {
+        event.preventDefault();
+        var input = event.target;
+        var reader = new FileReader();
+        reader.onload = function(){
+          var dataURL = reader.result;
+          var img = document.getElementById('placeholderSauceImage'); 
+          img.src = dataURL;
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+
 
     setAllBinds()
 })
