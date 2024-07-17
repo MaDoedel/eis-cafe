@@ -1,51 +1,40 @@
 package com.example.shop.controller;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.core.io.Resource;
-
-import com.example.shop.model.*;
-import com.example.shop.patterns.CandyFactory;
-import com.example.shop.patterns.FruitFactory;
-import com.example.shop.patterns.SauceFactory;
-
-import org.hibernate.mapping.Map;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.UrlResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.shop.model.Candy;
+import com.example.shop.model.Cup;
+import com.example.shop.model.Flavour;
+import com.example.shop.model.Fruit;
+import com.example.shop.model.Sauce;
+import com.example.shop.model.Topping;
+import com.example.shop.patterns.SauceFactory;
 import com.example.shop.repository.CupRepository;
 import com.example.shop.repository.FileRepository;
 import com.example.shop.repository.FlavourRepository;
 import com.example.shop.repository.JobRequestRepository;
-import com.example.shop.repository.UserRepository;
 import com.example.shop.repository.PricingRepository;
 import com.example.shop.repository.ToppingRepository;
+import com.example.shop.repository.UserRepository;
 
 @CrossOrigin(origins = "https://localhost:8081")
 @Controller
@@ -130,103 +119,6 @@ public class IceController {
         @ModelAttribute Sauce sauce, 
         @RequestParam("image") MultipartFile imageFile) throws IOException {
 
-        SauceFactory ff = new SauceFactory(pricingRepository);
-                    
-        // Does path exist 
-        // TODO make this final
-        // if (!Files.exists(flavourFolder)) {
-        //     Files.createDirectories(flavourFolder);
-        // }
-
-        // // Check if there is any image
-        // if (imageFile == null){
-        //     return ResponseEntity.badRequest().body("No image.");
-        // }
-        // if (!imageFile.getContentType().startsWith("image/")) {
-        //     return ResponseEntity.badRequest().body("Uploaded file is not an image.");
-        // }
-
-        // verify flavour is not already in the list
-        // note: technically multiple users could add the same flavour at the same time,
-        //       consider a lock for the database to prevent this
-        List<Topping> toppings = toppingRepository.findAll();
-        for(Topping t : toppings){
-            if(t.getName().equals(sauce.getName())){
-                return ResponseEntity.badRequest().body("Fruit already exists");
-            }
-        }
-
-        // save in persistent storage
-        // String fileName;
-        try {
-            Topping nSauce = ff.createTopping(sauce.getName(), sauce.getDescription(), sauce.getIsVegan());
-            toppingRepository.save(nSauce);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error saving Fruit");
-        }
-
-        // //safe image
-        // Path filePath = flavourFolder.resolve(fileName);
-        // Files.write(filePath, imageFile.getBytes());
-        
-        return ResponseEntity.ok().body(null);
-    }
-
-    @PostMapping(value = "/ice/addCandy", produces = "text/plain")
-    public ResponseEntity<String> addCandy(
-        @ModelAttribute Candy candy, 
-        @RequestParam("image") MultipartFile imageFile) throws IOException {
-
-        CandyFactory ff = new CandyFactory(pricingRepository);
-                    
-        // Does path exist 
-        // TODO make this final
-        // if (!Files.exists(flavourFolder)) {
-        //     Files.createDirectories(flavourFolder);
-        // }
-
-        // // Check if there is any image
-        // if (imageFile == null){
-        //     return ResponseEntity.badRequest().body("No image.");
-        // }
-        // if (!imageFile.getContentType().startsWith("image/")) {
-        //     return ResponseEntity.badRequest().body("Uploaded file is not an image.");
-        // }
-
-        // verify flavour is not already in the list
-        // note: technically multiple users could add the same flavour at the same time,
-        //       consider a lock for the database to prevent this
-        List<Topping> toppings = toppingRepository.findAll();
-        for(Topping t : toppings){
-            if(t.getName().equals(candy.getName())){
-                return ResponseEntity.badRequest().body("Fruit already exists");
-            }
-        }
-
-        // save in persistent storage
-        // String fileName;
-        try {
-            Topping nCandy = ff.createTopping(candy.getName(), candy.getDescription(), candy.getIsVegan());
-            toppingRepository.save(nCandy);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error saving Fruit");
-        }
-
-        // //safe image
-        // Path filePath = flavourFolder.resolve(fileName);
-        // Files.write(filePath, imageFile.getBytes());
-        
-        return ResponseEntity.ok().body(null);
-    }
-       
-    
-    @Transactional
-    @PostMapping(value = "/ice/addFlavour", produces = "text/plain")
-    public ResponseEntity<String> addFlavour(
-        @ModelAttribute Flavour flavour, 
-        @RequestParam(value= "image", required = true) MultipartFile imageFile) throws IOException {
-                    
-        // Get the exact type
         Pattern pattern = Pattern.compile("image/(.*)");
         Matcher matcher = pattern.matcher(imageFile.getContentType());
         String fileformat = "";
@@ -241,10 +133,95 @@ public class IceController {
             return ResponseEntity.badRequest().body("Invalid type. It should be in the format 'image/...'");
         }
 
-        // verify flavour is not already in the list
-        // if(!flavourRepository.findByName(flavour.getName()).isEmpty()){
-        //     return ResponseEntity.badRequest().body("Flavour already exists");
-        // }
+        String fileName;
+        try {
+            sauce.setPricing(pricingRepository.findByDescripton("Sauce").get(0));
+            sauce.setFile(null);
+            sauce = toppingRepository.save(sauce);
+            fileName = sauce.getId() + "." + fileformat;
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error saving topping");
+        }
+
+        //safe image
+        Path filePath = toppingsFruitsFolder.resolve(fileName);
+        Files.write(filePath, imageFile.getBytes());
+
+
+        com.example.shop.model.File file = new com.example.shop.model.File(fileName, filePath.toString(), fileformat);
+        fileRepository.save(file);
+
+        sauce.setFile(file);
+        toppingRepository.save(sauce);
+
+        return ResponseEntity.ok().body(null); 
+    }
+
+    @PostMapping(value = "/ice/addCandy", produces = "text/plain")
+    public ResponseEntity<String> addCandy(
+        @ModelAttribute Candy candy, 
+        @RequestParam("image") MultipartFile imageFile) throws IOException {
+
+        Pattern pattern = Pattern.compile("image/(.*)");
+        Matcher matcher = pattern.matcher(imageFile.getContentType());
+        String fileformat = "";
+
+        try{
+            if (!matcher.find()) {
+                return ResponseEntity.badRequest().body("Invalid type. It should be in the format 'image/...'");
+            }
+            fileformat = matcher.group(1);
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Invalid type. It should be in the format 'image/...'");
+        }
+
+        String fileName;
+        try {
+            candy.setPricing(pricingRepository.findByDescripton("Candy").get(0));
+            candy.setFile(null);
+            candy = toppingRepository.save(candy);
+            fileName = candy.getId() + "." + fileformat;
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error saving topping");
+        }
+
+        //safe image
+        Path filePath = toppingsFruitsFolder.resolve(fileName);
+        Files.write(filePath, imageFile.getBytes());
+
+
+        com.example.shop.model.File file = new com.example.shop.model.File(fileName, filePath.toString(), fileformat);
+        fileRepository.save(file);
+
+        candy.setFile(file);
+        toppingRepository.save(candy);
+
+        return ResponseEntity.ok().body(null);     
+    }
+       
+    
+    @Transactional
+    @PostMapping(value = "/ice/addFlavour", produces = "text/plain")
+    public ResponseEntity<String> addFlavour(
+        @ModelAttribute Flavour flavour, 
+        @RequestParam(value= "image", required = true) MultipartFile imageFile) throws IOException {
+                    
+        // Get the exact type
+        Pattern pattern = Pattern.compile("image/(.*)");
+        Matcher matcher = pattern.matcher(imageFile.getContentType());
+        String fileformat = "";
+
+        // looks bad
+        try{
+            if (!matcher.find()) {
+                return ResponseEntity.badRequest().body("Invalid type. It should be in the format 'image/...'");
+            } 
+            fileformat = matcher.group(1);
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Invalid type. It should be in the format 'image/...'");
+        }
 
         // save in persistent storage
         String fileName;
@@ -339,7 +316,7 @@ public class IceController {
     }
     
     @PostMapping("/ice/addCup")
-    public ResponseEntity<String> submitFlavors(
+    public ResponseEntity<String> addCup(
         @RequestParam java.util.Map<String, String> params,
         @RequestParam("CupName") String name,
         @RequestParam("CupPrice") BigDecimal price
