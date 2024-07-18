@@ -261,6 +261,9 @@ $(document).ready( function() {
         $('#candyForm').submit(onCandyFormSubmit);
         $('#sauceForm').submit(onSauceFormSubmit);
 
+        $('#roleForm').submit(onRoleFormSubmit);
+
+
         $(document).on("click",'.flavour-delete-btn', onFlavourDelete);
         $(document).on("click",'.topping-delete-btn', onToppingDelete);
         $(document).on("click",'.cup-delete-btn', onCupDelete);
@@ -334,6 +337,24 @@ $(document).ready( function() {
           data: formData,
           success: function () {
             refetchIce();
+          },
+          error: function () {
+            alert('Form submission failed');
+          }
+        });
+    }
+
+    function onRoleFormSubmit(e) {
+        e.preventDefault(); 
+
+        let formData = $(this).serialize(); 
+
+        $.ajax({
+          type: 'POST',
+          url: '/profile/addRole',
+          data: formData,
+          success: function () {
+            refetchProfile();
           },
           error: function () {
             alert('Form submission failed');

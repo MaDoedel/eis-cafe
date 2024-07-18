@@ -8,9 +8,11 @@ import org.junit.runner.RunWith;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -143,7 +145,11 @@ public class IceControllerTest {
 
         candy.setFile(file4);
         toppingRepository.save(candy);
-        
+
+        Cup cup = new Cup("Some cup", new BigDecimal(5.00));
+        cup.setFlavours(new ArrayList<Flavour>());
+        cup.setToppings(new ArrayList<Topping>());
+        cupRepository.save(cup);
     }
 
 	@AfterEach
@@ -222,6 +228,15 @@ public class IceControllerTest {
             //     Paths.get(fr8.getFile().getUrl()).normalize().toFile().delete();
             // }
             cupRepository.delete(fr8);
+        } catch (Exception e) {
+        }
+
+        try{
+            Cup fr9 = cupRepository.findByName("Some cup").get(0);
+            // if (Files.exists(Paths.get(fr8.getFile().getUrl()).normalize())) {
+            //     Paths.get(fr8.getFile().getUrl()).normalize().toFile().delete();
+            // }
+            cupRepository.delete(fr9);
         } catch (Exception e) {
         }
 	}
@@ -467,4 +482,24 @@ public class IceControllerTest {
                 });
     }
 
+    @Test
+    @WithMockUser(username ="admin", roles={"ADMIN"})
+    public void testDeleteCup() throws Exception {
+        Cup cup = cupRepository.findByName("Some cup").get(0);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/ice/deleteCup/" + cup.getId()))
+            .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username ="admin", roles={"ADMIN"})
+    public void testDeleteCupWrongID() throws Exception {
+        long id = 0;
+        while (cupRepository.existsById(id)) {
+            id++;
+        }
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/ice/deleteCup/" + id))
+            .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
 }

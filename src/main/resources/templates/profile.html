@@ -36,13 +36,21 @@
                                             <tr>
                                             <th scope="col">#</th>
                                             <th scope="col">Name</th>
+                                            <th scope="col"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr th:each="role : ${roles}">
                                                 <th scope="row" th:text="${role.id}"></th>
                                                 <td><span th:text="${role.name}"></span></td>
+                                                <td></td>
                                             </tr>
+                                            <form method="post" id="roleForm">
+                                                <tr>
+                                                    <th scope="row"></th>
+                                                    <td><input type="text" name="name" placeholder="ROLE_" required> </td>
+                                                    <td><button type="submit" class="btn btn-primary">Create</button> </td>        
+                                                </tr>
                                         </tbody>
                                     </table>
                                 </div>

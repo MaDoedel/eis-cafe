@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,7 @@ import com.example.shop.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import ch.qos.logback.core.model.Model;
+import jakarta.transaction.Transactional;
 
 @Controller
 public class JobsController {
@@ -54,6 +56,7 @@ public class JobsController {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    @Transactional
     @PostMapping(value = "/jobs/apply", produces = "text/plain")
     public ResponseEntity<String> addUser(
         @RequestParam("name") String name,
@@ -66,31 +69,20 @@ public class JobsController {
             user.setRoles(roleRepository.findByName("ROLE_NONE"));
             user.setPassword(passwordEncoder.encode("egal"));
 
-            if (!Files.exists(urdir)) {
-                Files.createDirectories(urdir);
-            }
-
-            // Better check pdf again
-            if (pdfFile == null){
-                return ResponseEntity.badRequest().body("No CV.");
-            }
             if (!pdfFile.getContentType().startsWith("application/pdf")) {
                 return ResponseEntity.badRequest().body("Uploaded file is not an pdf.");
             }
-
-
-
             // save in persistent storage
             String fileName;
-            try {
-                System.out.println(user.getEmail());
-                user = userRepository.save(user);
-                fileName = user.getId() + ".pdf";
-            } catch (Exception e) {
-                e.printStackTrace();
-                return ResponseEntity.badRequest().body("Something went wrong");
-            }
 
+            // Unique email somehow doesn't work
+            if (userRepository.findByEmail(email).size() > 0) {
+                return ResponseEntity.badRequest().body("Email already in use");
+            }
+            
+            user = userRepository.save(user);
+            fileName = user.getId() + ".pdf";
+           
             //safe image
             Path filePath = urdir.resolve(fileName);
             Files.write(filePath, pdfFile.getBytes());

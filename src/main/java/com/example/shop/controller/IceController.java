@@ -27,7 +27,6 @@ import com.example.shop.model.Flavour;
 import com.example.shop.model.Fruit;
 import com.example.shop.model.Sauce;
 import com.example.shop.model.Topping;
-import com.example.shop.patterns.SauceFactory;
 import com.example.shop.repository.CupRepository;
 import com.example.shop.repository.FileRepository;
 import com.example.shop.repository.FlavourRepository;
@@ -307,11 +306,14 @@ public class IceController {
     @DeleteMapping(value = "/ice/deleteCup/{id}")
     public ResponseEntity<String> deleteCup(@PathVariable("id") long id) throws IOException{
         try {
-            cupRepository.deleteById(id);
+            if (!cupRepository.existsById(id)){
+                return ResponseEntity.badRequest().body("Cup with id " + id + " does not exist");
+            }
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().body("Error deleting topping");
+            return ResponseEntity.badRequest().body("ID is null");
         }
+
+        cupRepository.deleteById(id);
         return ResponseEntity.ok().body(null);
     }
     

@@ -23,7 +23,7 @@ public class JobRequest {
     @JoinColumn(name = "file_id", referencedColumnName = "id")
     private File file;
 
-    @Column(name = "comment")
+    @Column(name = "comment", unique = true)
     private String comment; 
 
     @Column(name = "jobDescription")

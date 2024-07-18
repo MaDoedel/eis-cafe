@@ -20,10 +20,11 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
-@Table(name = "app_user")
+@Table(name = "app_user", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 public class User implements UserDetails {
 
     @Id 
