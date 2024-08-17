@@ -101,8 +101,8 @@ Ensure that Java 17 is set in your environment variables. The application is acc
 - [ ] Create a more stylish landing page.
 - [ ] Implement responsive design.
 - [ ] Design the Drinks page.
-- [ ] Add picture selection and description fields for cups.
-- [ ] Fix the addCup error.
+- [x] Add picture selection and description fields for cups.
+- [x] Fix the addCup error.
 - [ ] Rework navigation.
 - [ ] Draw a better database overview for the README.
 - [ ] Check the Unique keyword (JPA related).
