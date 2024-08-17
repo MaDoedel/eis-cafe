@@ -259,6 +259,12 @@ public class IceController {
         }
 
 
+        for(Cup c : cupRepository.findAll()){
+            if (c.getFlavours().contains(flavourRepository.findById(id).get())){
+                return ResponseEntity.badRequest().body("Flavour with id " + id + " is used in a cup " + c.getName());
+            }
+        }
+
         if(flavourFolder.resolve(flavourRepository.findById(id).get().getFile().getFileName()).toFile().exists()){
             flavourFolder.resolve(flavourRepository.findById(id).get().getFile().getFileName()).toFile().delete();
         }
@@ -277,6 +283,12 @@ public class IceController {
             }
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("ID is null");
+        }
+
+        for(Cup c : cupRepository.findAll()){
+            if (c.getToppings().contains(toppingRepository.findById(id).get())){
+                return ResponseEntity.badRequest().body("Topping with id " + id + " is used in a cup " + c.getName());
+            }
         }
 
 
@@ -321,13 +333,14 @@ public class IceController {
     public ResponseEntity<String> addCup(
         @RequestParam java.util.Map<String, String> params,
         @RequestParam("CupName") String name,
-        @RequestParam("CupPrice") BigDecimal price
+        @RequestParam("CupPrice") BigDecimal price,
+        @RequestParam("CupDescription") String description
         ) {
 
         Pattern fpattern = Pattern.compile("^(flavour)\\[(\\d+)\\]$");
         Pattern tpattern = Pattern.compile("^(topping)\\[(\\d+)\\]$");
 
-        Cup cup = new Cup(name, price);
+        Cup cup = new Cup(name, price, description);
         List<Flavour> cupFlavours = new ArrayList<Flavour>(); 
         params.forEach((key, value) -> {
             Matcher matcher = fpattern.matcher(key);

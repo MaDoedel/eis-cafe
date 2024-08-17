@@ -1,45 +1,16 @@
 package com.example.shop.controller;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.security.Principal;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.core.io.Resource;
 
-import com.example.shop.model.Cup;
-import com.example.shop.model.Flavour;
-import com.example.shop.model.Pricing;
 import com.example.shop.model.User;
 
-import org.hibernate.mapping.Map;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.example.shop.repository.CupRepository;
 import com.example.shop.repository.FileRepository;
@@ -49,8 +20,6 @@ import com.example.shop.repository.UserRepository;
 import com.example.shop.repository.PricingRepository;
 import com.example.shop.repository.RoleRepository;
 import com.example.shop.repository.ToppingRepository;
-
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 

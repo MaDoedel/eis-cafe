@@ -262,7 +262,7 @@
                     <img th:src="@{${'/images/cups/placeholder.png'}}" class="card-img-top" style="object-fit: cover; height: 100%; width: 100%;" alt="...">
                     <div class="card-body">
                       <h5 class="card-title" th:text="${cup.name}"></h5>
-                      <p class="card-text">something</p>
+                      <p class="card-text" th:text="${cup.description}"></p>
                     </div>
                     <div class="card-footer">
                       <div class="row">
@@ -354,10 +354,21 @@
               </table>
               
               <hr>
-              <div class="input-group">
-                <input type="text" name="CupName" class="form-control" placeholder="Becher" id="cupNameInput"/>
-                <input type="number" name="CupPrice" class="form-control" min="1" step="any" valur="0" id="cupPriceInput" />
-                <button type="submit" class="btn btn-outline-primary" data-bs-dismiss="offcanvas" >Speichern</button>
+              <div class="row">
+                <div class="col-12">
+                  <div class="form-floating">
+                    <textarea class="form-control" name="CupDescription" placeholder="Leave a comment here" id="cupDescriptionTextArea" style="height: 100px"></textarea>
+                    <label for="cupDescriptionInput">Kommentar</label>
+                    <small class="form-text text-muted" id="cupDescriptionTextAreaCount">0/255</small>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="input-group">
+                    <input type="text" name="CupName" class="form-control" placeholder="Becher" id="cupNameInput"/>
+                    <input type="number" name="CupPrice" class="form-control" min="1" step="any" valur="0" id="cupPriceInput" />
+                    <button type="submit" class="btn btn-outline-primary" data-bs-dismiss="offcanvas" >Speichern</button>
+                  </div>
+                </div>
               </div>
             </form>
           </div>

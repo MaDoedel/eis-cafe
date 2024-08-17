@@ -17,6 +17,9 @@ public class Cup {
     @Column(name = "name")
     String name;
 
+    @Column(name = "description")
+    String description;
+
     @Column(name = "isVegan")
     boolean isVegan = false;
 
@@ -42,9 +45,10 @@ public class Cup {
     public Cup() {
     }
 
-    public Cup(String name, BigDecimal bd) {
+    public Cup(String name, BigDecimal bd, String desc) {
         this.name = name; 
         this.price = bd;
+        this.description = desc;
     }
 
     public Long getId() {
@@ -98,4 +102,11 @@ public class Cup {
         this.isVegan = true;
     }
 
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String desc) {
+        this.description = desc;
+    }
 }

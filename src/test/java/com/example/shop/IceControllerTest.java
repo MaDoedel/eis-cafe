@@ -146,7 +146,7 @@ public class IceControllerTest {
         candy.setFile(file4);
         toppingRepository.save(candy);
 
-        Cup cup = new Cup("Some cup", new BigDecimal(5.00));
+        Cup cup = new Cup("Some cup", new BigDecimal(5.00), "Delicious cup");
         cup.setFlavours(new ArrayList<Flavour>());
         cup.setToppings(new ArrayList<Topping>());
         cupRepository.save(cup);
