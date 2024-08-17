@@ -18,124 +18,49 @@
             <div class="col-md-12">   
               <hr class="hr-text gradient" data-content="Eis">
             </div>
-          </div>
-        </div>
 
-        <div class="container-fluid text-center">
-          <div class="row" id="iceRow">
-            <div class="col-lg-3 align-items-stretch mb-2" th:each="flav, i : ${flavours}" th:if="${i.index > 0}">
-              <div class="card" >
-                <div class="row">
-                <div class="col-md-4">
-                  <img th:src="@{${'/images/flavours/' + flav.id + '.' + flav.file.getType()}}" class="img-fluid rounded-start" style="object-fit: cover; height: 100%; width: 100%" alt="...">
-                </div>
-                <div class="col-md-5">
-                  <div class="card-body">
-                  <h5 class="card-title text-start" th:text="${flav.name}"></h5>
-                  <p class="card-text text-start" th:text="${flav.description}"></p>
-                  </div>
-                </div>
-                <div class="col-md-3 " sec:authorize="hasRole('ROLE_ADMIN')"> 
-                  <div class="input-group">
-                  <button th:attr="data-id=${flav.id}" type="submit" class="btn btn-outline-secondary flavour-edit-btn"><span class="bi bi-pen"></span></button>
-                  <button th:attr="data-id=${flav.id}" type="submit" class="btn btn-outline-secondary flavour-delete-btn"><span class="bi bi-x-lg"></span></button>
-                  </div>
-                </div>
-                </div>
-              </div>
-            </div>
-            
-            <div class="col-lg-3 align-items-stretch mb-2" sec:authorize="hasRole('ROLE_ADMIN')" >
-              <form method="POST" action="/ice/addFlavour" id="iceCreamForm" enctype="multipart/form-data">
-                <div class="card" >
-                  <div class="row">
-                    <div class="col-md-4">
-                      <img th:src="@{${'/images/flavours/placeholder.png'}}" class="img-fluid rounded-start" style="object-fit: cover; width: 100%; cursor: pointer; height: 100%;" alt="..." id="placeholderImage">
-                      <input type="file" class="d-none" id="formFile" name="image" required>
-                    </div>
-                    <div class="col-md-8">
-                      <div class="card-body">
-                        <input type="text" class="form-control card-title text-start" id="iceCreamNameInput" name="name" placeholder="Mintberry Crunch">
-                        <input type="text" class="form-control card-text text-start" id="iceCreamDescriptionInput" name="description" placeholder="creamy">
-                        <div class="form-check form-switch form-check-reverse">
-                          <input class="form-check-input" type="checkbox" id="iceCreamVeganInput" name="isVegan">
-                          <label class="form-check-label" for="iceCreamVeganInput">Vegan</label>
-                        </div>
-                        <button tabindex="0" id="saveButton" type="submit" class="btn btn-outline-primary text-center" >Speichern</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
+            <div class="col-md-1"></div>
 
-        <!-- <div class="container-fluid text-center">
-          <div class="row">
-            <div class="col-md-12">
-              <button class="btn btn-primary" th:attr="data-count=${flavours.size}" id="showMoreFlavourBtn">Show More</button>
-            </div>
-          </div>
-        </div> -->
-
-        <div class="container-fluid text-center">
-          <div class="col-md-12">   
-            <hr class="hr-text gradient" data-content="Topping">
-          </div>
-        </div>
-
-        <ul class="nav nav-underline justify-content-center" id="myTab" role="tablist">
-          <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="fruit-tab" data-bs-toggle="tab" data-bs-target="#fruit-tab-pane" type="button" role="tab" aria-controls="fruit-tab-pane" aria-selected="true">Frucht</button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="sauce-tab" data-bs-toggle="tab" data-bs-target="#sauce-tab-pane" type="button" role="tab" aria-controls="sauce-tab-pane" aria-selected="false">Soße</button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="candy-tab" data-bs-toggle="tab" data-bs-target="#candy-tab-pane" type="button" role="tab" aria-controls="candy-tab-pane" aria-selected="false">Süßes</button>
-          </li>
-        </ul>
-
-        <!-- look the next div, something is wrong here, as following divs are nor displayed, help me -->
-
-        <div class="tab-content" id="myTabContent">
-          <div class="tab-pane fade show active" id="fruit-tab-pane" role="tabpanel" aria-labelledby="fruit-tab" tabindex="0">
-            <div class="container-fluid text-center">
-              <div class="row" id="fruitRow">
-                <div class="col-lg-3 align-items-stretch mb-2" th:each="topp: ${toppings}" th:if="${topp.isFruit()}">
-                  <div class="card">
+            <div class="col-md-10">
+              <div class="row">
+                <div class="col-lg-3 align-items-stretch mb-2" th:each="flav, i : ${flavours}" th:if="${i.index > 0}">
+                  <div class="card" >
                     <div class="row">
-                      <div class="col-md-4">
-                        <img th:src="@{${'/images/toppings/fruits/' + topp.id + '.' + topp.file.getType()}}" class="img-fluid rounded-start" style="object-fit: cover; height: 100%; width: 100%;" alt="...">
+                    <div class="col-md-4">
+                      <img th:src="@{${'/images/flavours/' + flav.id + '.' + flav.file.getType()}}" class="img-fluid rounded-start" style="object-fit: cover; height: 100%; width: 100%" alt="...">
+                    </div>
+                    <div class="col-md-5">
+                      <div class="card-body">
+                      <h5 class="card-title text-start" th:text="${flav.name}"></h5>
+                      <p class="card-text text-start" th:text="${flav.description}"></p>
                       </div>
-                      <div class="col-md-5">
-                        <div class="card-body">
-                          <h5 class="card-title text-start" th:text="${topp.name}"></h5>
-                          <p class="card-text text-start" th:text="${topp.description}"></p>
-                        </div>
+                    </div>
+                    <div class="col-md-3 " sec:authorize="hasRole('ROLE_ADMIN')"> 
+                      <div class="input-group">
+                      <button th:attr="data-id=${flav.id}" type="submit" class="btn btn-outline-secondary flavour-edit-btn"><span class="bi bi-pen"></span></button>
+                      <button th:attr="data-id=${flav.id}" type="submit" class="btn btn-outline-secondary flavour-delete-btn"><span class="bi bi-x-lg"></span></button>
                       </div>
-                      <div class="col-md-3" sec:authorize="hasRole('ROLE_ADMIN')">
-                        <div class="input-group">
-                          <button th:attr="data-id=${topp.id}" type="submit" class="btn btn-outline-secondary topping-edit-btn"><span class="bi bi-pen"></span></button>
-                          <button th:attr="data-id=${topp.id}, data-field=${cups}" type="submit" class="btn btn-outline-secondary topping-delete-btn"><span class="bi bi-x-lg"></span></button>
-                        </div>
-                      </div>
+                    </div>
                     </div>
                   </div>
                 </div>
+              
                 <div class="col-lg-3 align-items-stretch mb-2" sec:authorize="hasRole('ROLE_ADMIN')" >
-                  <form method="POST" action="/ice/addFruit" id="fruitForm" enctype="multipart/form-data">
-                    <div class="card">
+                  <form method="POST" action="/ice/addFlavour" id="iceCreamForm" enctype="multipart/form-data">
+                    <div class="card" >
                       <div class="row">
                         <div class="col-md-4">
-                          <img th:src="@{${'/images/flavours/placeholder.png'}}" class="img-fluid rounded-start" style="object-fit: cover; height: 100%; cursor: pointer;width: 100%;" alt="..." id="placeholderFruitsImage">
-                          <input type="file" class="d-none" id="formFileFruits" name="image" required>
+                          <img th:src="@{${'/images/flavours/placeholder.png'}}" class="img-fluid rounded-start" style="object-fit: cover; width: 100%; cursor: pointer; height: 100%;" alt="..." id="placeholderImage">
+                          <input type="file" class="d-none" id="formFile" name="image" required>
                         </div>
                         <div class="col-md-8">
                           <div class="card-body">
-                            <input type="text" class="form-control card-title text-start" id="fruitNameInput" name="name" placeholder="Banana">
-                            <input type="text" class="form-control card-text text-start" id="fruitDescriptionInput" name="description" placeholder="sweet">
+                            <input type="text" class="form-control card-title text-start" id="iceCreamNameInput" name="name" placeholder="Mintberry Crunch">
+                            <input type="text" class="form-control card-text text-start" id="iceCreamDescriptionInput" name="description" placeholder="creamy">
+                            <div class="form-check form-switch form-check-reverse">
+                              <input class="form-check-input" type="checkbox" id="iceCreamVeganInput" name="isVegan">
+                              <label class="form-check-label" for="iceCreamVeganInput">Vegan</label>
+                            </div>
                             <button tabindex="0" id="saveButton" type="submit" class="btn btn-outline-primary text-center" >Speichern</button>
                           </div>
                         </div>
@@ -145,163 +70,245 @@
                 </div>
               </div>
             </div>
-          </div>
-          <div class="tab-pane fade" id="sauce-tab-pane" role="tabpanel" aria-labelledby="sauce-tab" tabindex="0">
-            <div class="container-fluid text-center">
-              <div class="row" id="sauceRow">
-                <div class="col-lg-3 align-items-stretch mb-2" th:each="topp: ${toppings}" th:if="${topp.isSauce()}">
-                  <div class="card">
-                    <div class="row">
-                      <div class="col-md-4">
-                        <img th:src="@{${'/images/toppings/sauce/' + topp.id + '.' + topp.file.getType()}}" class="img-fluid rounded-start" style="object-fit: cover; height: 100%; width: 100%;" alt="...">
-                      </div>
-                      <div class="col-md-5">
-                        <div class="card-body">
-                          <h5 class="card-title text-start" th:text="${topp.name}"></h5>
-                          <p class="card-text text-start" th:text="${topp.description}"></p>
+            <div class="col-md-1"></div>
+
+            <div class="col-md-12">   
+              <hr class="hr-text gradient" data-content="Topping">
+            </div>
+
+            <div class="col-md-1"></div>
+
+            <div class="col-md-10">
+              <ul class="nav nav-underline justify-content-center" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="fruit-tab" data-bs-toggle="tab" data-bs-target="#fruit-tab-pane" type="button" role="tab" aria-controls="fruit-tab-pane" aria-selected="true">Frucht</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="sauce-tab" data-bs-toggle="tab" data-bs-target="#sauce-tab-pane" type="button" role="tab" aria-controls="sauce-tab-pane" aria-selected="false">Soße</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="candy-tab" data-bs-toggle="tab" data-bs-target="#candy-tab-pane" type="button" role="tab" aria-controls="candy-tab-pane" aria-selected="false">Süßes</button>
+                </li>
+              </ul>
+            </div>
+
+            <div class="col-md-1"></div>
+            <div class="col-md-1"></div>
+
+            <div class="col-md-10">
+              <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="fruit-tab-pane" role="tabpanel" aria-labelledby="fruit-tab" tabindex="0">
+                  <div class="container-fluid text-center">
+                    <div class="row" id="fruitRow">
+                      <div class="col-lg-3 align-items-stretch mb-2" th:each="topp: ${toppings}" th:if="${topp.isFruit()}">
+                        <div class="card">
+                          <div class="row">
+                            <div class="col-md-4">
+                              <img th:src="@{${'/images/toppings/fruits/' + topp.id + '.' + topp.file.getType()}}" class="img-fluid rounded-start" style="object-fit: cover; height: 100%; width: 100%;" alt="...">
+                            </div>
+                            <div class="col-md-5">
+                              <div class="card-body">
+                                <h5 class="card-title text-start" th:text="${topp.name}"></h5>
+                                <p class="card-text text-start" th:text="${topp.description}"></p>
+                              </div>
+                            </div>
+                            <div class="col-md-3" sec:authorize="hasRole('ROLE_ADMIN')">
+                              <div class="input-group">
+                                <button th:attr="data-id=${topp.id}" type="submit" class="btn btn-outline-secondary topping-edit-btn"><span class="bi bi-pen"></span></button>
+                                <button th:attr="data-id=${topp.id}, data-field=${cups}" type="submit" class="btn btn-outline-secondary topping-delete-btn"><span class="bi bi-x-lg"></span></button>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                      <div class="col-md-3">
-                        <div class="input-group" sec:authorize="hasRole('ROLE_ADMIN')">
-                          <button th:attr="data-id=${topp.id}" type="submit" class="btn btn-outline-secondary topping-edit-btn"><span class="bi bi-pen"></span></button>
-                          <button th:attr="data-id=${topp.id}" type="submit" class="btn btn-outline-secondary topping-delete-btn"><span class="bi bi-x-lg"></span></button>
-                        </div>
+                      <div class="col-lg-3 align-items-stretch mb-2" sec:authorize="hasRole('ROLE_ADMIN')" >
+                        <form method="POST" action="/ice/addFruit" id="fruitForm" enctype="multipart/form-data">
+                          <div class="card">
+                            <div class="row">
+                              <div class="col-md-4">
+                                <img th:src="@{${'/images/toppings/fruits/placeholder.png'}}" class="img-fluid rounded-start" style="object-fit: cover; height: 100%; cursor: pointer;width: 100%;" alt="..." id="placeholderFruitsImage">
+                                <input type="file" class="d-none" id="formFileFruits" name="image" required>
+                              </div>
+                              <div class="col-md-8">
+                                <div class="card-body">
+                                  <input type="text" class="form-control card-title text-start" id="fruitNameInput" name="name" placeholder="Banana">
+                                  <input type="text" class="form-control card-text text-start" id="fruitDescriptionInput" name="description" placeholder="sweet">
+                                  <button tabindex="0" id="saveButton" type="submit" class="btn btn-outline-primary text-center" >Speichern</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </form>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div class="col-lg-3 align-items-stretch mb-2" sec:authorize="hasRole('ROLE_ADMIN')" >
-                  <form method="POST" action="/ice/addSauce" id="sauceForm" enctype="multipart/form-data">
-                    <div class="card">
-                      <div class="row">
-                        <div class="col-md-4">
-                          <img th:src="@{${'/images/flavours/placeholder.png'}}" class="img-fluid rounded-start" style="object-fit: cover; cursor: pointer; height: 100%; width: 100%;" alt="..." id="placeholderSauceImage">
-                          <input type="file" class="d-none" id="formFileSauce" name="image">
-                        </div>
-                        <div class="col-md-8">
-                          <div class="card-body">
-                            <input type="text" class="form-control card-title text-start" id="sauceNameInput" name="name" placeholder="Erdbeer Soße">
-                            <input type="text" class="form-control card-text text-start" id="sauceDescriptionInput" name="description" placeholder="sweet">
-                            <div class="form-check form-switch form-check-reverse">
-                              <input class="form-check-input" type="checkbox" id="sauceVeganInput" name="isVegan">
-                              <label class="form-check-label" for="sauceVeganInput">Vegan</label>
+                <div class="tab-pane fade" id="sauce-tab-pane" role="tabpanel" aria-labelledby="sauce-tab" tabindex="0">
+                  <div class="container-fluid text-center">
+                    <div class="row" id="sauceRow">
+                      <div class="col-lg-3 align-items-stretch mb-2" th:each="topp: ${toppings}" th:if="${topp.isSauce()}">
+                        <div class="card">
+                          <div class="row">
+                            <div class="col-md-4">
+                              <img th:src="@{${'/images/toppings/sauce/' + topp.id + '.' + topp.file.getType()}}" class="img-fluid rounded-start" style="object-fit: cover; height: 100%; width: 100%;" alt="...">
                             </div>
-                            <button tabindex="0" id="saveButton" type="submit" class="btn btn-outline-primary text-end" >Speichern</button>
+                            <div class="col-md-5">
+                              <div class="card-body">
+                                <h5 class="card-title text-start" th:text="${topp.name}"></h5>
+                                <p class="card-text text-start" th:text="${topp.description}"></p>
+                              </div>
+                            </div>
+                            <div class="col-md-3">
+                              <div class="input-group" sec:authorize="hasRole('ROLE_ADMIN')">
+                                <button th:attr="data-id=${topp.id}" type="submit" class="btn btn-outline-secondary topping-edit-btn"><span class="bi bi-pen"></span></button>
+                                <button th:attr="data-id=${topp.id}" type="submit" class="btn btn-outline-secondary topping-delete-btn"><span class="bi bi-x-lg"></span></button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-lg-3 align-items-stretch mb-2" sec:authorize="hasRole('ROLE_ADMIN')" >
+                        <form method="POST" action="/ice/addSauce" id="sauceForm" enctype="multipart/form-data">
+                          <div class="card">
+                            <div class="row">
+                              <div class="col-md-4">
+                                <img th:src="@{${'/images/toppings/sauce/placeholder.png'}}" class="img-fluid rounded-start" style="object-fit: cover; cursor: pointer; height: 100%; width: 100%;" alt="..." id="placeholderSauceImage">
+                                <input type="file" class="d-none" id="formFileSauce" name="image">
+                              </div>
+                              <div class="col-md-8">
+                                <div class="card-body">
+                                  <input type="text" class="form-control card-title text-start" id="sauceNameInput" name="name" placeholder="Erdbeer Soße">
+                                  <input type="text" class="form-control card-text text-start" id="sauceDescriptionInput" name="description" placeholder="sweet">
+                                  <div class="form-check form-switch form-check-reverse">
+                                    <input class="form-check-input" type="checkbox" id="sauceVeganInput" name="isVegan">
+                                    <label class="form-check-label" for="sauceVeganInput">Vegan</label>
+                                  </div>
+                                  <button tabindex="0" id="saveButton" type="submit" class="btn btn-outline-primary text-end" >Speichern</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="tab-pane fade" id="candy-tab-pane" role="tabpanel" aria-labelledby="candy-tab" tabindex="0">
+                  <div class="container-fluid text-center">
+                    <div class="row" id="candyRow">
+                      <div class="col-lg-3 align-items-stretch mb-2" th:each="topp: ${toppings}" th:if="${topp.isCandy()}">
+                        <div class="card">
+                          <div class="row">
+                            <div class="col-md-4">
+                              <img th:src="@{${'/images/toppings/candies/' + topp.id + '.' + topp.file.getType()}}" class="img-fluid rounded-start" style="object-fit: cover; height: 100%; width: 100%;" alt="...">
+                            </div>
+                            <div class="col-md-5">
+                              <div class="card-body">
+                                <h5 class="card-title text-start" th:text="${topp.name}"></h5>
+                                <p class="card-text text-start" th:text="${topp.description}"></p>
+                              </div>
+                            </div>
+                            <div class="col-md-3" sec:authorize="hasRole('ROLE_ADMIN')">
+                              <div class="input-group">
+                                <button th:attr="data-id=${topp.id}" type="submit" class="btn btn-outline-secondary topping-edit-btn"><span class="bi bi-pen"></span></button>
+                                <button th:attr="data-id=${topp.id}" type="submit" class="btn btn-outline-secondary topping-delete-btn"><span class="bi bi-x-lg"></span></button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-lg-3 align-items-stretch mb-2" sec:authorize="hasRole('ROLE_ADMIN')">
+                        <form method="POST" action="/ice/addCandy" id="candyForm" enctype="multipart/form-data">
+                          <div class="card">
+                            <div class="row">
+                              <div class="col-md-4">
+                                <img th:src="@{${'/images/flavours/placeholder.png'}}" class="img-fluid rounded-start" style="object-fit: cover; cursor: pointer; height: 100%; width: 100%;" alt="..." id="placeholderCandiesImage">
+                                <input type="file" class="d-none" id="formFileCandies" name="image" required>
+                              </div>
+                              <div class="col-md-8">
+                                <div class="card-body">
+                                  <input type="text" class="form-control card-title text-start" id="candyNameInput" name="name" placeholder="Müsli">
+                                  <input type="text" class="form-control card-text text-start" id="candyDescriptionInput" name="description" placeholder="sweet">
+                                  <div class="form-check form-switch form-check-reverse">
+                                    <input class="form-check-input" type="checkbox" id="candyVeganInput" name="isVegan">
+                                    <label class="form-check-label" for="candyVeganInput">Vegan</label>
+                                  </div>
+                                  <button tabindex="0" id="saveButton" type="submit" class="btn btn-outline-primary text-end" >Speichern</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-1"></div>
+
+            <div class="col-md-12">   
+              <hr class="hr-text gradient" data-content="Becher">
+            </div>
+
+            <div class="col-md-1"></div>
+
+
+            <div class="col-md-10">
+              <div class="row row-cols-1 row-cols-md-5 mb-2" id="cupRow">
+                <div class="col" th:each="cup: ${cups}">
+                  <div class="card h-100">
+                    <img th:src="@{${'/images/cups/placeholder.png'}}" class="card-img-top" style="object-fit: cover; height: 100%; width: 100%;" alt="...">
+                    <div class="card-body">
+                      <h5 class="card-title" th:text="${cup.name}"></h5>
+                      <p class="card-text">something</p>
+                    </div>
+                    <div class="card-footer">
+                      <div class="row">
+                        <div class="col-6">
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">€</span>
+                            </div>
+                            <small class="form-control" th:text="${cup.price}"></small>
+                          </div>
+                        </div>
+                        <div class="col-3"></div>
+                        <div class="col-3" sec:authorize="hasRole('ROLE_ADMIN')">
+                          <div class="input-group">
+                            <button th:attr="data-id=${cup.id}" type="submit" class="btn btn-sm btn-outline-secondary cup-edit-btn"><span class="bi bi-pen"></span></button>
+                            <button th:attr="data-id=${cup.id}" type="submit" class="btn btn-sm btn-outline-secondary cup-delete-btn"><span class="bi bi-x-lg"></span></button>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="tab-pane fade" id="candy-tab-pane" role="tabpanel" aria-labelledby="candy-tab" tabindex="0">
-            <div class="container-fluid text-center">
-              <div class="row" id="candyRow">
-                <div class="col-lg-3 align-items-stretch mb-2" th:each="topp: ${toppings}" th:if="${topp.isCandy()}">
-                  <div class="card">
-                    <div class="row">
-                      <div class="col-md-4">
-                        <img th:src="@{${'/images/toppings/candies/' + topp.id + '.' + topp.file.getType()}}" class="img-fluid rounded-start" style="object-fit: cover; height: 100%; width: 100%;" alt="...">
-                      </div>
-                      <div class="col-md-5">
-                        <div class="card-body">
-                          <h5 class="card-title text-start" th:text="${topp.name}"></h5>
-                          <p class="card-text text-start" th:text="${topp.description}"></p>
-                        </div>
-                      </div>
-                      <div class="col-md-3" sec:authorize="hasRole('ROLE_ADMIN')">
-                        <div class="input-group">
-                          <button th:attr="data-id=${topp.id}" type="submit" class="btn btn-outline-secondary topping-edit-btn"><span class="bi bi-pen"></span></button>
-                          <button th:attr="data-id=${topp.id}" type="submit" class="btn btn-outline-secondary topping-delete-btn"><span class="bi bi-x-lg"></span></button>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </div>
-                <div class="col-lg-3 align-items-stretch mb-2" sec:authorize="hasRole('ROLE_ADMIN')">
-                  <form method="POST" action="/ice/addCandy" id="candyForm" enctype="multipart/form-data">
-                    <div class="card">
-                      <div class="row">
-                        <div class="col-md-4">
-                          <img th:src="@{${'/images/flavours/placeholder.png'}}" class="img-fluid rounded-start" style="object-fit: cover; cursor: pointer; height: 100%; width: 100%;" alt="..." id="placeholderCandiesImage">
-                          <input type="file" class="d-none" id="formFileCandies" name="image" required>
-                        </div>
-                        <div class="col-md-8">
-                          <div class="card-body">
-                            <input type="text" class="form-control card-title text-start" id="candyNameInput" name="name" placeholder="Müsli">
-                            <input type="text" class="form-control card-text text-start" id="candyDescriptionInput" name="description" placeholder="sweet">
-                            <div class="form-check form-switch form-check-reverse">
-                              <input class="form-check-input" type="checkbox" id="candyVeganInput" name="isVegan">
-                              <label class="form-check-label" for="candyVeganInput">Vegan</label>
-                            </div>
-                            <button tabindex="0" id="saveButton" type="submit" class="btn btn-outline-primary text-end" >Speichern</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-12">   
-            <hr class="hr-text gradient" data-content="Becher">
-          </div>
-        </div>
-
-        <div class="container-fluid text-center">
-          <div class="row row-cols-1 row-cols-md-5 mb-2" id="cupRow">
-            <div class="col" th:each="cup: ${cups}">
-              <div class="card h-100">
-                <img th:src="@{${'/images/cups/placeholder.png'}}" class="card-img-top" style="object-fit: cover; height: 100%; width: 100%;" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title" th:text="${cup.name}"></h5>
-                  <p class="card-text">something</p>
-                </div>
-                <div class="card-footer">
-                  <div class="row">
-                    <div class="col-6">
-                      <div class="input-group">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text">€</span>
-                        </div>
-                        <small class="form-control" th:text="${cup.price}"></small>
-                      </div>
-                    </div>
-                    <div class="col-3"></div>
-                    <div class="col-3" sec:authorize="hasRole('ROLE_ADMIN')">
-                      <div class="input-group">
-                        <button th:attr="data-id=${cup.id}" type="submit" class="btn btn-sm btn-outline-secondary cup-edit-btn"><span class="bi bi-pen"></span></button>
-                        <button th:attr="data-id=${cup.id}" type="submit" class="btn btn-sm btn-outline-secondary cup-delete-btn"><span class="bi bi-x-lg"></span></button>
-                      </div>
+                <div class="col" sec:authorize="hasRole('ROLE_ADMIN')">
+                  <div class="card h-100" aria-hidden="true">
+                    <img th:src="@{${'/images/cups/placeholder.png'}}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                      <h5 class="card-title placeholder-glow">
+                        <span class="placeholder col-6"></span>
+                      </h5>
+                      <p class="card-text placeholder-glow">
+                        <span class="placeholder col-7"></span>
+                        <span class="placeholder col-4"></span>
+                        <span class="placeholder col-4"></span>
+                      </p>
+                      <a tabindex="-1" class="btn btn-primary col-6" data-bs-toggle="offcanvas" href="#cupCreator" role="button" aria-controls="cupCreator">
+                        Becher hinzufügen
+                      </a>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col" sec:authorize="hasRole('ROLE_ADMIN')">
-              <div class="card h-100" aria-hidden="true">
-                <img th:src="@{${'/images/cups/placeholder.png'}}" class="card-img-top" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title placeholder-glow">
-                    <span class="placeholder col-6"></span>
-                  </h5>
-                  <p class="card-text placeholder-glow">
-                    <span class="placeholder col-7"></span>
-                    <span class="placeholder col-4"></span>
-                    <span class="placeholder col-4"></span>
-                  </p>
-                  <a tabindex="-1" class="btn btn-primary col-6" data-bs-toggle="offcanvas" href="#cupCreator" role="button" aria-controls="cupCreator">
-                    Becher hinzufügen
-                  </a>
-                </div>
-              </div>
-            </div>
+
+            <div class="col-md-1"></div>
+
+
           </div>
         </div>
   

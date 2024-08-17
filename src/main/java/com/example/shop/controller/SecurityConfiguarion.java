@@ -48,14 +48,14 @@ public class SecurityConfiguarion {
 		return new ProviderManager(authenticationProvider);
 	}
 
-    @Bean
-    public InMemoryUserDetailsManager userDetailsService() {
-        UserDetails user = User.withUsername("admin")
-            .password(passwordEncoder().encode("secret"))
-            .roles("ADMIN")
-            .build();
-        return new InMemoryUserDetailsManager(user);
-    }
+    // @Bean
+    // public InMemoryUserDetailsManager userDetailsService() {
+    //     UserDetails user = User.withUsername("admin")
+    //         .password(passwordEncoder().encode("secret"))
+    //         .roles("ADMIN")
+    //         .build();
+    //     return new InMemoryUserDetailsManager(user);
+    // }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

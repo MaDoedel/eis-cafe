@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.example.shop.model.Fruit;
 import com.example.shop.model.Role;
+import com.example.shop.repository.FileRepository;
 import com.example.shop.repository.JobRequestRepository;
 import com.example.shop.repository.RoleRepository;
 import com.example.shop.repository.UserRepository;
@@ -40,6 +41,9 @@ public class ProfileController {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private FileRepository fileRepository;
 
     @GetMapping("/download/cv/{id}")
     public ResponseEntity<Resource> downloadCV(@PathVariable("id") long id) throws IOException {
@@ -78,6 +82,24 @@ public class ProfileController {
             jobRequestRepository.deleteById(id);
             userRepository.deleteById(user_id);
 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Wrong ID: " + id);
+        }
+
+        return ResponseEntity.ok().body("");
+    }
+
+    @DeleteMapping("/profile/deleteFile/{id}")
+    public ResponseEntity<String> deleteFile(@PathVariable("id") long id) throws IOException {
+
+        try{
+
+            if (Files.exists(Paths.get(fileRepository.findById(id).get().getUrl()).normalize())) {
+                Paths.get(fileRepository.findById(id).get().getUrl()).normalize().toFile().delete();
+            }
+
+            fileRepository.deleteById(id);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body("Wrong ID: " + id);

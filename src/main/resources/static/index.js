@@ -264,6 +264,7 @@ $(document).ready( function() {
         $('#roleForm').submit(onRoleFormSubmit);
 
 
+        $(document).on("click",'.file-delete-btn', onFileDelete);
         $(document).on("click",'.flavour-delete-btn', onFlavourDelete);
         $(document).on("click",'.topping-delete-btn', onToppingDelete);
         $(document).on("click",'.cup-delete-btn', onCupDelete);
@@ -438,7 +439,20 @@ $(document).ready( function() {
         });
     }
 
-    
+    function onFileDelete(e) {
+        e.preventDefault();
+        $.ajax({
+            url: '/profile/deleteFile/' + $(this).attr('data-id'),
+            type: 'delete',
+            success: function(){
+                refetchProfile()
+            },
+            error: function(data){
+                alert(data.responseText)
+            }
+        });
+    }
+
     function onLoginSubmit(e){
         e.preventDefault();
         const alertPlaceholder = document.getElementById('liveAlertPlaceholder')

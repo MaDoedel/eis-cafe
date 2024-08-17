@@ -42,6 +42,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.shop.repository.CupRepository;
+import com.example.shop.repository.FileRepository;
 import com.example.shop.repository.FlavourRepository;
 import com.example.shop.repository.JobRequestRepository;
 import com.example.shop.repository.UserRepository;
@@ -80,6 +81,9 @@ public class HomeController {
 
     @Autowired
     PricingRepository pricingRepository;
+
+    @Autowired
+    FileRepository fileRepository;
     
     @GetMapping(value = "/")
     public String getAllLists(Model model, @AuthenticationPrincipal UserDetails userDetails) {
@@ -96,6 +100,8 @@ public class HomeController {
         model.addAttribute("roles", roleRepository.findAll());
         model.addAttribute("users", userRepository.findAll());
         model.addAttribute("prices", pricingRepository.findAll());
+        model.addAttribute("files", fileRepository.findAll());
+
 
         // User user = new User("Matteo", "Anedda", "matteo.aneddama@gmail.com", "active");
         // user.setRoles(roleRepository.findByName("ROLE_ADMIN"));
@@ -128,7 +134,7 @@ public class HomeController {
         model.addAttribute("roles", roleRepository.findAll());
         model.addAttribute("users", userRepository.findAll());
         model.addAttribute("prices", pricingRepository.findAll());
-
+        model.addAttribute("files", fileRepository.findAll());
 
         return "profile :: profile";
     }

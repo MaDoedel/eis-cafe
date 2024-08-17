@@ -12,7 +12,7 @@
           <div th:insert="~{drinks :: drinks(drinks=drinks)}" class="tab-pane fade" id="tab-2"></div>
 
           <div th:insert="~{jobs :: jobs}" class="tab-pane fade" id="tab-3" sec:authorize="isAnonymous()"></div>
-          <div th:insert="~{profile :: profile(jobRequests=${jobRequests}, roles=${roles}, users=${users}, prices=${prices})}" class="tab-pane fade" id="tab-3" sec:authorize="isAuthenticated()"></div>
+          <div th:insert="~{profile :: profile(jobRequests=${jobRequests}, roles=${roles}, users=${users}, prices=${prices}, files=${files})}" class="tab-pane fade" id="tab-3" sec:authorize="isAuthenticated()"></div>
 
           <div th:insert="~{login :: login}" class="tab-pane fade" id="tab-4" sec:authorize="isAnonymous()"></div>
 
