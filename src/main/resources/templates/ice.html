@@ -22,30 +22,30 @@
             <div class="col-md-1"></div>
 
             <div class="col-md-10">
-              <div class="row">
-                <div class="col-lg-3 align-items-stretch mb-2" th:each="flav, i : ${flavours}" th:if="${i.index > 0}">
-                  <div class="card" >
+              <div class="row row-cols-1 row-cols-md-5 mb-2">
+                <div class="col" th:each="flav, i : ${flavours}" th:if="${i.index > 0}">
+                  <div class="card h-100" >
                     <div class="row">
-                    <div class="col-md-4">
-                      <img th:src="@{${'/images/flavours/' + flav.id + '.' + flav.file.getType()}}" class="img-fluid rounded-start" style="object-fit: cover; height: 100%; width: 100%" alt="...">
-                    </div>
-                    <div class="col-md-5">
-                      <div class="card-body">
-                      <h5 class="card-title text-start" th:text="${flav.name}"></h5>
-                      <p class="card-text text-start" th:text="${flav.description}"></p>
+                      <div class="col-md-4">
+                        <img th:src="@{${'/images/flavours/' + flav.id + '.' + flav.file.getType()}}" class="card-img-left rounded-start" style="object-fit: cover; height: 100%; width: 100%;" alt="...">
                       </div>
-                    </div>
-                    <div class="col-md-3 " sec:authorize="hasRole('ROLE_ADMIN')"> 
-                      <div class="input-group">
-                      <button th:attr="data-id=${flav.id}" type="submit" class="btn btn-outline-secondary flavour-edit-btn"><span class="bi bi-pen"></span></button>
-                      <button th:attr="data-id=${flav.id}" type="submit" class="btn btn-outline-secondary flavour-delete-btn"><span class="bi bi-x-lg"></span></button>
+                      <div class="col-md-5">
+                        <div class="card-body">
+                          <h5 class="card-title text-start" th:text="${flav.name}"></h5>
+                          <p class="card-text text-start" th:text="${flav.description}"></p>
+                        </div>
                       </div>
-                    </div>
+                      <div class="col-md-3 " sec:authorize="hasRole('ROLE_ADMIN')"> 
+                        <div class="input-group">
+                          <button th:attr="data-id=${flav.id}" type="submit" class="btn btn-outline-secondary flavour-edit-btn"><span class="bi bi-pen"></span></button>
+                          <button th:attr="data-id=${flav.id}" type="submit" class="btn btn-outline-secondary flavour-delete-btn"><span class="bi bi-x-lg"></span></button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               
-                <div class="col-lg-3 align-items-stretch mb-2" sec:authorize="hasRole('ROLE_ADMIN')" >
+                <div class="col" sec:authorize="hasRole('ROLE_ADMIN')" >
                   <form method="POST" action="/ice/addFlavour" id="iceCreamForm" enctype="multipart/form-data">
                     <div class="card" >
                       <div class="row">
@@ -195,7 +195,7 @@
                 </div>
                 <div class="tab-pane fade" id="candy-tab-pane" role="tabpanel" aria-labelledby="candy-tab" tabindex="0">
                   <div class="container-fluid text-center">
-                    <div class="row" id="candyRow">
+                    <div class="row" id="candyRow"> 
                       <div class="col-lg-3 align-items-stretch mb-2" th:each="topp: ${toppings}" th:if="${topp.isCandy()}">
                         <div class="card">
                           <div class="row">
@@ -259,7 +259,7 @@
               <div class="row row-cols-1 row-cols-md-5 mb-2" id="cupRow">
                 <div class="col" th:each="cup: ${cups}">
                   <div class="card h-100">
-                    <img th:src="@{${'/images/cups/placeholder.png'}}" class="card-img-top" style="object-fit: cover; height: 100%; width: 100%;" alt="...">
+                    <img th:src="@{${'/images/cups/' + cup.id + '.' + cup.file.getType()}}" class="card-img-top" style="object-fit: cover; height: 100%; width: 100%;" alt="...">
                     <div class="card-body">
                       <h5 class="card-title" th:text="${cup.name}"></h5>
                       <p class="card-text" th:text="${cup.description}"></p>
@@ -361,6 +361,10 @@
                     <label for="cupDescriptionInput">Kommentar</label>
                     <small class="form-text text-muted" id="cupDescriptionTextAreaCount">0/255</small>
                   </div>
+                </div>
+                <div class="col-12">
+                  <img th:src="@{${'/images/cups/placeholder.png'}}" class="img-fluid rounded-start" style="object-fit: cover; cursor: pointer; height: 100%; width: 100%;" alt="..." id="placeholderCupImage">
+                  <input type="file" class="d-none" id="formFileCup" name="image" required>
                 </div>
                 <div class="col-12">
                   <div class="input-group">

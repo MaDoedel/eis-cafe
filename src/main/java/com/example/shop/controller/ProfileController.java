@@ -11,6 +11,7 @@ import org.aspectj.internal.lang.annotation.ajcDeclareAnnotation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +21,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.example.shop.model.Cup;
+import com.example.shop.model.File;
+import com.example.shop.model.Flavour;
 import com.example.shop.model.Fruit;
 import com.example.shop.model.Role;
+import com.example.shop.model.Topping;
+import com.example.shop.repository.CupRepository;
 import com.example.shop.repository.FileRepository;
+import com.example.shop.repository.FlavourRepository;
 import com.example.shop.repository.JobRequestRepository;
 import com.example.shop.repository.RoleRepository;
+import com.example.shop.repository.ToppingRepository;
 import com.example.shop.repository.UserRepository;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,6 +52,16 @@ public class ProfileController {
 
     @Autowired
     private FileRepository fileRepository;
+
+    @Autowired
+    private ToppingRepository toppingRepository;
+
+    @Autowired
+    private FlavourRepository flavourRepository;
+
+    @Autowired
+    private CupRepository cupRepository;
+
 
     @GetMapping("/download/cv/{id}")
     public ResponseEntity<Resource> downloadCV(@PathVariable("id") long id) throws IOException {
@@ -92,6 +110,26 @@ public class ProfileController {
 
     @DeleteMapping("/profile/deleteFile/{id}")
     public ResponseEntity<String> deleteFile(@PathVariable("id") long id) throws IOException {
+
+        for (Topping topping : toppingRepository.findAll()) {
+            if (topping.getFile().getId() == fileRepository.findById(id).get().getId()) {
+                return ResponseEntity.badRequest().body("File is in use by a topping");
+            }
+        }
+
+        for (Flavour flavour : flavourRepository.findAll()) {
+            if (flavour.getName().equals("Sahne")) {continue;}
+            
+            if (flavour.getFile().getId() == fileRepository.findById(id).get().getId()) {
+                return ResponseEntity.badRequest().body("File is in use by a flavour");
+            }
+        }
+
+        for (Cup cup : cupRepository.findAll()) {
+            if (cup.getFile().getId() == fileRepository.findById(id).get().getId()) {
+                return ResponseEntity.badRequest().body("File is in use by a cup");
+            }
+        }
 
         try{
 

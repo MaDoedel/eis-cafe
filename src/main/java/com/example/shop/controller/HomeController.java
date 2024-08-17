@@ -113,7 +113,7 @@ public class HomeController {
         model.addAttribute("flavours", flavourRepository.findAll());
         model.addAttribute("toppings", toppingRepository.findAll());
         model.addAttribute("cups", cupRepository.findAll());
-
+        model.addAttribute("files", fileRepository.findAll());
 
         return "ice :: ice(flavours=${flavours}, toppings=${toppings}, cups=${cups})";
     }

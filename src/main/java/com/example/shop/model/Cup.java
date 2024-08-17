@@ -42,6 +42,11 @@ public class Cup {
     @Column(name = "price")
     BigDecimal price;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "file_id", referencedColumnName = "id")
+    private File file;
+
+
     public Cup() {
     }
 
@@ -49,6 +54,14 @@ public class Cup {
         this.name = name; 
         this.price = bd;
         this.description = desc;
+    }
+
+    public void setFile(File file){
+        this.file = file;
+    }
+
+    public File getFile(){
+        return file;
     }
 
     public Long getId() {

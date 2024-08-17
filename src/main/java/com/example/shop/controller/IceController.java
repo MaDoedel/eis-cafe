@@ -35,6 +35,8 @@ import com.example.shop.repository.PricingRepository;
 import com.example.shop.repository.ToppingRepository;
 import com.example.shop.repository.UserRepository;
 
+import jakarta.validation.constraints.Null;
+
 @CrossOrigin(origins = "https://localhost:8081")
 @Controller
 public class IceController {
@@ -44,7 +46,7 @@ public class IceController {
     static final Path toppingsCandiesFolder = Path.of("src", "main", "resources", "static", "images", "toppings", "candies");
     static final Path toppingsSauceFolder = Path.of("src", "main", "resources", "static", "images", "toppings", "sauce");
 
-    static final Path cupFolder = Path.of("src", "main", "resources", "static", "images", "cup");
+    static final Path cupFolder = Path.of("src", "main", "resources", "static", "images", "cups");
 
     @Autowired
     FlavourRepository flavourRepository; 
@@ -324,7 +326,11 @@ public class IceController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("ID is null");
         }
-
+     
+        if(cupFolder.resolve(cupRepository.findById(id).get().getFile().getFileName()).toFile().exists()){
+            cupFolder.resolve(cupRepository.findById(id).get().getFile().getFileName()).toFile().delete();
+        }
+        
         cupRepository.deleteById(id);
         return ResponseEntity.ok().body(null);
     }
@@ -334,8 +340,26 @@ public class IceController {
         @RequestParam java.util.Map<String, String> params,
         @RequestParam("CupName") String name,
         @RequestParam("CupPrice") BigDecimal price,
-        @RequestParam("CupDescription") String description
-        ) {
+        @RequestParam("CupDescription") String description,
+        @RequestParam(value= "image", required = true) MultipartFile imageFile
+        ) throws IOException {
+
+        // Get the exact type
+        Pattern pattern = Pattern.compile("image/(.*)");
+        Matcher imatcher = pattern.matcher(imageFile.getContentType());
+        String fileformat = "";
+
+        // looks bad
+        try{
+            if (!imatcher.find()) {
+                return ResponseEntity.badRequest().body("Invalid type. It should be in the format 'image/...'");
+            } 
+            fileformat = imatcher.group(1);
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Invalid type. It should be in the format 'image/...'");
+        }
+
 
         Pattern fpattern = Pattern.compile("^(flavour)\\[(\\d+)\\]$");
         Pattern tpattern = Pattern.compile("^(topping)\\[(\\d+)\\]$");
@@ -365,14 +389,29 @@ public class IceController {
         });
         cup.setToppings(cupToppings);
 
-
+    
+        String fileName;
         try{
             cup.calculateVegan();
-            cupRepository.save(cup);
+            cup.setFile(null); // Just in case you know
+            cup = cupRepository.save(cup);
+            fileName = cup.getId() + "." + fileformat;
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body("Bad Cup");
         }
+
+         //safe image
+         Path filePath = cupFolder.resolve(fileName);
+         Files.write(filePath, imageFile.getBytes());
+ 
+ 
+         com.example.shop.model.File file = new com.example.shop.model.File(fileName, filePath.toString(), fileformat);
+         fileRepository.save(file);
+
+         cup.setFile(file);
+         cupRepository.save(cup);
+ 
 
         return ResponseEntity.ok().body(null);
     }

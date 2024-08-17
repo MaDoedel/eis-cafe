@@ -150,21 +150,27 @@ $(document).ready( function() {
             success:function(new_content){
                 $("#tab-1").html(new_content)
                 $('#iceCreamForm').submit(onIceCreamFormSubmit);
-
                 $('#fruitForm').submit(onFruitFormSubmit);
                 $('#candyForm').submit(onCandyFormSubmit);
                 $('#sauceForm').submit(onSauceFormSubmit);
+                $('#addCupForm').submit(onAddCupSubmit);
+
+
 
                 // This must be solvable through patterns and stuff, or react
                 $('#placeholderImage').on("click", selectImage);
                 $('#placeholderCandiesImage').on("click", selectCandiesImage);
                 $('#placeholderSauceImage').on("click", selectSauceImage);
                 $('#placeholderFruitsImage').on("click", selectFruitsImage);
+                $('#placeholderCupImage').on("click", selectCupImage);
+
 
                 $('#formFile').on("change", previewImage);
                 $('#formFileCandies').on("change", previewCandiesImage);
                 $('#formFileSauce').on("change", previewSauceImage);
                 $('#formFileFruits').on("change", previewFruitsImage);
+                $('#formFileCup').on("change", previewCupImage);
+
 
                 ListeningIceForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'iceCreamNameInput'), new InputListenerDecorator(new CommentRegexChecker(''), 'iceCreamDescriptionInput')]);
                 ListeningFruitForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'fruitNameInput'), new InputListenerDecorator(new CommentRegexChecker(''), 'fruitDescriptionInput')]);
@@ -284,11 +290,15 @@ $(document).ready( function() {
         $('#placeholderCandiesImage').on("click", selectCandiesImage);
         $('#placeholderSauceImage').on("click", selectSauceImage);
         $('#placeholderFruitsImage').on("click", selectFruitsImage);
+        $('#placeholderCupImage').on("click", selectCupImage);
+
 
         $('#formFile').on("change", previewImage);
         $('#formFileCandies').on("change", previewCandiesImage);
         $('#formFileSauce').on("change", previewSauceImage);
         $('#formFileFruits').on("change", previewFruitsImage);
+        $('#formFileCup').on("change", previewCupImage);
+
 
         $('#CVButton').on("click", selectCV);
         $('#CVInput').on("change", previewCV);
@@ -331,12 +341,14 @@ $(document).ready( function() {
     function onAddCupSubmit(e) {
         e.preventDefault(); 
 
-        let formData = $(this).serialize(); 
+        let formData = new FormData($('#addCupForm')[0]);
 
         $.ajax({
           type: 'POST',
           url: '/ice/addCup',
           data: formData,
+          contentType: false, // Set contentType to false, FormData will automatically set it correctly
+          processData: false, // Set processData to false to prevent jQuery from processing the data
           success: function () {
             refetchIce();
           },
@@ -492,6 +504,10 @@ $(document).ready( function() {
 
     function selectSauceImage() {
         document.getElementById('formFileSauce').click();
+    }
+
+    function selectCupImage() {
+        document.getElementById('formFileCup').click();
     }
 
     function selectCV(e) {
@@ -714,6 +730,18 @@ $(document).ready( function() {
         reader.onload = function(){
           var dataURL = reader.result;
           var img = document.getElementById('placeholderFruitsImage'); 
+          img.src = dataURL;
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+
+    function previewCupImage(event) {
+        event.preventDefault();
+        var input = event.target;
+        var reader = new FileReader();
+        reader.onload = function(){
+          var dataURL = reader.result;
+          var img = document.getElementById('placeholderCupImage'); 
           img.src = dataURL;
         };
         reader.readAsDataURL(input.files[0]);

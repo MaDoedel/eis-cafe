@@ -70,6 +70,7 @@ public class IceControllerTest {
     private MockMvc mockMvc;
 
     static final Path fdir = Path.of("src", "main", "resources", "static", "images", "flavours");
+    static final Path cdir = Path.of("src", "main", "resources", "static", "images", "cups");
     static final Path tfdir = Path.of("src", "main", "resources", "static", "images", "toppings", "fruits");
     static final Path tsdir = Path.of("src", "main", "resources", "static", "images", "toppings", "sauce");
     static final Path tcdir = Path.of("src", "main", "resources", "static", "images", "toppings", "candies");
@@ -149,6 +150,16 @@ public class IceControllerTest {
         Cup cup = new Cup("Some cup", new BigDecimal(5.00), "Delicious cup");
         cup.setFlavours(new ArrayList<Flavour>());
         cup.setToppings(new ArrayList<Topping>());
+        cup = cupRepository.save(cup);
+
+        String fileName5 = cup.getId() + ".png" ;
+        Path filePath5 = cdir.resolve(fileName5);
+        Files.write(filePath5, "Cup".getBytes());
+
+        com.example.shop.model.File file5 = new com.example.shop.model.File(fileName5, filePath5.toString(), "png");
+        fileRepository.save(file5);
+
+        cup.setFile(file5);
         cupRepository.save(cup);
     }
 
@@ -224,18 +235,18 @@ public class IceControllerTest {
 
         try{
             Cup fr8 = cupRepository.findByName("Banana Caramel Delight").get(0);
-            // if (Files.exists(Paths.get(fr8.getFile().getUrl()).normalize())) {
-            //     Paths.get(fr8.getFile().getUrl()).normalize().toFile().delete();
-            // }
+            if (Files.exists(Paths.get(fr8.getFile().getUrl()).normalize())) {
+                Paths.get(fr8.getFile().getUrl()).normalize().toFile().delete();
+            }
             cupRepository.delete(fr8);
         } catch (Exception e) {
         }
 
         try{
             Cup fr9 = cupRepository.findByName("Some cup").get(0);
-            // if (Files.exists(Paths.get(fr8.getFile().getUrl()).normalize())) {
-            //     Paths.get(fr8.getFile().getUrl()).normalize().toFile().delete();
-            // }
+            if (Files.exists(Paths.get(fr9.getFile().getUrl()).normalize())) {
+                Paths.get(fr9.getFile().getUrl()).normalize().toFile().delete();
+            }
             cupRepository.delete(fr9);
         } catch (Exception e) {
         }
@@ -460,7 +471,7 @@ public class IceControllerTest {
     @Test
     @WithMockUser(username ="admin", roles={"ADMIN"})
     public void testAddCup() throws Exception {
-        //MockMultipartFile file = new MockMultipartFile("image", "something.png", MediaType.IMAGE_PNG_VALUE, "I'm a png".getBytes());
+        MockMultipartFile file = new MockMultipartFile("image", "something.png", MediaType.IMAGE_PNG_VALUE, "I'm a png".getBytes());
 
         Flavour flavour = flavourRepository.findByName("IchigoSando").get(0);
         Topping fruit = toppingRepository.findByName("Banana").get(0);
@@ -468,11 +479,13 @@ public class IceControllerTest {
         long cC = cupRepository.count();
         //long fileC = fileRepository.count();
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/ice/addCup")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/ice/addCup")
+                .file(file)
                 .param("flavour[" + flavour.getId() +"]", "2") 
                 .param("topping["+ fruit.getId() +"]", "1") 
                 .param("CupName", "Banana Caramel Delight")
-                .param("CupPrice", "5.00"))
+                .param("CupPrice", "5.00")
+                .param("CupDescription", "Test"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(result -> {
                     assertAll(
