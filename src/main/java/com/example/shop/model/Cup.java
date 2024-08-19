@@ -17,6 +17,9 @@ public class Cup {
     @Column(name = "name")
     String name;
 
+    @Column(name = "description")
+    String description;
+
     @Column(name = "isVegan")
     boolean isVegan = false;
 
@@ -39,12 +42,26 @@ public class Cup {
     @Column(name = "price")
     BigDecimal price;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "file_id", referencedColumnName = "id")
+    private File file;
+
+
     public Cup() {
     }
 
-    public Cup(String name, BigDecimal bd) {
+    public Cup(String name, BigDecimal bd, String desc) {
         this.name = name; 
         this.price = bd;
+        this.description = desc;
+    }
+
+    public void setFile(File file){
+        this.file = file;
+    }
+
+    public File getFile(){
+        return file;
     }
 
     public Long getId() {
@@ -98,4 +115,11 @@ public class Cup {
         this.isVegan = true;
     }
 
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String desc) {
+        this.description = desc;
+    }
 }

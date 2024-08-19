@@ -74,7 +74,36 @@ To authenticate users against the application's database, a custom `UserDetailsS
 
 To enhance the user experience when authentication fails, a custom `AuthenticationFailureHandler` has been implemented. This handler sends an HTTP error status and a custom error message to the client upon authentication failure. This setup allows handling authentication errors in the AJAX error function and provides more reactive interactions using alerts and without distracting redirects.
 
+### Installation Guide
+
+Ensure that Java 17 is set in your environment variables. The application is accessible at http://localhost:8080.
+
+1. **Clone the Repository**
+    ```bash
+    apt-get update
+    apt-get upgrade
+    apt install openjdk-17-jdk openjdk-17-jre
+
+    git clone git@github.com:MaDoedel/eis-cafe.git
+    cd eis-cafe
+    ```
+2. ***Start Application in Windows***
+    ```bash
+    gradlew.bat bootRun        
+    ```
+
+2. ***Start Application in Linux***
+    ```bash
+    ./gradlew bootRun
+    ```
+
 ## TODO
-- [ ] Write something about the JavaScript input validation bridge with and without Event Listeners. Although it is implemented and used, it has not been introduced.
-- [ ] Write something about the factory pattern, which is used to resolve the pricing entity for toppings or flavors.
-- [ ] Need a more stylish landing page.
+- [ ] Create a more stylish landing page.
+- [ ] Implement responsive design.
+- [ ] Design the Drinks page.
+- [x] Add picture selection and description fields for cups.
+- [x] Fix the addCup error.
+- [ ] Rework navigation.
+- [ ] Draw a better database overview for the README.
+- [ ] Check the Unique keyword (JPA related).
+- [ ] Write about the JavaScript input validation bridge with and without Event Listeners. Although it is implemented and used, it has not been introduced.

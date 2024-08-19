@@ -104,7 +104,7 @@ class TextAreaListenerDecorator extends CheckerDecorator{
                 inputElement.value = inputElement.value.substring(0, 255);
             }
 
-            document.getElementById('applicantCommentTextAreaCount').innerText = inputElement.value.length + '/255';
+            document.getElementById(this.id +'Count').innerText = inputElement.value.length + '/255';
         });     
     }
 }
@@ -150,32 +150,39 @@ $(document).ready( function() {
             success:function(new_content){
                 $("#tab-1").html(new_content)
                 $('#iceCreamForm').submit(onIceCreamFormSubmit);
-
                 $('#fruitForm').submit(onFruitFormSubmit);
                 $('#candyForm').submit(onCandyFormSubmit);
                 $('#sauceForm').submit(onSauceFormSubmit);
+                $('#addCupForm').submit(onAddCupSubmit);
+
+
 
                 // This must be solvable through patterns and stuff, or react
                 $('#placeholderImage').on("click", selectImage);
                 $('#placeholderCandiesImage').on("click", selectCandiesImage);
                 $('#placeholderSauceImage').on("click", selectSauceImage);
                 $('#placeholderFruitsImage').on("click", selectFruitsImage);
+                $('#placeholderCupImage').on("click", selectCupImage);
+
 
                 $('#formFile').on("change", previewImage);
                 $('#formFileCandies').on("change", previewCandiesImage);
                 $('#formFileSauce').on("change", previewSauceImage);
                 $('#formFileFruits').on("change", previewFruitsImage);
+                $('#formFileCup').on("change", previewCupImage);
+
 
                 ListeningIceForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'iceCreamNameInput'), new InputListenerDecorator(new CommentRegexChecker(''), 'iceCreamDescriptionInput')]);
                 ListeningFruitForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'fruitNameInput'), new InputListenerDecorator(new CommentRegexChecker(''), 'fruitDescriptionInput')]);
                 ListeningCandyForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'candyNameInput'), new InputListenerDecorator(new CommentRegexChecker(''), 'candyDescriptionInput')]);
                 ListeningSauceForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'sauceNameInput'), new InputListenerDecorator(new CommentRegexChecker(''), 'sauceDescriptionInput')]);
+                ListeningCupForm = new ListeningForm([new InputListenerDecorator(new PriceRegexChecker(''), 'cupPriceInput'), new InputListenerDecorator(new TextRegexChecker(''), 'cupNameInput'), new TextAreaListenerDecorator(new TextLengthChecker(''), 'cupDescriptionTextArea')]);
 
                 ListeningIceForm.isValid();
                 ListeningFruitForm.isValid();
                 ListeningCandyForm.isValid();
                 ListeningSauceForm.isValid();
-                
+                ListeningCupForm.isValid();               
 
             },
             error: function(){
@@ -208,7 +215,7 @@ $(document).ready( function() {
                 $('#jobsForm').submit(onJobsFormSubmit);
                 $('#CVButton').on("click", selectCV);
                 $('#CVInput').on("change", previewCV);
-                const ListeningJobsForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'applicantNameInput'), new InputListenerDecorator(new TextRegexChecker(''), 'applicantSurnameInput'), new InputListenerDecorator(new EmailRegexChecker(''), 'applicantMailInput'), new TextLengthChecker(new CommentRegexChecker(''), 'applicantCommentTextArea')]);
+                const ListeningJobsForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'applicantNameInput'), new InputListenerDecorator(new TextRegexChecker(''), 'applicantSurnameInput'), new InputListenerDecorator(new EmailRegexChecker(''), 'applicantMailInput'), new TextAreaListenerDecorator(new TextLengthChecker(''), 'applicantCommentTextArea')]);
                 ListeningJobsForm.isValid();
 
             },
@@ -236,7 +243,7 @@ $(document).ready( function() {
         //var formData = new FormData($('#iceCreamForm')[0]);
         const ListeningIceForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'iceCreamNameInput'), new InputListenerDecorator(new CommentRegexChecker(''), 'iceCreamDescriptionInput')]);
         const ListeningJobsForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'applicantNameInput'), new InputListenerDecorator(new TextRegexChecker(''), 'applicantSurnameInput'), new InputListenerDecorator(new EmailRegexChecker(''), 'applicantMailInput'), new TextAreaListenerDecorator(new TextLengthChecker(''), 'applicantCommentTextArea')]);
-        const ListeningCupForm = new ListeningForm([new InputListenerDecorator(new PriceRegexChecker(''), 'cupPriceInput'), new InputListenerDecorator(new TextRegexChecker(''), 'cupNameInput')]);
+        const ListeningCupForm = new ListeningForm([new InputListenerDecorator(new PriceRegexChecker(''), 'cupPriceInput'), new InputListenerDecorator(new TextRegexChecker(''), 'cupNameInput'), new TextAreaListenerDecorator(new TextLengthChecker(''), 'cupDescriptionTextArea')]);
         const ListeningFruitForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'fruitNameInput'), new InputListenerDecorator(new CommentRegexChecker(''), 'fruitDescriptionInput')]);
         const ListeningCandyForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'candyNameInput'), new InputListenerDecorator(new CommentRegexChecker(''), 'candyDescriptionInput')]);
         const ListeningSauceForm = new ListeningForm([new InputListenerDecorator(new TextRegexChecker(''), 'sauceNameInput'), new InputListenerDecorator(new CommentRegexChecker(''), 'sauceDescriptionInput')]);
@@ -283,11 +290,15 @@ $(document).ready( function() {
         $('#placeholderCandiesImage').on("click", selectCandiesImage);
         $('#placeholderSauceImage').on("click", selectSauceImage);
         $('#placeholderFruitsImage').on("click", selectFruitsImage);
+        $('#placeholderCupImage').on("click", selectCupImage);
+
 
         $('#formFile').on("change", previewImage);
         $('#formFileCandies').on("change", previewCandiesImage);
         $('#formFileSauce').on("change", previewSauceImage);
         $('#formFileFruits').on("change", previewFruitsImage);
+        $('#formFileCup').on("change", previewCupImage);
+
 
         $('#CVButton').on("click", selectCV);
         $('#CVInput').on("change", previewCV);
@@ -330,12 +341,14 @@ $(document).ready( function() {
     function onAddCupSubmit(e) {
         e.preventDefault(); 
 
-        let formData = $(this).serialize(); 
+        let formData = new FormData($('#addCupForm')[0]);
 
         $.ajax({
           type: 'POST',
           url: '/ice/addCup',
           data: formData,
+          contentType: false, // Set contentType to false, FormData will automatically set it correctly
+          processData: false, // Set processData to false to prevent jQuery from processing the data
           success: function () {
             refetchIce();
           },
@@ -491,6 +504,10 @@ $(document).ready( function() {
 
     function selectSauceImage() {
         document.getElementById('formFileSauce').click();
+    }
+
+    function selectCupImage() {
+        document.getElementById('formFileCup').click();
     }
 
     function selectCV(e) {
@@ -713,6 +730,18 @@ $(document).ready( function() {
         reader.onload = function(){
           var dataURL = reader.result;
           var img = document.getElementById('placeholderFruitsImage'); 
+          img.src = dataURL;
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+
+    function previewCupImage(event) {
+        event.preventDefault();
+        var input = event.target;
+        var reader = new FileReader();
+        reader.onload = function(){
+          var dataURL = reader.result;
+          var img = document.getElementById('placeholderCupImage'); 
           img.src = dataURL;
         };
         reader.readAsDataURL(input.files[0]);
