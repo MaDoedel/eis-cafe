@@ -62,7 +62,7 @@ public class SecurityConfiguarion {
 
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/login").permitAll() // if not, somehow login is denied
-                .requestMatchers("/","/style.css", "/index.js", "/favicon.ico", "/image.png", "/images/**", "/jobs/apply").permitAll()
+                .requestMatchers("/","/style.css", "/index.js", "/favicon.ico", "/image.png", "/images/**", "/jobs/apply", "/api/v2/ice/**").permitAll()
                 .requestMatchers("/ice/**", "/jobs/reject/**", "/jobs/accept/**").hasAnyAuthority("ROLE_ADMIN")
                 .anyRequest().authenticated()
             )

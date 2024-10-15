@@ -53,7 +53,7 @@ function App() {
                 <a className={current === "Contact" ? 'nav-link active' : 'nav-link'} aria-current={current === "Contact" ? 'page' : ''} onClick={() => handleClick("Contact")}>Pricing</a>
               </li>
             </ul>
-            <div className="d-flex">
+            <div className="d-flex justify-content-center">
               <a className={current === "Login" ? 'nav-link active' : 'nav-link'} aria-current={current === "Login" ? 'page' : ''} onClick={() => handleClick("Login")} style={{color: 'white'}}>Login</a>
             </div>
           </div>

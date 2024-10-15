@@ -6,6 +6,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.shop.model.User;
 
+import java.net.http.HttpResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -53,6 +55,9 @@ public class HomeController {
 
     @Autowired
     FileRepository fileRepository;
+
+
+
     
     @GetMapping(value = "/")
     public String getAllLists(Model model, @AuthenticationPrincipal UserDetails userDetails) {

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,7 +38,7 @@ import com.example.shop.repository.UserRepository;
 
 import jakarta.validation.constraints.Null;
 
-@CrossOrigin(origins = "https://localhost:8081")
+@CrossOrigin(origins = "https://localhost:3000")
 @Controller
 public class IceController {
 
@@ -66,11 +67,33 @@ public class IceController {
     @Autowired
     ToppingRepository toppingRepository;
         
-
     @Autowired
     FileRepository fileRepository;
-        
+    
 
+    @GetMapping(value = "/api/v2/ice/flavours")
+    public ResponseEntity<List<Flavour>> getFlavours(){
+        return ResponseEntity.ok().body(flavourRepository.findAll());
+    }
+
+    @PostMapping(value = "/api/v2/ice/flavours")
+    public ResponseEntity<String> addFlavours(){
+        return ResponseEntity.ok().body("{ \"message\": \"Flavour added\" }");
+    }
+
+    @GetMapping(value = "/api/v2/ice/cups")
+    public ResponseEntity<List<Cup>> getCups(){
+        return ResponseEntity.ok().body(cupRepository.findAll());
+    }
+
+    @GetMapping(value = "/api/v2/ice/toppings")
+    public ResponseEntity<List<Topping>> getToppings(){
+        return ResponseEntity.ok().body(toppingRepository.findAll());
+    }
+
+
+
+      
     @Transactional
     @PostMapping(value = "/ice/addFruit", produces = "text/plain")
     public ResponseEntity<String> addFruit(
