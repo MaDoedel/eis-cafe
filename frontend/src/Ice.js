@@ -1,22 +1,7 @@
 import React, { useState, useEffect, useCallback} from "react";
 import Flavour from "./Flavour";
 import Topping from "./Topping";
-
-
-function Cups({cups}) {
-    return (
-        <>
-            <div className="row my-2 border rounded">
-                <div className="col-md-12 mt-2 ">
-                    <p>Cups</p>
-                </div>
-                <div className="col-md-12 mt-2">
-                </div>
-            </div>
-        </>
-    );
-}
-
+import Cup from "./Cup";
 
 function Ice() {
     const [flavours, setFlavours] = useState([]);
@@ -87,7 +72,7 @@ function Ice() {
                 <div className="col-md-10">
                     <Flavour flavours={flavours}/>
                     <Topping toppings={toppings}/>
-                    <Cups cups={cups}/>
+                    <Cup cups={cups}/>
                 </div>
                 <div className="col-md-1"></div>
             </div>

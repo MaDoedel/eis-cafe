@@ -86,9 +86,20 @@ public class IceController {
         return ResponseEntity.ok().body(cupRepository.findAll());
     }
 
+    @PostMapping(value = "/api/v2/ice/cups")
+    public ResponseEntity<String> addCups(){
+        return ResponseEntity.ok().body("{ \"message\": \"Cup added\" }");
+    }
+
+
     @GetMapping(value = "/api/v2/ice/toppings")
     public ResponseEntity<List<Topping>> getToppings(){
         return ResponseEntity.ok().body(toppingRepository.findAll());
+    }
+
+    @PostMapping(value = "/api/v2/ice/toppings")
+    public ResponseEntity<String> addToppings(){
+        return ResponseEntity.ok().body("{ \"message\": \"toppping added\" }");
     }
 
 

@@ -4,6 +4,7 @@ import React, { useRef } from "react";
 function Flavour({flavours}) {
     const nameInputRef = useRef(null);
     const descriptionInputRef = useRef(null);
+    const veganInputRef = useRef(null);
 
 
     const handleSubmit = (event) => {
@@ -15,6 +16,7 @@ function Flavour({flavours}) {
 
         const postData = new FormData();
         postData.append('name', name);
+        postData.append('vegan', veganInputRef.current.checked ? true : false);
         postData.append('description', description);
 
         fetch('/api/v2/ice/flavours', {
@@ -32,6 +34,7 @@ function Flavour({flavours}) {
     
         nameInputRef.current.value = '';
         descriptionInputRef.current.value = '';
+        veganInputRef.current.checked = 'false';
     
     };
 
@@ -65,8 +68,12 @@ function Flavour({flavours}) {
                                     <div className="card-body">
                                         <input className="card-title form-control text-start" placeholder="Mintberry Crunch" ref={nameInputRef}/>
                                         <input className="card-text form-control text-start" placeholder="creamy" ref={descriptionInputRef}/>
+                                        <div class="form-check form-switch form-check-reverse">
+                                            <input defaultChecked="false" class="form-check-input" type="checkbox" ref={veganInputRef} />
+                                            <label class="form-check-label" for="sauceVeganInput">Vegan</label>
+                                        </div>
                                     </div>
-                                    <button tabindex="0" type="submit" class="btn btn-outline-primary text-center" >Speichern</button>
+                                    <button tabindex="0" type="submit" class="btn btn-outline-primary text-center rounded-bottom" >Speichern</button>
                                 </div>
                             </form>
                         </div>

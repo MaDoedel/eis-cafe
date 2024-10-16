@@ -1,13 +1,48 @@
-import React, { useCallback} from "react";
+import React, { useCallback, useRef} from "react";
 
-function ToppingContent({toppings = []}) {
+function ToppingContent({toppings = [], type}) {
+    const nameInputRef = useRef(null);
+    const descriptionInputRef = useRef(null);
+    const veganInputRef = useRef(null);
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+
+        const name = nameInputRef.current.value;
+        const description = descriptionInputRef.current.value;
+        const vegan = veganInputRef.current.checked ? true : false;
+
+
+        const postData = new FormData();
+        postData.append('name', name);
+        postData.append('description', description);
+        postData.append('type', type);
+        postData.append('vegan', vegan);
+
+        fetch('/api/v2/ice/toppings', {
+            method: 'POST',
+            body: postData,
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            alert(data.message);
+        })
+        .catch((error) => {
+            alert(error.message);
+        });
+    
+        nameInputRef.current.value = '';
+        descriptionInputRef.current.value = '';
+        veganInputRef.current.checked = "false";
+    }
+
     return (
         <>
-            <div class="row">
+            <div class="row-cols-1 row-cols-md-5 my-2">
                 {toppings.map(topping => {
                     return (
                         <div className="col">
-                            <div className="card" key={topping.id}>
+                            <div className="card h-100">
                                 <img src="..." class="card-img-top" alt="..." />
                                 <div className="card-body">
                                     <h5 className="card-title">{topping.name}</h5>
@@ -17,6 +52,22 @@ function ToppingContent({toppings = []}) {
                         </div>
                     )
                 })}
+
+                <div className="col">
+                    <div className="card h-100" >
+                        <form enctype="multipart/form-data" onSubmit={handleSubmit}>
+                            <div className="card-body">
+                                <input className="card-title form-control text-start" placeholder="Mintberry Crunch" ref={nameInputRef}/>
+                                <input className="card-text form-control text-start" placeholder="creamy" ref={descriptionInputRef}/>
+                                <div class="form-check form-switch form-check-reverse">
+                                    <input defaultChecked={type === "Fruit"} class="form-check-input" type="checkbox" ref={veganInputRef} disabled={type === "Fruit"} />
+                                    <label class="form-check-label" for="sauceVeganInput">Vegan</label>
+                                </div>
+                            </div>
+                            <button tabindex="0" type="submit" class="btn btn-outline-primary text-center" >Speichern</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </>
     );
@@ -55,13 +106,13 @@ function Topping({toppings = []}) {
 
                     <div class="tab-content">
                         <div class="tab-pane active" id="fruits" role="tabpanel" aria-labelledby="fruits-tab" tabindex="0">
-                            <ToppingContent toppings={filterFruits()}/>
+                            <ToppingContent toppings={filterFruits()} type="Fruit"/>
                         </div>
                         <div class="tab-pane" id="sweets" role="tabpanel" aria-labelledby="sweets-tab" tabindex="0">
-                            <ToppingContent toppings={filterSweets()}/>
+                            <ToppingContent toppings={filterSweets()} type="Sweets"/>
                         </div>
                         <div class="tab-pane" id="sauce" role="tabpanel" aria-labelledby="sauce-tab" tabindex="0">
-                            <ToppingContent toppings={filterSauce()}/>
+                            <ToppingContent toppings={filterSauce()} type="Sauce"/>
                         </div>
                     </div>
                 </div>
