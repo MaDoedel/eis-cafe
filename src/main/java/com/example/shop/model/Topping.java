@@ -1,25 +1,30 @@
 package com.example.shop.model;
 
-import java.math.BigDecimal;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.example.shop.service.ProductVisitor;
+
+import java.io.IOException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import java.util.Objects;
+import com.example.shop.service.Element;
+import com.example.shop.service.ProductVisitor;
+
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "topping_type", discriminatorType = DiscriminatorType.STRING)
-public abstract class Topping {
+public abstract class Topping  implements Element {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", unique = true)
+    @Column(name = "name", unique = true, length = 32)
     @NotBlank(message = "Need some name")
     private String name;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 255)
     @NotBlank(message = "description")
     private String description;
 
@@ -99,5 +104,20 @@ public abstract class Topping {
     public boolean isFruit() {return false;}
     public boolean isSauce() {return false;}
     public boolean isCandy() {return false;}
+
+    @Override
+    public void accept(ProductVisitor visitor, MultipartFile file) throws IOException {
+        visitor.addProduct(this, file);
+    }
+
+    @Override
+    public void accept(ProductVisitor visitor, Long id) throws IOException {
+        visitor.editProduct(this, id);
+    }
+
+    @Override
+    public void accept(ProductVisitor visitor) throws IOException {
+        visitor.deleteProduct(this);
+    }
 
 }

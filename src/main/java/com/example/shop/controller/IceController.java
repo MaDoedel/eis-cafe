@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,7 +37,8 @@ import com.example.shop.repository.PricingRepository;
 import com.example.shop.repository.ToppingRepository;
 import com.example.shop.repository.UserRepository;
 
-import jakarta.validation.constraints.Null;
+import com.example.shop.service.ProductService;
+
 
 @CrossOrigin(origins = "https://localhost:3000")
 @Controller
@@ -49,6 +51,7 @@ public class IceController {
 
     static final Path cupFolder = Path.of("src", "main", "resources", "static", "images", "cups");
 
+    // Field injections bad, I know
     @Autowired
     FlavourRepository flavourRepository; 
 
@@ -69,16 +72,57 @@ public class IceController {
         
     @Autowired
     FileRepository fileRepository;
-    
+
+    @Autowired
+    ProductService productService;
+
+    // v3 will be GraphQL
 
     @GetMapping(value = "/api/v2/ice/flavours")
     public ResponseEntity<List<Flavour>> getFlavours(){
         return ResponseEntity.ok().body(flavourRepository.findAll());
     }
 
+    @PutMapping(value = "/api/v2/ice/flavours/{id}")
+    public ResponseEntity<String> editFlavours(
+        @PathVariable("id") Long id,
+        @RequestParam("id") Long newId, 
+        @RequestParam("name") String name,
+        @RequestParam("vegan") boolean vegan,
+        @RequestParam("description") String description,
+        @RequestParam("image") MultipartFile imageFile) throws IOException {
+
+        Flavour flavour = new Flavour();
+        flavour.setName(name);
+        flavour.setIsVegan(vegan);
+        flavour.setDescription(description);
+        flavour.setPricing(pricingRepository.findByDescripton("Spoon").get(0));
+        flavour.setFile(null);
+
+        return productService.editProduct(flavour, id);
+    }
+
+    @DeleteMapping(value = "/api/v2/ice/flavours/{id}")
+    public ResponseEntity<String> deleteFlavours(
+        @PathVariable("id") Long id) throws IOException {
+        return productService.deleteProduct(flavourRepository.findById(id).get());
+    }
+
     @PostMapping(value = "/api/v2/ice/flavours")
-    public ResponseEntity<String> addFlavours(){
-        return ResponseEntity.ok().body("{ \"message\": \"Flavour added\" }");
+    public ResponseEntity<String> addFlavours(
+        @RequestParam("name") String name,
+        @RequestParam("vegan") boolean vegan,
+        @RequestParam("description") String description,
+        @RequestParam("image") MultipartFile imageFile) throws IOException {
+
+        Flavour flavour = new Flavour();
+        flavour.setName(name);
+        flavour.setIsVegan(vegan);
+        flavour.setDescription(description);
+        flavour.setPricing(pricingRepository.findByDescripton("Spoon").get(0));
+        flavour.setFile(null);
+
+        return productService.addProduct(flavour, imageFile);
     }
 
     @GetMapping(value = "/api/v2/ice/cups")
@@ -87,8 +131,48 @@ public class IceController {
     }
 
     @PostMapping(value = "/api/v2/ice/cups")
-    public ResponseEntity<String> addCups(){
-        return ResponseEntity.ok().body("{ \"message\": \"Cup added\" }");
+    public ResponseEntity<String> addCups(
+        @RequestParam java.util.Map<String, String> params,
+        @RequestParam("CupName") String name,
+        @RequestParam("CupPrice") BigDecimal price,
+        @RequestParam("CupDescription") String description,
+        @RequestParam(value= "image", required = true) MultipartFile imageFile ) throws IOException {
+        
+        Cup cup = new Cup();
+        cup.setName(name);
+        cup.setPrice(price);
+        cup.setDescription(description);
+        cup.setFlavours(new ArrayList<Flavour>());
+        cup.setToppings(new ArrayList<Topping>());
+        cup.setFile(null);
+
+        return productService.addProduct(cup, imageFile);
+    }
+
+    @DeleteMapping(value = "/api/v2/ice/cups/{id}")
+    public ResponseEntity<String> deleteCups(
+        @PathVariable("id") Long id) throws IOException {
+        return productService.deleteProduct(cupRepository.findById(id).get());
+    }
+
+    @PutMapping(value = "/api/v2/ice/cups/{id}")
+    public ResponseEntity<String> editCups(
+        @PathVariable("id") Long id,
+        @RequestParam("id") Long newId, 
+        @RequestParam("name") String name,
+        @RequestParam("price") BigDecimal price,
+        @RequestParam("description") String description,
+        @RequestParam("image") MultipartFile imageFile) throws IOException {
+
+        Cup cup = new Cup();
+        cup.setName(name);
+        cup.setPrice(price);
+        cup.setDescription(description);
+        cup.setFlavours(new ArrayList<Flavour>());
+        cup.setToppings(new ArrayList<Topping>());
+        cup.setFile(null);
+
+        return productService.editProduct(cup, id);
     }
 
 
@@ -98,11 +182,99 @@ public class IceController {
     }
 
     @PostMapping(value = "/api/v2/ice/toppings")
-    public ResponseEntity<String> addToppings(){
-        return ResponseEntity.ok().body("{ \"message\": \"toppping added\" }");
+    public ResponseEntity<String> addToppings(
+        @RequestParam("name") String name,
+        @RequestParam("vegan") boolean vegan,
+        @RequestParam("description") String description,
+        @RequestParam("image") String type,
+        @RequestParam("image") MultipartFile imageFile) throws IOException {
+
+
+            Topping topping = null;
+            if (type.equals("Fruit")) {
+                topping = new Fruit();
+                topping.setName(name);
+                topping.setIsVegan(vegan);
+                topping.setDescription(description);
+                topping.setPricing(pricingRepository.findByDescripton("Fruit").get(0));
+                topping.setFile(null);
+                return productService.addProduct(topping, imageFile);
+            }
+
+            if (type.equals("Sauce")) {
+                topping = new Sauce();
+                topping.setName(name);
+                topping.setIsVegan(vegan);
+                topping.setDescription(description);
+                topping.setPricing(pricingRepository.findByDescripton("Sauce").get(0));
+                topping.setFile(null);
+                return productService.addProduct(topping, imageFile);
+            }
+
+            if (type.equals("Candy")) {
+                topping = new Candy();
+                topping.setName(name);
+                topping.setIsVegan(vegan);
+                topping.setDescription(description);
+                topping.setPricing(pricingRepository.findByDescripton("Candy").get(0));
+                topping.setFile(null);
+                return productService.addProduct(topping, imageFile);
+            }
+
+            return productService.addProduct(topping, imageFile);
     }
 
+    @DeleteMapping(value = "/api/v2/ice/toppings/{id}")
+    public ResponseEntity<String> deleteToppings(
+        @PathVariable("id") Long id) throws IOException {
+        return productService.deleteProduct(toppingRepository.findById(id).get());
+        }
+    
+    @PutMapping(value = "/api/v2/ice/toppings/{id}")
+    public ResponseEntity<String> editTopping (
+        @PathVariable("id") Long id,
+        @RequestParam("id") Long newId, 
+        @RequestParam("name") String name,
+        @RequestParam("vegan") boolean vegan,
+        @RequestParam("description") String description,
+        @RequestParam("image") String type,
+        @RequestParam("image") MultipartFile imageFile) throws IOException {
 
+        Topping topping = null;
+        if (type.equals("Fruit")) {
+            topping = new Fruit();
+            topping.setName(name);
+            topping.setIsVegan(vegan);
+            topping.setDescription(description);
+            topping.setPricing(pricingRepository.findByDescripton("Fruit").get(0));
+            topping.setFile(null);
+            return productService.editProduct(topping, id);
+        }
+
+        if (type.equals("Sauce")) {
+            topping = new Sauce();
+            topping.setName(name);
+            topping.setIsVegan(vegan);
+            topping.setDescription(description);
+            topping.setPricing(pricingRepository.findByDescripton("Sauce").get(0));
+            topping.setFile(null);
+            return productService.editProduct(topping, id);
+        }
+
+        if (type.equals("Candy")) {
+            topping = new Candy();
+            topping.setName(name);
+            topping.setIsVegan(vegan);
+            topping.setDescription(description);
+            topping.setPricing(pricingRepository.findByDescripton("Candy").get(0));
+            topping.setFile(null);
+            return productService.editProduct(topping, id);
+        }
+
+        return productService.editProduct(topping, id);
+    }
+
+    // ------------------------------- Old code here -------------------------------
 
       
     @Transactional

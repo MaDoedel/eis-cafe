@@ -3,21 +3,26 @@ package com.example.shop.model;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import jakarta.persistence.*;
-import java.util.Objects;
+import com.example.shop.service.Element;
+import com.example.shop.service.ProductVisitor;
+
+import java.io.IOException;
 
 @Entity
 @Table(name ="cup")
-public class Cup {
+public class Cup  implements Element {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
     Long id; 
 
-    @Column(name = "name")
+    @Column(name = "name", length = 32)
     String name;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 255)
     String description;
 
     @Column(name = "isVegan")
@@ -121,5 +126,20 @@ public class Cup {
 
     public void setDescription(String desc) {
         this.description = desc;
+    }
+
+    @Override
+    public void accept(ProductVisitor visitor, MultipartFile file) throws IOException {
+        visitor.addProduct(this, file);
+    }
+
+    @Override
+    public void accept(ProductVisitor visitor, Long id) throws IOException {
+        visitor.editProduct(this, id);
+    }
+
+    @Override
+    public void accept(ProductVisitor visitor) throws IOException {
+        visitor.deleteProduct(this);
     }
 }

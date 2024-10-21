@@ -5,12 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
-import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class File {
@@ -19,15 +14,15 @@ public class File {
     @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
 
-    @Column(name = "filename")
+    @Column(name = "filename", length = 32)
     @NotBlank(message = "Invalid filename")
     private String fileName;
 
-    @Column(name = "url")
+    @Column(name = "url", length = 255)
     @NotBlank(message = "Invalid url")  
     private String url;
 
-    @Column(name = "type")
+    @Column(name = "type", length = 32)
     @NotBlank(message = "Invalid type")  
     private String type;
 

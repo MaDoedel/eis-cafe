@@ -1,24 +1,26 @@
 package com.example.shop.model;
-
-import javax.annotation.processing.Generated;
-
 import jakarta.persistence.*;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+
+import com.example.shop.service.Element;
+import com.example.shop.service.ProductVisitor;
 
 
 @Entity
 @Table(name = "flavour")
-public class Flavour {
+public class Flavour implements Element {
 
     @Id 
     @GeneratedValue(strategy = GenerationType.TABLE)
     private long id;
 
-    @Column(name = "name", unique=true)
+    @Column(name = "name", unique=true, length = 32)
     @NotBlank(message = "Invalid name")
     private String name; 
 
@@ -26,7 +28,7 @@ public class Flavour {
     @NotNull(message = "Invalid value")
     private boolean isVegan; 
 
-    @Column(name = "description")
+    @Column(name = "description", length = 255)
     @NotBlank(message = "Invalid description")
     private String description; 
 
@@ -91,5 +93,20 @@ public class Flavour {
 
     public Pricing getPricing() {
         return pricing;
+    }
+
+    @Override
+    public void accept(ProductVisitor visitor, MultipartFile file) throws IOException {
+        visitor.addProduct(this, file);
+    }
+
+    @Override
+    public void accept(ProductVisitor visitor, Long id) throws IOException {
+        visitor.editProduct(this, id);
+    }
+
+    @Override
+    public void accept(ProductVisitor visitor) throws IOException {
+        visitor.deleteProduct(this);
     }
 }

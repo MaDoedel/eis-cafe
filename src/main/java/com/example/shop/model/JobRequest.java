@@ -23,10 +23,10 @@ public class JobRequest {
     @JoinColumn(name = "file_id", referencedColumnName = "id")
     private File file;
 
-    @Column(name = "comment", unique = true)
+    @Column(name = "comment", unique = true, length = 255)
     private String comment; 
 
-    @Column(name = "jobDescription")
+    @Column(name = "jobDescription", length = 32)
     @NotBlank(message = "Invalid jobDescription")
     private String jobDescription; 
 

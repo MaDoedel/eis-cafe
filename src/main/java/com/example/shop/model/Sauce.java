@@ -1,10 +1,6 @@
 package com.example.shop.model;
 
-import javax.annotation.processing.Generated;
-
 import jakarta.persistence.*;
-import java.util.Objects;
-
 
 @Entity
 @DiscriminatorValue("Sauce")

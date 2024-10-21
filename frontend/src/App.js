@@ -61,6 +61,24 @@ function App() {
       </nav>
       {isPending && "Loading..."}
       {renderPage()}
+
+      {/* <footer className="footer mt-auto py-3">
+        <div className="container d-flex flex-wrap justify-content-between align-items-center">
+          <div className="col-md-4 d-flex align-items-center">
+            <a href="https://getbootstrap.com/" className="mb-3 me-2 mb-md-0 text-white text-decoration-none lh-1">
+              <i className="bi bi-bootstrap" style={{ color: "white" }} ></i>
+            </a>
+            <span className="text-white">© 2021 Company, Inc</span>
+          </div>
+
+          <ul className="nav col-md-4 justify-content-end list-unstyled d-flex">
+            <li className="ms-3"><a className="text-white" href="#"><svg className="bi" width="24" height="24"></svg></a></li>
+            <li className="ms-3"><a className="text-white" href="#"><svg className="bi" width="24" height="24"></svg></a></li>
+            <li className="ms-3"><a className="text-white" href="#"><svg className="bi" width="24" height="24"></svg></a></li>
+          </ul>
+        </div>
+      </footer> */}
+
     </div>
   );
 }

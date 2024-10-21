@@ -1,16 +1,7 @@
 package com.example.shop.model;
 
-import java.math.BigDecimal;
-
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-
 import java.util.List;
-import java.util.Objects;
-
-import org.hibernate.annotations.GenericGenerator;
-import org.springframework.web.bind.annotation.SessionAttributes;
-
 
 @Entity
 @Table(name = "role")
@@ -19,7 +10,7 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", unique = true)
+    @Column(name = "name", unique = true, length = 20)
     private String name;
 
     @ManyToMany(mappedBy = "roles")

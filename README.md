@@ -20,7 +20,7 @@ Design of a RESTful Web Application dedicated to a particular Ice Coffee Shop! T
 ## Technologies Used
 
 - **Backend**: Java, Spring Boot
-- **Frontend**: Thymeleaf, Vanilla JavaScript, Bootstrap
+- **Frontend**: Thymeleaf, Vanilla JavaScript, Bootstrap, React
 - **Database**: H2
 - **Frameworks**: Jakarta, JPA, Hibernate
 - **Build Tool**: Gradle
@@ -28,7 +28,9 @@ Design of a RESTful Web Application dedicated to a particular Ice Coffee Shop! T
 
 ## Architecture
 
-The Ice Coffee Shop (single page) application follows the Model-View-Controller (MVC) architectural pattern, ensuring a clear separation of concerns and facilitating maintainable and scalable code.
+The Ice Coffee Shop single-page application is designed using the Model-View-Controller (MVC) architectural pattern, promoting a clear separation of concerns for more maintainable and scalable code. This structure consists of three main layers: the model layer, which handles database entities and their storage; the service layer, where the business logic is encapsulated; and finally, the representational layer, which defines the interface via server-side endpoints accessible to the client.
+
+![architecture abstract](docs/layered.png)
 
 ### Models
 
@@ -96,14 +98,3 @@ Ensure that Java 17 is set in your environment variables. The application is acc
     ```bash
     ./gradlew bootRun
     ```
-
-## TODO
-- [ ] Create a more stylish landing page.
-- [ ] Implement responsive design.
-- [ ] Design the Drinks page.
-- [x] Add picture selection and description fields for cups.
-- [x] Fix the addCup error.
-- [ ] Rework navigation.
-- [ ] Draw a better database overview for the README.
-- [ ] Check the Unique keyword (JPA related).
-- [ ] Write about the JavaScript input validation bridge with and without Event Listeners. Although it is implemented and used, it has not been introduced.

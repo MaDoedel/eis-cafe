@@ -4,12 +4,7 @@ import java.math.BigDecimal;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import java.util.Objects;
 
-import org.hibernate.annotations.GenericGenerator;
-
-
-// flexible pricing database 
 @Entity
 @Table(name = "pricing")
 public class Pricing {
@@ -18,7 +13,7 @@ public class Pricing {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 255)
     @NotBlank(message = "Nothing is free")
     private String description;
 

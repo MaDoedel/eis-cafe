@@ -16,9 +16,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotBlank;
@@ -31,15 +28,15 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.TABLE)
     private long id;
 
-    @Column(name = "name")
+    @Column(name = "name", length = 32)
     @NotBlank(message = "Invalid name")
     private String name; 
 
-    @Column(name = "surname")
+    @Column(name = "surname", length = 32)
     @NotBlank(message = "Invalid surname")
     private String surname; 
 
-    @Column(name = "email", unique=true)
+    @Column(name = "email", unique=true, length = 255)
     @NotBlank(message = "Invalid email")
     private String email; 
 
@@ -55,7 +52,7 @@ public class User implements UserDetails {
     )
     private List<Role> roles;
 
-    @Column(name = "state")
+    @Column(name = "state", length = 32)
     @NotBlank(message = "Invalid state")
     private String state; 
 

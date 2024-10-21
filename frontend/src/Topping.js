@@ -42,11 +42,17 @@ function ToppingContent({toppings = [], type}) {
                 {toppings.map(topping => {
                     return (
                         <div className="col">
-                            <div className="card h-100">
-                                <img src="..." class="card-img-top" alt="..." />
-                                <div className="card-body">
-                                    <h5 className="card-title">{topping.name}</h5>
-                                    <p className="card-text">{topping.description}</p>
+                            <div className="card h-100" style={{maxWidth: '540px'}}>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <img src="/logo192.png" class="img-fluid rounded-start text-center" alt="..."/>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div className="card-body">
+                                            <h5 className="card-title">{topping.name}</h5>
+                                            <p className="card-text">{topping.description}</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -54,19 +60,32 @@ function ToppingContent({toppings = [], type}) {
                 })}
 
                 <div className="col">
-                    <div className="card h-100" >
-                        <form enctype="multipart/form-data" onSubmit={handleSubmit}>
-                            <div className="card-body">
-                                <input className="card-title form-control text-start" placeholder="Mintberry Crunch" ref={nameInputRef}/>
-                                <input className="card-text form-control text-start" placeholder="creamy" ref={descriptionInputRef}/>
-                                <div class="form-check form-switch form-check-reverse">
-                                    <input defaultChecked={type === "Fruit"} class="form-check-input" type="checkbox" ref={veganInputRef} disabled={type === "Fruit"} />
-                                    <label class="form-check-label" for="sauceVeganInput">Vegan</label>
+                    <form enctype="multipart/form-data" onSubmit={handleSubmit}>
+                        <div className="card h-100" >
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <img src="/logo192.png" class="img-fluid rounded-start text-center" alt="..."/>
+                                </div>
+                                <div class="col-md-8">
+                                    <div className="card-body">
+                                        <input className="card-title form-control text-start" placeholder="Mintberry Crunch" ref={nameInputRef}/>
+                                        <input className="card-text form-control text-start" placeholder="creamy" ref={descriptionInputRef}/>
+                                        <div className="row mt-2">
+                                            <div class="col-md-6">
+                                                <button tabindex="0" type="submit" class="btn btn-outline-primary text-center rounded-bottom text-start" >Speichern</button>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="text-start form-check form-switch form-check-reverse ">
+                                                    <input defaultChecked={type === "Fruit"} class="form-check-input" type="checkbox" ref={veganInputRef} disabled={type === "Fruit"} />
+                                                    <label class="form-check-label" for="sauceVeganInput">Vegan</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <button tabindex="0" type="submit" class="btn btn-outline-primary text-center" >Speichern</button>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </>
