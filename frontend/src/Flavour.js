@@ -25,6 +25,22 @@ function Flavour({flavours}) {
         reader.readAsDataURL(file);
     };
 
+    const handleDelete = (event) => {
+        event.preventDefault();
+
+        const id = event.target.id;
+        fetch(`/api/v2/ice/flavours/${id}`, {
+            method: 'DELETE',
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            alert(data.message);
+        })
+        .catch((error) => {
+            alert(error.message);
+        });
+    };
+
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -67,21 +83,30 @@ function Flavour({flavours}) {
                     <p>Flavours</p>
                 </div>
                 <div className="col-md-12 mt-2">
-                    <div class="row row-cols-1 row-cols-md-5 my-2">
+                    <div class="row row-cols-1 row-cols-md-5">
                         {flavours.map(element => {
                             if (element.id ===  0) {return null}
                             else {
                                 return (
-                                    <div className="col">
+                                    <div className="col my-1">
                                         <div className="card h-100" style={{maxWidth: '540px'}}>
                                             <div class="row">
                                                 <div class="col-md-4">
-                                                    <img src="/logo192.png" class="rounded-start" alt="..."/>
+                                                    <img src={`/api/v2/ice/flavours/${element.id}/images`} class="img-fluid rounded-start text-center" alt="..."/>
                                                 </div>
                                                 <div class="col-md-8">
                                                     <div className="card-body">
                                                         <h5 className="card-title">{element.name}</h5>
                                                         <p className="card-text">{element.description}</p>
+                                                    </div>
+                                                    <div class="row my-2">
+                                                        <div class="col-md-6"></div>
+                                                        <div class="col-md-6">
+                                                            <div class="input-group text-end">
+                                                                <button class="btn btn-outline-danger border-end-0" id={element.id} onClick={handleDelete}><span class="bi bi-x-lg"></span></button>
+                                                                <button class="btn btn-outline-warning border-start-0"><span class="bi bi-pen"></span></button>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -91,7 +116,7 @@ function Flavour({flavours}) {
                             }
                         )}
 
-                        <div className="col">
+                        <div className="col my-1">
                             <form encType="multipart/form-data" onSubmit={handleSubmit}>
                                 <div className="card h-100" style={{maxWidth: '540px'}} >
                                     <div class="row">

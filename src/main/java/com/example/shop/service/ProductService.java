@@ -1,7 +1,11 @@
 package com.example.shop.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.UrlResource;
 import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +22,10 @@ import com.example.shop.model.Candy;
 import com.example.shop.repository.FlavourRepository;
 import com.example.shop.repository.ToppingRepository;
 
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+
+
 
 import jakarta.validation.OverridesAttribute;
 
@@ -27,8 +35,8 @@ import java.io.IOException;
 
 import com.example.shop.repository.FileRepository;
 
-
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.Files;
 
 import java.util.regex.Matcher;
@@ -54,7 +62,72 @@ public class ProductService implements ProductVisitor {
     FlavourRepository flavourRepository; 
 
     @Autowired
-    FileRepository fileRepository; 
+    FileRepository fileRepository;
+    
+    public MediaType getMediaType (String fileformat) {
+        MediaType mediaType = null;
+        if (fileformat.equals("jpeg")) {
+            mediaType = MediaType.IMAGE_JPEG;
+        } else if (fileformat.equals("png")) {
+            mediaType = MediaType.IMAGE_PNG;
+        } else if (fileformat.equals("gif")) {
+            mediaType = MediaType.IMAGE_GIF;
+        } else {
+            return null;
+        }
+        return mediaType;
+    }
+
+    public ResponseEntity<Resource> getFlavourImage(Long id) {
+        try{
+            Flavour flavour = flavourRepository.findById(id).get();
+
+            Path filePath = Paths.get(flavour.getFile().getUrl()).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+
+            MediaType mediaType = getMediaType(flavour.getFile().getType());
+            if (mediaType == null) {
+                System.out.println("mediaType is null");
+                return ResponseEntity.badRequest().body(null);
+            }
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + flavour.getFile().getFileName());
+            
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .contentType(mediaType)
+                    .body(resource);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    public ResponseEntity<Resource> getToppingImage(Long id) {
+        try{
+            Topping topping = toppingRepository.findById(id).get();
+
+            Path filePath = Paths.get(topping.getFile().getUrl()).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+
+            MediaType mediaType = getMediaType(topping.getFile().getType());
+            if (mediaType == null) {
+                return ResponseEntity.badRequest().body(null);
+            }
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + topping.getFile().getFileName());
+            
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .contentType(mediaType)
+                    .body(resource);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
 
     public String formatChecker(MultipartFile imageFile) {
         Pattern pattern = Pattern.compile("image/(.*)");
@@ -429,4 +502,6 @@ public class ProductService implements ProductVisitor {
 
         return ResponseEntity.ok().body("{ \"message\": \"Topping with id " + id + " edited successfully\" }");
     }
+
+
 }

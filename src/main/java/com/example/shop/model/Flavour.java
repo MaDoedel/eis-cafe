@@ -10,6 +10,7 @@ import java.io.IOException;
 
 import com.example.shop.service.Element;
 import com.example.shop.service.ProductVisitor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
@@ -32,10 +33,12 @@ public class Flavour implements Element {
     @NotBlank(message = "Invalid description")
     private String description; 
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name="price_id")
     private Pricing pricing;
  
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "file_id", referencedColumnName = "id")
     private File file;

@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.persistence.*;
 import com.example.shop.service.Element;
 import com.example.shop.service.ProductVisitor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.IOException;
 
@@ -47,6 +48,7 @@ public class Cup  implements Element {
     @Column(name = "price")
     BigDecimal price;
 
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "file_id", referencedColumnName = "id")
     private File file;

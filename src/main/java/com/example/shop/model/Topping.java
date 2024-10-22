@@ -3,12 +3,12 @@ package com.example.shop.model;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.shop.service.ProductVisitor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.IOException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import com.example.shop.service.Element;
-import com.example.shop.service.ProductVisitor;
 
 
 @Entity
@@ -28,6 +28,7 @@ public abstract class Topping  implements Element {
     @NotBlank(message = "description")
     private String description;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name="price_id")
     private Pricing pricing;
@@ -35,6 +36,7 @@ public abstract class Topping  implements Element {
     @Column(name = "isVegan")
     private boolean isVegan;
 
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "file_id", referencedColumnName = "id")
     private File file;

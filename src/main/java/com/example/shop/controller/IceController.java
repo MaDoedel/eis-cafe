@@ -10,6 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -273,6 +274,20 @@ public class IceController {
 
         return productService.editProduct(topping, id);
     }
+
+    @GetMapping(value = "/api/v2/ice/toppings/{id}/images")
+    public ResponseEntity<Resource> editToppingImage(
+        @PathVariable("id") Long id) throws IOException {
+        return productService.getToppingImage(id);
+    }
+
+    @GetMapping(value = "/api/v2/ice/flavours/{id}/images")
+    public ResponseEntity<Resource> editFlavourImage(
+        @PathVariable("id") Long id) throws IOException {
+        return productService.getFlavourImage(id);
+    }
+
+
 
     // ------------------------------- Old code here -------------------------------
 
