@@ -417,38 +417,32 @@ public class ProductService implements ProductVisitor {
     public ResponseEntity<String> deleteProduct(Topping element) throws IOException{
         Long id = element.getId();
 
-        try {
-            if (!toppingRepository.existsById(id)){
-                return ResponseEntity.badRequest().body("Topping with id " + id + " does not exist");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("ID is null");
-        }
-
         for(Cup c : cupRepository.findAll()){
             if (c.getToppings().contains(toppingRepository.findById(id).get())){
                 return ResponseEntity.badRequest().body("Topping with id " + id + " is used in a cup " + c.getName());
             }
         }
+        
+        if (element.getFile() != null) {
+            if (toppingRepository.findById(id).get().isFruit()){
+                if(toppingsFruitsFolder.resolve(toppingRepository.findById(id).get().getFile().getFileName()).toFile().exists()){
+                    toppingsFruitsFolder.resolve(toppingRepository.findById(id).get().getFile().getFileName()).toFile().delete();
+                }
+            }
 
-        if (toppingRepository.findById(id).get().isFruit()){
-            if(toppingsFruitsFolder.resolve(toppingRepository.findById(id).get().getFile().getFileName()).toFile().exists()){
-                toppingsFruitsFolder.resolve(toppingRepository.findById(id).get().getFile().getFileName()).toFile().delete();
+            if (toppingRepository.findById(id).get().isCandy()){
+                if(toppingsCandiesFolder.resolve(toppingRepository.findById(id).get().getFile().getFileName()).toFile().exists()){
+                    toppingsCandiesFolder.resolve(toppingRepository.findById(id).get().getFile().getFileName()).toFile().delete();
+                }
+            }
+
+            if (toppingRepository.findById(id).get().isSauce()){
+                if(toppingsSauceFolder.resolve(toppingRepository.findById(id).get().getFile().getFileName()).toFile().exists()){
+                    toppingsSauceFolder.resolve(toppingRepository.findById(id).get().getFile().getFileName()).toFile().delete();
+                }
             }
         }
-
-        if (toppingRepository.findById(id).get().isCandy()){
-            if(toppingsCandiesFolder.resolve(toppingRepository.findById(id).get().getFile().getFileName()).toFile().exists()){
-                toppingsCandiesFolder.resolve(toppingRepository.findById(id).get().getFile().getFileName()).toFile().delete();
-            }
-        }
-
-        if (toppingRepository.findById(id).get().isSauce()){
-            if(toppingsSauceFolder.resolve(toppingRepository.findById(id).get().getFile().getFileName()).toFile().exists()){
-                toppingsSauceFolder.resolve(toppingRepository.findById(id).get().getFile().getFileName()).toFile().delete();
-            }
-        }
-
+        
         toppingRepository.deleteById(id);
         return ResponseEntity.ok().body("{ \"message\": \"Topping with id " + id + " deleted successfully\" }");
     }

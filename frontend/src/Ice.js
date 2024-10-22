@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback} from "react";
 import Flavour from "./Flavour";
 import Topping from "./Topping";
 import Cup from "./Cup";
+import IceContainer from "./component/container/IceContainer";
 
 function Ice() {
     const [flavours, setFlavours] = useState([]);
@@ -70,7 +71,13 @@ function Ice() {
             <div className="row">
                 <div className="col-md-1"></div>
                 <div className="col-md-10">
-                    <Flavour flavours={flavours}/>
+                    <div className="row my-2 border rounded">
+                        <div className="col-md-12 mt-2 ">
+                            <p>Flavours</p>
+                        </div>
+                        <IceContainer api={"flavours"}/>
+                        {/* <Flavour flavours={flavours}/> */}
+                    </div>  
                     <Topping toppings={toppings}/>
                     <Cup cups={cups}/>
                 </div>

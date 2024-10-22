@@ -177,22 +177,33 @@ public class IceController {
     }
 
 
-    @GetMapping(value = "/api/v2/ice/toppings")
-    public ResponseEntity<List<Topping>> getToppings(){
-        return ResponseEntity.ok().body(toppingRepository.findAll());
+    @GetMapping(value = "/api/v2/ice/toppings/{type}")
+    public ResponseEntity<List<?>> getToppings(
+        @PathVariable("type") String type){
+            System.out.println(type);
+        if (type.equals("fruits")){
+            return ResponseEntity.ok().body(toppingRepository.findAllFruits());
+        }
+        if (type.equals("candy")){
+            return ResponseEntity.ok().body(toppingRepository.findAllCandies());
+        }
+        if (type.equals("sauce")){
+            return ResponseEntity.ok().body(toppingRepository.findAllSauce());
+        }
+        return ResponseEntity.badRequest().body(null);
     }
 
-    @PostMapping(value = "/api/v2/ice/toppings")
+    @PostMapping(value = "/api/v2/ice/toppings/{type}")
     public ResponseEntity<String> addToppings(
+        @PathVariable("type") String type,
         @RequestParam("name") String name,
         @RequestParam("vegan") boolean vegan,
         @RequestParam("description") String description,
-        @RequestParam("image") String type,
         @RequestParam("image") MultipartFile imageFile) throws IOException {
-
+            System.out.println(type);
 
             Topping topping = null;
-            if (type.equals("Fruit")) {
+            if (type.equals("fruits")) {
                 topping = new Fruit();
                 topping.setName(name);
                 topping.setIsVegan(vegan);
@@ -202,7 +213,7 @@ public class IceController {
                 return productService.addProduct(topping, imageFile);
             }
 
-            if (type.equals("Sauce")) {
+            if (type.equals("sauce")) {
                 topping = new Sauce();
                 topping.setName(name);
                 topping.setIsVegan(vegan);
@@ -212,7 +223,7 @@ public class IceController {
                 return productService.addProduct(topping, imageFile);
             }
 
-            if (type.equals("Candy")) {
+            if (type.equals("candy")) {
                 topping = new Candy();
                 topping.setName(name);
                 topping.setIsVegan(vegan);
@@ -225,24 +236,25 @@ public class IceController {
             return productService.addProduct(topping, imageFile);
     }
 
-    @DeleteMapping(value = "/api/v2/ice/toppings/{id}")
+    @DeleteMapping(value = "/api/v2/ice/toppings/{type}/{id}")
     public ResponseEntity<String> deleteToppings(
+        @PathVariable("type") String type,
         @PathVariable("id") Long id) throws IOException {
         return productService.deleteProduct(toppingRepository.findById(id).get());
         }
     
-    @PutMapping(value = "/api/v2/ice/toppings/{id}")
+    @PutMapping(value = "/api/v2/ice/toppings/{type}/{id}")
     public ResponseEntity<String> editTopping (
         @PathVariable("id") Long id,
+        @PathVariable("type") String type,
         @RequestParam("id") Long newId, 
         @RequestParam("name") String name,
         @RequestParam("vegan") boolean vegan,
         @RequestParam("description") String description,
-        @RequestParam("image") String type,
         @RequestParam("image") MultipartFile imageFile) throws IOException {
 
         Topping topping = null;
-        if (type.equals("Fruit")) {
+        if (type.equals("fruit")) {
             topping = new Fruit();
             topping.setName(name);
             topping.setIsVegan(vegan);
@@ -252,7 +264,7 @@ public class IceController {
             return productService.editProduct(topping, id);
         }
 
-        if (type.equals("Sauce")) {
+        if (type.equals("sauce")) {
             topping = new Sauce();
             topping.setName(name);
             topping.setIsVegan(vegan);
@@ -262,7 +274,7 @@ public class IceController {
             return productService.editProduct(topping, id);
         }
 
-        if (type.equals("Candy")) {
+        if (type.equals("candy")) {
             topping = new Candy();
             topping.setName(name);
             topping.setIsVegan(vegan);
@@ -275,8 +287,9 @@ public class IceController {
         return productService.editProduct(topping, id);
     }
 
-    @GetMapping(value = "/api/v2/ice/toppings/{id}/images")
+    @GetMapping(value = "/api/v2/ice/toppings/{type}/{id}/images")
     public ResponseEntity<Resource> editToppingImage(
+        @PathVariable("type") String type,
         @PathVariable("id") Long id) throws IOException {
         return productService.getToppingImage(id);
     }

@@ -1,4 +1,5 @@
 import React, { useCallback, useRef} from "react";
+import IceContainer from "./component/container/IceContainer";
 
 function ToppingContent({toppings = [], type}) {
     const nameInputRef = useRef(null);
@@ -92,18 +93,7 @@ function ToppingContent({toppings = [], type}) {
     );
 }
 
-function Topping({toppings = []}) {
-
-    const filterByType = useCallback((type) => {
-        return toppings ? toppings.filter(item => item.type === type) : [];
-    }, [toppings]);
-    
-    
-    // Should consider using api calls with different params for each type... could reduce the load for people who don't need all the data
-    const filterFruits = useCallback(() => filterByType("Fruits"), [filterByType]);
-    const filterSweets = useCallback(() => filterByType("Sweets"), [filterByType]);
-    const filterSauce = useCallback(() => filterByType("Sauce"), [filterByType]);
-    
+function Topping({}) {
     return (
         <>
             <div className="row my-2 border rounded">
@@ -125,13 +115,13 @@ function Topping({toppings = []}) {
 
                     <div class="tab-content">
                         <div class="tab-pane active" id="fruits" role="tabpanel" aria-labelledby="fruits-tab" tabindex="0">
-                            <ToppingContent toppings={filterFruits()} type="Fruit"/>
+                            <IceContainer api={"toppings/fruits"}/>
                         </div>
                         <div class="tab-pane" id="sweets" role="tabpanel" aria-labelledby="sweets-tab" tabindex="0">
-                            <ToppingContent toppings={filterSweets()} type="Sweets"/>
+                            <IceContainer api={"toppings/candy"}/>
                         </div>
                         <div class="tab-pane" id="sauce" role="tabpanel" aria-labelledby="sauce-tab" tabindex="0">
-                            <ToppingContent toppings={filterSauce()} type="Sauce"/>
+                            <IceContainer api={"toppings/sauce"}/>
                         </div>
                     </div>
                 </div>
