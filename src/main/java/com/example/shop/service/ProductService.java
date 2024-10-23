@@ -4,11 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.shop.model.Flavour;
@@ -23,11 +21,6 @@ import com.example.shop.repository.FlavourRepository;
 import com.example.shop.repository.ToppingRepository;
 
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-
-
-
-import jakarta.validation.OverridesAttribute;
 
 import com.example.shop.repository.CupRepository;
 
