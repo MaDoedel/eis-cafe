@@ -57,7 +57,7 @@ public class JobsController {
     }
 
     @Transactional
-    @PostMapping(value = "/jobs", produces = "text/plain")
+    @PostMapping(value = "/api/v2/jobs", produces = "text/plain")
     public ResponseEntity<String> processJobRequests(
         @RequestParam("name") String name,
         @RequestParam("email") String email,
@@ -69,12 +69,12 @@ public class JobsController {
             return jobService.processJobRequest(userRecord, pdfFile);
     }
 
-    @GetMapping(value = "/jobs")
+    @GetMapping(value = "/api/v2/jobs")
     public ResponseEntity<List<JobRequestRecord>> getJobRequests() {
         return jobService.getJobRequests();
     }
 
-    @GetMapping(value = "/jobs/{id}")
+    @GetMapping(value = "/api/v2/jobs/{id}")
     public ResponseEntity<Resource> getFile(
         @PathVariable("id") long RequestId) throws IOException {
         return jobService.getFile(RequestId);

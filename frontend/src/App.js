@@ -2,7 +2,7 @@ import './App.css';
 import Home from './Home.js';
 import Login from './Login.js';
 import Ice from './Ice.js';
-import Contact from './Contact.js';
+import Jobs from './Jobs.js';
 import React, {useState, useTransition} from 'react';
 
 
@@ -23,8 +23,8 @@ function App() {
         return <Home />;
       case "Ice":
         return <Ice />;
-      case "Contact":
-        return <Contact />;
+      case "Jobs":
+        return <Jobs />;
       case "Login":
         return <Login />;
       default:
@@ -50,7 +50,7 @@ function App() {
                 <a className={current === "Ice" ? 'nav-link active' : 'nav-link'} aria-current={current === "Ice" ? 'page' : ''} onClick={() => handleClick("Ice")}>Eis</a>
               </li>
               <li className="nav-item">
-                <a className={current === "Contact" ? 'nav-link active' : 'nav-link'} aria-current={current === "Contact" ? 'page' : ''} onClick={() => handleClick("Contact")}>Pricing</a>
+                <a className={current === "Jobs" ? 'nav-link active' : 'nav-link'} aria-current={current === "Jobs" ? 'page' : ''} onClick={() => handleClick("Jobs")}>Jobs</a>
               </li>
             </ul>
             <div className="d-flex justify-content-center">
