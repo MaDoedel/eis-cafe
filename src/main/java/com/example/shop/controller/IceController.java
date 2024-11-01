@@ -39,6 +39,9 @@ import com.example.shop.repository.ToppingRepository;
 import com.example.shop.repository.UserRepository;
 
 import com.example.shop.service.ProductService;
+import com.example.shop.service.ProductService.CupRecord;
+import com.example.shop.service.ProductService.FlavourRecord;
+import com.example.shop.service.ProductService.ToppingRecord;
 
 
 @CrossOrigin(origins = "https://localhost:3000")
@@ -74,14 +77,16 @@ public class IceController {
     @Autowired
     FileRepository fileRepository;
 
-    @Autowired
+    // going to delete all repository stuff
     ProductService productService;
 
-    // v3 will be GraphQL
+    public IceController(ProductService productService) {
+        this.productService = productService;
+    }
 
     @GetMapping(value = "/api/v2/ice/flavours")
-    public ResponseEntity<List<Flavour>> getFlavours(){
-        return ResponseEntity.ok().body(flavourRepository.findAll());
+    public ResponseEntity<List<FlavourRecord>> getFlavours(){
+        return productService.getFlavours();
     }
 
     @PutMapping(value = "/api/v2/ice/flavours/{id}")
@@ -127,8 +132,8 @@ public class IceController {
     }
 
     @GetMapping(value = "/api/v2/ice/cups")
-    public ResponseEntity<List<Cup>> getCups(){
-        return ResponseEntity.ok().body(cupRepository.findAll());
+    public ResponseEntity<List<CupRecord>> getCups(){
+        return productService.getCups();
     }
 
     @PostMapping(value = "/api/v2/ice/cups")
@@ -178,19 +183,9 @@ public class IceController {
 
 
     @GetMapping(value = "/api/v2/ice/toppings/{type}")
-    public ResponseEntity<List<?>> getToppings(
+    public ResponseEntity<List<ToppingRecord>> getToppings(
         @PathVariable("type") String type){
-            System.out.println(type);
-        if (type.equals("fruits")){
-            return ResponseEntity.ok().body(toppingRepository.findAllFruits());
-        }
-        if (type.equals("candy")){
-            return ResponseEntity.ok().body(toppingRepository.findAllCandies());
-        }
-        if (type.equals("sauce")){
-            return ResponseEntity.ok().body(toppingRepository.findAllSauce());
-        }
-        return ResponseEntity.badRequest().body(null);
+        return productService.getToppings(type);
     }
 
     @PostMapping(value = "/api/v2/ice/toppings/{type}")

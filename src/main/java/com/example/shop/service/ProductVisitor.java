@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 public interface ProductVisitor {
+    
     ResponseEntity<String> addProduct(Flavour element, MultipartFile file) throws IOException;
     ResponseEntity<String> editProduct(Flavour element, Long id) throws IOException;
     ResponseEntity<String> deleteProduct(Flavour element) throws IOException;

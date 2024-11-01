@@ -1,12 +1,12 @@
 package com.example.shop.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.shop.model.Flavour;
@@ -25,6 +25,7 @@ import org.springframework.core.io.Resource;
 import com.example.shop.repository.CupRepository;
 
 import java.io.IOException;
+import java.util.*;
 
 import com.example.shop.repository.FileRepository;
 
@@ -45,18 +46,23 @@ public class ProductService implements ProductVisitor {
     static final Path toppingsCandiesFolder = Path.of("src", "main", "resources", "static", "images", "toppings", "candies");
     static final Path toppingsSauceFolder = Path.of("src", "main", "resources", "static", "images", "toppings", "sauce");
 
-    @Autowired
     ToppingRepository toppingRepository;
-
-    @Autowired
     CupRepository cupRepository;
-
-    @Autowired
     FlavourRepository flavourRepository; 
-
-    @Autowired
     FileRepository fileRepository;
-    
+
+    // Should work
+    public ProductService(
+        ToppingRepository toppingRepository, 
+        CupRepository cupRepository,
+        FlavourRepository flavourRepository, 
+        FileRepository fileRepository) {
+            this.toppingRepository = toppingRepository;
+            this.cupRepository = cupRepository;
+            this.flavourRepository = flavourRepository;
+            this.fileRepository = fileRepository;
+    }
+
     public MediaType getMediaType (String fileformat) {
         MediaType mediaType = null;
         if (fileformat.equals("jpeg")) {
@@ -69,6 +75,51 @@ public class ProductService implements ProductVisitor {
             return null;
         }
         return mediaType;
+    }
+
+    public record FlavourRecord (Long id, String name, String description) {}
+    public ResponseEntity<List<FlavourRecord>> getFlavours() {
+        List<FlavourRecord> records = new ArrayList<>();
+
+        flavourRepository.findAll().forEach(flavour -> {
+            records.add(new FlavourRecord(flavour.getId(), flavour.getName(), flavour.getDescription()));
+        });
+        return ResponseEntity.ok().body(records);
+    }
+
+    public record CupRecord (Long id, String name) {}
+    public ResponseEntity<List<CupRecord>> getCups() {
+        List<CupRecord> records = new ArrayList<>();
+
+        cupRepository.findAll().forEach((cup) -> {
+            records.add(new CupRecord(cup.getId(), cup.getName()));
+        });
+        return ResponseEntity.ok().body(records);
+    }
+
+    public record ToppingRecord (Long id, String name, String description) {}
+    public ResponseEntity<List<ToppingRecord>> getToppings(String type) {
+        List<ToppingRecord> records = new ArrayList<>();
+
+        if (type.equals("fruits")){
+            toppingRepository.findAllFruits().forEach((fruits) -> {
+                records.add(new ToppingRecord(fruits.getId(), fruits.getName(), fruits.getDescription()));
+            });
+            return ResponseEntity.ok().body(records);
+        }
+        if (type.equals("candy")){
+            toppingRepository.findAllCandies().forEach((candy) -> {
+                records.add(new ToppingRecord(candy.getId(), candy.getName(), candy.getDescription()));
+            });
+            return ResponseEntity.ok().body(records);
+        }
+        if (type.equals("sauce")){
+            toppingRepository.findAllSauce().forEach((sauce) -> {
+                records.add(new ToppingRecord(sauce.getId(), sauce.getName(), sauce.getDescription()));
+            });
+            return ResponseEntity.ok().body(records);
+        }
+        return ResponseEntity.badRequest().body(records);
     }
 
     public ResponseEntity<Resource> getFlavourImage(Long id) {

@@ -129,11 +129,11 @@ public class HomeController {
     }
 
 
-    @GetMapping(value = "/jobs")
-    public String getJobs(Model model) {
-        model.addAttribute("jobRequests", jobRequestRepository.findAll());
-        return "jobs :: jobs(jobRequests=${jobRequests})";
-    }
+    // @GetMapping(value = "/jobs")
+    // public String getJobs(Model model) {
+    //     model.addAttribute("jobRequests", jobRequestRepository.findAll());
+    //     return "jobs :: jobs(jobRequests=${jobRequests})";
+    // }
 
     
 }

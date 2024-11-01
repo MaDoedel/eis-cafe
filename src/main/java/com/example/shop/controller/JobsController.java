@@ -3,20 +3,13 @@ package com.example.shop.controller;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,16 +17,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.shop.model.File;
 import com.example.shop.model.JobRequest;
-import com.example.shop.model.Role;
 import com.example.shop.model.User;
 import com.example.shop.repository.FileRepository;
 import com.example.shop.repository.JobRequestRepository;
 import com.example.shop.repository.RoleRepository;
 import com.example.shop.repository.UserRepository;
+import com.example.shop.service.JobService;
+import com.example.shop.service.JobService.UserRecord;
+import com.example.shop.service.JobService.JobRequestRecord;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import ch.qos.logback.core.model.Model;
 import jakarta.transaction.Transactional;
 
 @Controller
@@ -56,6 +50,38 @@ public class JobsController {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    JobService jobService;
+
+    public JobsController(JobService jobService) {
+        this.jobService = jobService;
+    }
+
+    @Transactional
+    @PostMapping(value = "/jobs", produces = "text/plain")
+    public ResponseEntity<String> processJobRequests(
+        @RequestParam("name") String name,
+        @RequestParam("email") String email,
+        @RequestParam("surname") String surname,
+        @RequestParam("comment") String comment, 
+        @RequestParam("applicantType") String applicantType,
+        @RequestParam(value = "CV") MultipartFile pdfFile) throws IOException {
+            UserRecord userRecord = new UserRecord(name, surname, email, comment, applicantType);
+            return jobService.processJobRequest(userRecord, pdfFile);
+    }
+
+    @GetMapping(value = "/jobs")
+    public ResponseEntity<List<JobRequestRecord>> getJobRequests() {
+        return jobService.getJobRequests();
+    }
+
+    @GetMapping(value = "/jobs/{id}")
+    public ResponseEntity<Resource> getFile(
+        @PathVariable("id") long RequestId) throws IOException {
+        return jobService.getFile(RequestId);
+    }
+
+    // Old code
+
     @Transactional
     @PostMapping(value = "/jobs/apply", produces = "text/plain")
     public ResponseEntity<String> addUser(
@@ -65,35 +91,7 @@ public class JobsController {
         @RequestParam("comment") String comment, 
         @RequestParam("applicantType") String applicantType,
         @RequestParam(value = "CV") MultipartFile pdfFile) throws IOException {
-            User user = new User(name, surname, email, "pending");
-            user.setRoles(roleRepository.findByName("ROLE_NONE"));
-            user.setPassword(passwordEncoder.encode("egal"));
-
-            if (!pdfFile.getContentType().startsWith("application/pdf")) {
-                return ResponseEntity.badRequest().body("Uploaded file is not an pdf.");
-            }
-            // save in persistent storage
-            String fileName;
-
-            // Unique email somehow doesn't work
-            if (userRepository.findByEmail(email).size() > 0) {
-                return ResponseEntity.badRequest().body("Email already in use");
-            }
-            
-            user = userRepository.save(user);
-            fileName = user.getId() + ".pdf";
-           
-            //safe image
-            Path filePath = urdir.resolve(fileName);
-            Files.write(filePath, pdfFile.getBytes());
-
-            File file = new File(fileName, filePath.toString(), "pdf");
-            fileRepository.save(file);
-
-            JobRequest jobRequest = new JobRequest(user, file, ((comment == null) || (comment.length() == 0)) ? "" : comment, applicantType);
-            jobRequestRepository.save(jobRequest);
-            
-            return ResponseEntity.ok().body(null);
+            UserRecord userRecord = new UserRecord(name, surname, email, comment, applicantType);
+            return jobService.processJobRequest(userRecord, pdfFile);
     }
-    
 }
