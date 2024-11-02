@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.shop.model.Candy;
 import com.example.shop.model.Cup;
+import com.example.shop.model.CupInfoPojo;
 import com.example.shop.model.Flavour;
 import com.example.shop.model.Fruit;
 import com.example.shop.model.Sauce;
@@ -640,7 +641,18 @@ public class IceController {
 
          cup.setFile(file);
          cupRepository.save(cup);
- 
+
+         List<CupInfoPojo> falvours = cupRepository.findCupFlavours();
+
+         for (CupInfoPojo f : falvours){
+            System.out.println(f.getCupId() + " " + f.getIngredientId() + " " + f.getCount());
+         }
+
+         List<CupInfoPojo> toppings = cupRepository.findCupToppings();
+
+         for (CupInfoPojo f : toppings){
+            System.out.println(f.getCupId() + " " + f.getIngredientId() + " " + f.getCount());
+         }
 
         return ResponseEntity.ok().body(null);
     }

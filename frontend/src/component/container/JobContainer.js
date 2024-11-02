@@ -7,7 +7,7 @@ function JobContainer() {
     const emailInputRef = useRef();
     const commentInputRef = useRef();
     const cvInputRef = useRef();
-    const jobDescription = useRef();
+    const jobDescription = useRef(null);
     const fileTitle = useRef();
 
 
@@ -44,7 +44,7 @@ function JobContainer() {
         emailInputRef.current.value = '';
         commentInputRef.current.value = '';
         cvInputRef.current.value = '';
-        jobDescription.current.value = 'MiniJob';
+        jobDescription.current.value = "MiniJob";
         fileTitle.current.textContent = 'Lebenslauf';
         
     }

@@ -108,7 +108,6 @@ public class JobService {
             Resource resource = new UrlResource(filePath.toUri());
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + jobRequestRepository.findById(id).get().getFile().getFileName());
-            
             return ResponseEntity.ok()
                     .headers(headers)
                     .contentType(MediaType.APPLICATION_OCTET_STREAM)
@@ -117,5 +116,35 @@ public class JobService {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(null);
         }
+    }
+
+    public ResponseEntity<String> decideJobrequest(long id, String decision) {
+
+        if (jobRequestRepository.findById(id).isEmpty()) {
+            return ResponseEntity.badRequest().body("{ \"message\" : \"Invalid request\" }");
+        }
+
+        if (decision.equals("accept")) {
+            if (Files.exists(Paths.get(jobRequestRepository.findById(id).get().getFile().getUrl()).normalize())) {
+                Paths.get(jobRequestRepository.findById(id).get().getFile().getUrl()).normalize().toFile().delete();
+            }
+            User user = jobRequestRepository.findById(id).get().getUser();
+            user.setState("accepted");    
+            userRepository.save(user);
+
+            jobRequestRepository.deleteById(id);
+            return ResponseEntity.ok().body("{ \"message\" : \"Request accepted\" }");
+        }
+
+        if (decision.equals("reject")) {
+            if (Files.exists(Paths.get(jobRequestRepository.findById(id).get().getFile().getUrl()).normalize())) {
+                Paths.get(jobRequestRepository.findById(id).get().getFile().getUrl()).normalize().toFile().delete();
+            }
+            Long user_id = jobRequestRepository.findById(id).get().getUser().getId();
+            jobRequestRepository.deleteById(id);
+            userRepository.deleteById(user_id);
+            return ResponseEntity.ok().body("{ \"message\" : \"Request rejected\" }");
+        }
+        return ResponseEntity.badRequest().body("{ \"message\" : \"Error\" }");
     }
 }

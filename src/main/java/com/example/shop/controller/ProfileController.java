@@ -65,7 +65,6 @@ public class ProfileController {
 
     @GetMapping("/download/cv/{id}")
     public ResponseEntity<Resource> downloadCV(@PathVariable("id") long id) throws IOException {
-
         try{
             Path filePath = Paths.get(jobRequestRepository.findById(id).get().getFile().getUrl()).normalize();
             Resource resource = new UrlResource(filePath.toUri());
