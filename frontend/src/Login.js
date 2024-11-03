@@ -5,7 +5,7 @@ function Login ()  {
     const passwordInputRef = useRef(null);
 
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         const username = usernameInputRef.current.value;
@@ -15,17 +15,22 @@ function Login ()  {
         postData.append('username', username);
         postData.append('password', password);
 
-        fetch('/login', {
-            method: 'POST',
-            body: postData,
-        })
-        .then((response) => response.json())
-        .then((data) => {
-            alert(data.message);
-        })
-        .catch((error) => {
-            alert(error.message);
-        });
+        try {
+            const response = await fetch('/login', {
+                method: 'POST',
+                body: postData
+            });
+    
+            if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem('token', data.jwt);
+                alert(data.jwt);
+            } else {
+                throw new Error('Login failed');
+            }
+        } catch (error) {
+            console.error(error);
+        }
 
         usernameInputRef.current.value = '';
         passwordInputRef.current.value = '';
