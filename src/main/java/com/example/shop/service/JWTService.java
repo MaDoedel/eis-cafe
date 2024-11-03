@@ -25,6 +25,11 @@ public class JWTService {
         return extractClaim(token, Claims::getExpiration);
     }
 
+    public Long extractUserId(String token) {
+        Claims claims = extractAllClaims(token);
+        return Long.parseLong(claims.get("userId").toString());
+    }
+
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
@@ -39,8 +44,9 @@ public class JWTService {
         return extractExpiration(token).before(new Date());
     }
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(UserDetails userDetails, Long userId) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", userId);
         claims.put("roles", userDetails.getAuthorities());
         return createToken(claims, userDetails.getUsername());
     }
@@ -54,6 +60,7 @@ public class JWTService {
 
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
+
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 }

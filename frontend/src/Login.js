@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import { jwtDecode } from "jwt-decode";
 
 function Login ()  {
     const usernameInputRef = useRef(null);
@@ -24,7 +25,9 @@ function Login ()  {
             if (response.ok) {
                 const data = await response.json();
                 localStorage.setItem('token', data.jwt);
-                alert(data.jwt);
+
+                const decodedToken = jwtDecode(data.jwt);
+                alert(decodedToken.userId);
             } else {
                 throw new Error('Login failed');
             }
