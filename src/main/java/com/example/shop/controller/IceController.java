@@ -284,14 +284,14 @@ public class IceController {
     }
 
     @GetMapping(value = "/api/v2/ice/toppings/{type}/{id}/images")
-    public ResponseEntity<Resource> editToppingImage(
+    public ResponseEntity<Resource> getToppingImage(
         @PathVariable("type") String type,
         @PathVariable("id") Long id) throws IOException {
         return productService.getToppingImage(id);
     }
 
     @GetMapping(value = "/api/v2/ice/flavours/{id}/images")
-    public ResponseEntity<Resource> editFlavourImage(
+    public ResponseEntity<Resource> getFlavourImage(
         @PathVariable("id") Long id) throws IOException {
         return productService.getFlavourImage(id);
     }

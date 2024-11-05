@@ -3,19 +3,47 @@ import Home from './Home.js';
 import Login from './Login.js';
 import Ice from './Ice.js';
 import Jobs from './Jobs.js';
-import React, {useState, useTransition} from 'react';
+import DashboardContainer from './component/container/DashboardContainer.js';
+import React, {useState, useTransition, useEffect} from 'react';
+import { jwtDecode } from 'jwt-decode';
+
 
 
 function App() {
-  
   const [current, setCurrent] = useState("Home");
   const [isPending, startTransition] = useTransition();
+  const [isTokenExpired, setIsTokenExpired] = useState(false);
 
   const handleClick = (page) => {
     startTransition(() => {
       setCurrent(page);
     });
   };
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    setIsTokenExpired(true);
+    setCurrent("Home");
+  };
+
+
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      const decoded = jwtDecode(token);
+      const expirationTime = decoded.exp * 1000;
+
+      setIsTokenExpired(expirationTime < Date.now());
+
+      const timer = setTimeout(() => {
+        setIsTokenExpired(true);
+      }, expirationTime - Date.now());
+
+      return () => clearTimeout(timer);
+    }
+  }, []);
 
   const renderPage = () => {
     switch (current) {
@@ -27,6 +55,8 @@ function App() {
         return <Jobs />;
       case "Login":
         return <Login />;
+      case "Dashboard":
+        return <DashboardContainer />;
       default:
         return <Home />;
     }
@@ -53,9 +83,22 @@ function App() {
                 <a className={current === "Jobs" ? 'nav-link active' : 'nav-link'} aria-current={current === "Jobs" ? 'page' : ''} onClick={() => handleClick("Jobs")}>Jobs</a>
               </li>
             </ul>
-            <div className="d-flex justify-content-center">
+            {isTokenExpired ? (
+              <div className="d-flex justify-content-center">
               <a className={current === "Login" ? 'nav-link active' : 'nav-link'} aria-current={current === "Login" ? 'page' : ''} onClick={() => handleClick("Login")} style={{color: 'white'}}>Login</a>
             </div>
+            ) : (
+              <>
+                <div className="d-flex justify-content-center">
+                  <a className={current === "Dashboard" ? 'nav-link active' : 'nav-link'} aria-current={current === "Dashboard" ? 'page' : ''} onClick={() => handleClick("Dashboard")} style={{color: 'white'}}>Dashboard</a>
+                </div>
+                <div className="d-flex justify-content-center">
+                  <a className={'nav-link'} onClick={logout} style={{color: 'white'}}>Logout</a>
+                </div>
+              </>
+            )
+            }
+            
           </div>
         </div>
       </nav>

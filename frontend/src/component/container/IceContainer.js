@@ -34,9 +34,12 @@ function IceContainer({api}) {
     
     const handleDelete = (event) => {
         event.preventDefault();
+        const token = localStorage.getItem('token');
+
 
         const id = event.currentTarget.id;
         fetch(`/api/v2/ice/${api}/${id}`, {
+            headers: {'Authorization': `Bearer ${token}`},
             method: 'DELETE',
         })
         .then((response) => response.json())
@@ -51,8 +54,8 @@ function IceContainer({api}) {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        const token = localStorage.getItem('token');
 
-    
         const name = nameInputRef.current.value;
         const description = descriptionInputRef.current.value;
         const image = imageInputRef.current.files[0];
@@ -65,6 +68,7 @@ function IceContainer({api}) {
 
         fetch(`/api/v2/ice/${api}`, {
             method: 'POST',
+            headers: {'Authorization': `Bearer ${token}`},
             body: postData,
         })
         .then((response) => response.json())

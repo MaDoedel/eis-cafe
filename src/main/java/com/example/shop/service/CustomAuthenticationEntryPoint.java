@@ -17,8 +17,9 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint{
 
         // RequestDispatcher dispatcher = request.getRequestDispatcher("index/login");
         // dispatcher.forward(request, response);
-        
-        response.sendRedirect("/");
-
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \"" + authException.getMessage() + "\"}");
     }
 }

@@ -25,9 +25,6 @@ function Login ()  {
             if (response.ok) {
                 const data = await response.json();
                 localStorage.setItem('token', data.jwt);
-
-                const decodedToken = jwtDecode(data.jwt);
-                alert(decodedToken.userId);
             } else {
                 throw new Error('Login failed');
             }
@@ -48,18 +45,31 @@ function Login ()  {
                             <h1>Login</h1>
                         </div>
                         <form onSubmit={handleSubmit}> 
-                            <div className="col-md-12 mt-2">
-                                    <div class="me-3">
-                                        <label for="nameInput" class="form-label">Username</label>
-                                        <input type="text" class="form-control" aria-describedby="userHelp" ref={usernameInputRef}/>
-                                    </div>
-                                    <div class="me-3">
-                                        <label for="passwordInput" class="form-label">Password</label>
-                                        <input type="password" class="form-control" aria-describedby="passwordHelp" ref={passwordInputRef}/>
-                                        <div id="passwordHelp" class="form-text text-start"> Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji. </div>
-                                    </div>
+                            <div class="col-md-12 mt-2">
+                                <div className="input-group">
+                                    <span className="input-group-text">@E-Mail</span>
+                                    <input type="text" class="form-control" placeholder="me@example.com" aria-describedby="userHelp" ref={usernameInputRef}/>
+                                </div>
+                                <div id="userHelp" class="form-text text-start"> 
+                                    Please enter your email address.
+                                </div>
                             </div>
-                            <button type="submit" class="btn btn-primary">Login</button>            
+                            <div class="col-md-12 mt-2">
+                            </div>
+
+                            <div class="col-md-12 mt-2">
+                                <div className="input-group ">
+                                    <span className="input-group-text">Password</span>
+                                    <input type="password" class="form-control" placeholder="password" aria-describedby="passwordHelp" ref={passwordInputRef}/>
+                                </div>
+                                <div id="passwordHelp" class="form-text text-start"> 
+                                    Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji. 
+                                </div>
+                            </div>
+
+                            <div class="col-me-12 my-2">
+                                <button type="submit" class="btn btn-outline-primary">Login</button>            
+                            </div>
                         </form>
                     </div>
                 </div>
