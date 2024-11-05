@@ -69,7 +69,7 @@ public class SecurityConfiguarion {
                 .requestMatchers(HttpMethod.PUT, "/api/v2/ice/**").hasAnyAuthority("ROLE_ADMIN")
 
                 .requestMatchers(HttpMethod.GET, "/api/v2/users").hasAnyAuthority("ROLE_ADMIN") // Gets all users
-                .requestMatchers(HttpMethod.GET, "/api/v2/users/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER") // Gets a specific user (himslef)
+                .requestMatchers(HttpMethod.GET, "/api/v2/users/**").hasAnyAuthority("ROLE_ADMIN") // Gets a specific user (himslef)
 
                 .requestMatchers(HttpMethod.POST, "/api/v2/users").hasAnyAuthority("ROLE_ADMIN") // Creating a User is an admin thing mostly
                 .requestMatchers(HttpMethod.DELETE, "/api/v2/users/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER") // deleting yourself or deleting another user is should be possible for anyone

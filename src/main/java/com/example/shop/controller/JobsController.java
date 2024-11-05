@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.shop.service.JobService;
-import com.example.shop.service.JobService.UserRecord;
+import com.example.shop.service.JobService.UserRequestRecord;
 import com.example.shop.service.JobService.JobRequestRecord;
 
 
@@ -42,7 +42,7 @@ public class JobsController {
         @RequestParam("comment") String comment, 
         @RequestParam("jobDescription") String jobDescription,
         @RequestParam(value = "cv") MultipartFile pdfFile) throws IOException {
-            UserRecord userRecord = new UserRecord(name, surname, email, comment, jobDescription);
+            UserRequestRecord userRecord = new UserRequestRecord(name, surname, email, comment, jobDescription);
             return jobService.processJobRequest(userRecord, pdfFile);
     }
 
@@ -75,7 +75,7 @@ public class JobsController {
         @RequestParam("comment") String comment, 
         @RequestParam("applicantType") String applicantType,
         @RequestParam(value = "CV") MultipartFile pdfFile) throws IOException {
-            UserRecord userRecord = new UserRecord(name, surname, email, comment, applicantType);
+            UserRequestRecord userRecord = new UserRequestRecord(name, surname, email, comment, applicantType);
             return jobService.processJobRequest(userRecord, pdfFile);
     }
 }

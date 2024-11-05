@@ -1,9 +1,11 @@
 import React, { useRef } from "react";
-import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
-function Login ()  {
+function Login ( {setCurrent} ) {
     const usernameInputRef = useRef(null);
     const passwordInputRef = useRef(null);
+    const navigate = useNavigate();
+
 
 
     const handleSubmit = async (e) => {
@@ -25,6 +27,7 @@ function Login ()  {
             if (response.ok) {
                 const data = await response.json();
                 localStorage.setItem('token', data.jwt);
+                window.location.href = '/';
             } else {
                 throw new Error('Login failed');
             }

@@ -50,11 +50,11 @@ public class JobService {
     }
 
 
-    public record UserRecord(String name, String surname, String email, String comment, String applicantType) {}
+    public record UserRequestRecord(String name, String surname, String email, String comment, String applicantType) {}
     public ResponseEntity<String> processJobRequest(
-        UserRecord userRecord,
+        UserRequestRecord Request,
         @RequestParam(value = "CV") MultipartFile pdfFile) throws IOException {
-            User user = new User(userRecord.name(), userRecord.surname(), userRecord.email(), "pending");
+            User user = new User(Request.name(), Request.surname(), Request.email(), "pending");
 
             user.setRoles(roleRepository.findByName("ROLE_NONE"));
             user.setPassword(passwordEncoder.encode("none")); // Do we need that... maybe for dashboard reasons?
@@ -84,7 +84,7 @@ public class JobService {
             File file = new File(fileName, filePath.toString(), "pdf");
             fileRepository.save(file);
 
-            JobRequest jobRequest = new JobRequest(user, file, ((userRecord.comment() == null) || (userRecord.comment().length() == 0)) ? "" : userRecord.comment(), userRecord.applicantType());
+            JobRequest jobRequest = new JobRequest(user, file, ((Request.comment() == null) || (Request.comment().length() == 0)) ? "" : Request.comment(), Request.applicantType());
             jobRequestRepository.save(jobRequest);
             
             return ResponseEntity.ok().body("{ \"message\" : \"Successfull Request\" }");

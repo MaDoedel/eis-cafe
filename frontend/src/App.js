@@ -12,7 +12,7 @@ import { jwtDecode } from 'jwt-decode';
 function App() {
   const [current, setCurrent] = useState("Home");
   const [isPending, startTransition] = useTransition();
-  const [isTokenExpired, setIsTokenExpired] = useState(false);
+  const [isTokenExpired, setIsTokenExpired] = useState(true);
 
   const handleClick = (page) => {
     startTransition(() => {
@@ -20,30 +20,34 @@ function App() {
     });
   };
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    setIsTokenExpired(true);
-    setCurrent("Home");
-  };
-
-
-
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const checkTokenExpiration = () => {
+      const token = localStorage.getItem("token");
 
-    if (token) {
-      const decoded = jwtDecode(token);
-      const expirationTime = decoded.exp * 1000;
+      if (token) {
+        try {
+          const decoded = jwtDecode(token);
+          const expirationTime = decoded.exp * 1000;
 
-      setIsTokenExpired(expirationTime < Date.now());
+          setIsTokenExpired(expirationTime < Date.now());
 
-      const timer = setTimeout(() => {
+          const timer = setTimeout(() => {
+            setIsTokenExpired(true);
+          }, expirationTime - Date.now());
+
+          return () => clearTimeout(timer);
+        } catch (error) {
+          console.error("Error decoding token:", error);
+          setIsTokenExpired(true);
+        }
+      } else {
         setIsTokenExpired(true);
-      }, expirationTime - Date.now());
+      }
+    };
 
-      return () => clearTimeout(timer);
-    }
+    checkTokenExpiration();
   }, []);
+  
 
   const renderPage = () => {
     switch (current) {
@@ -54,7 +58,9 @@ function App() {
       case "Jobs":
         return <Jobs />;
       case "Login":
-        return <Login />;
+        return <Login 
+        current={setCurrent}
+        />;
       case "Dashboard":
         return <DashboardContainer />;
       default:
@@ -91,9 +97,6 @@ function App() {
               <>
                 <div className="d-flex justify-content-center">
                   <a className={current === "Dashboard" ? 'nav-link active' : 'nav-link'} aria-current={current === "Dashboard" ? 'page' : ''} onClick={() => handleClick("Dashboard")} style={{color: 'white'}}>Dashboard</a>
-                </div>
-                <div className="d-flex justify-content-center">
-                  <a className={'nav-link'} onClick={logout} style={{color: 'white'}}>Logout</a>
                 </div>
               </>
             )

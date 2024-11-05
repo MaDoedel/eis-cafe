@@ -15,11 +15,6 @@ function Jobs() {
                         <JobContainer />
                         {/* <Flavour flavours={flavours}/> */}
                     </div>  
-                    <div className="row my-2 border rounded">
-                        <div className="col-md-12 my-2 ">
-                            <JobListPresenter />
-                        </div>
-                    </div>  
                 </div>
                 <div className="col-md-4"></div>
             </div>
